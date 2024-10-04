@@ -8,6 +8,7 @@ class PrimaryButton extends StatelessWidget {
   final double? minHeight;
   final Color? backgroundColor;
   final Color? hoverColor;
+  final Color? splashColor;
   final bool enabled;
   final bool isLoading;
   const PrimaryButton({
@@ -18,6 +19,7 @@ class PrimaryButton extends StatelessWidget {
     this.minHeight,
     this.backgroundColor,
     this.hoverColor,
+    this.splashColor,
     this.enabled = true,
     this.isLoading = false,
   });
@@ -27,15 +29,15 @@ class PrimaryButton extends StatelessWidget {
     return Material(
       child: InkWell(
         onTap: enabled && !isLoading ? onTap : null,
-        splashColor: Colors.tealAccent,
-        hoverColor: hoverColor ?? Colors.tealAccent.withOpacity(.5),
+        splashColor: splashColor ?? const Color(0xff69C335),
+        hoverColor: hoverColor ?? const Color(0xff69C335).withOpacity(.5),
         borderRadius: BorderRadius.circular(7),
         child: Ink(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(7),
             color: enabled
-                ? backgroundColor ?? Theme.of(context).colorScheme.primary
+                ? backgroundColor ?? Theme.of(context).colorScheme.secondary
                 : Colors.grey.shade400,
           ),
           child: ConstrainedBox(

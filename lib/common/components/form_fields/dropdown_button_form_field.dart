@@ -6,6 +6,7 @@ class EnumDropdownButtonFormField<T> extends StatelessWidget {
   final Function(T?) onSelected;
   final String? Function(T?)? validator;
   final T? value;
+  final Widget? prefixIcon;
 
   const EnumDropdownButtonFormField({
     super.key,
@@ -14,6 +15,7 @@ class EnumDropdownButtonFormField<T> extends StatelessWidget {
     required this.values,
     this.validator,
     this.value,
+    this.prefixIcon,
   });
 
   @override
@@ -38,12 +40,12 @@ class EnumDropdownButtonFormField<T> extends StatelessWidget {
       onChanged: onSelected,
       dropdownColor: Theme.of(context).colorScheme.surface,
       decoration: InputDecoration(
+        prefixIcon: prefixIcon,
         label: Text(
           label,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: Theme.of(context).colorScheme.primary),
+          // style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          //       color: Theme.of(context).colorScheme.primary,
+          //     ),
         ),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -54,7 +56,7 @@ class EnumDropdownButtonFormField<T> extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7),
           borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.surfaceTint,
           ),
         ),
         focusedBorder: OutlineInputBorder(

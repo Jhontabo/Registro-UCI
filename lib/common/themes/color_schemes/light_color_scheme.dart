@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color.fromARGB(255, 48, 128, 100),
+  secondary: Color(0xff009049),
   onPrimary: Colors.white,
-  secondary: Color.fromARGB(255, 255, 222, 182),
+  primary: Color(0xff103D8F),
   onSecondary: Color.fromRGBO(14, 14, 14, 1),
-  tertiary: Colors.tealAccent,
+  tertiary: Color(0xff69C335),
   onTertiary: Colors.white,
   error: Colors.pink,
   onError: Colors.white,

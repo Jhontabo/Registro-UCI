@@ -2,36 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:registro_uci/common/themes/color_schemes/light_color_scheme.dart';
 
 final lightTheme = ThemeData(
-  useMaterial3: false,
-  // fontFamily: 'PlusJakartaSans',
+  useMaterial3: true,
+  fontFamily: 'PlusJakartaSans',
   colorScheme: lightColorScheme,
-  appBarTheme: const AppBarTheme(
-    elevation: 0,
+  appBarTheme: AppBarTheme(
+    // elevation: 0,
     // toolbarHeight: 45,
-    centerTitle: true,
-  ),
-  textTheme: const TextTheme(
-    bodyLarge: TextStyle(
-      fontSize: 18,
-    ),
-    bodyMedium: TextStyle(
-      fontSize: 16,
-    ),
-    // subtitle
-    bodySmall: TextStyle(
-      fontSize: 12,
-    ),
-    //title
-    titleMedium: TextStyle(
-      fontSize: 18,
+    // centerTitle: true,
+    titleTextStyle: TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 24,
+      color: lightColorScheme.primary,
+      fontFamily: 'PlusJakartaSans',
     ),
   ),
+  // textTheme: const TextTheme(
+  //   bodyLarge: TextStyle(
+  //     fontSize: 18,
+  //   ),
+  //   bodyMedium: TextStyle(
+  //     fontSize: 16,
+  //   ),
+  //   // subtitle
+  //   bodySmall: TextStyle(
+  //     fontSize: 12,
+  //   ),
+  //   //title
+  //   titleMedium: TextStyle(
+  //     fontSize: 18,
+  //   ),
+  // ),
   drawerTheme: const DrawerThemeData(
     width: 250,
     elevation: 3,
   ),
-  filledButtonTheme: const FilledButtonThemeData(style: ButtonStyle()),
+  // filledButtonTheme: const FilledButtonThemeData(style: ButtonStyle()),
   scaffoldBackgroundColor: const Color.fromARGB(255, 249, 249, 249),
+
   // textTheme: const TextTheme(
   //   displaySmall: TextStyle(
   //     fontWeight: FontWeight.bold,

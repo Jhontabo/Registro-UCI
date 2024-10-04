@@ -14,6 +14,7 @@ class SecondaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,
         splashColor: Colors.tealAccent,

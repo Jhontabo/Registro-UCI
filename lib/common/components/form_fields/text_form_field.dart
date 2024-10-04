@@ -12,9 +12,10 @@ class OutlinedTextFormField extends StatelessWidget {
   final double borderRadius;
   final String hint;
   final Color? borderColor;
-  final Icon? prefixIcon;
+  final Widget? prefixIcon;
   final Widget? suffixIcon;
   final bool? autocorrect;
+  final bool? enableSuggestions;
   final bool? readOnly;
 
   const OutlinedTextFormField({
@@ -33,6 +34,7 @@ class OutlinedTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.autocorrect,
     this.readOnly,
+    this.enableSuggestions,
   });
 
   @override
@@ -44,7 +46,7 @@ class OutlinedTextFormField extends StatelessWidget {
       initialValue: initialValue,
       style: Theme.of(context).textTheme.bodyMedium,
       obscureText: obscureText,
-      enableSuggestions: false,
+      enableSuggestions: enableSuggestions ?? true,
       autocorrect: autocorrect ?? false,
       autofillHints: hint.isNotEmpty ? [hint] : null,
       showCursor: true,
@@ -69,14 +71,14 @@ class OutlinedTextFormField extends StatelessWidget {
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: BorderSide(
-            color: borderColor ?? Theme.of(context).colorScheme.secondary,
+            color: borderColor ?? Theme.of(context).colorScheme.primary,
             width: .8,
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: BorderSide(
-            color: borderColor ?? Theme.of(context).colorScheme.surfaceTint,
+            color: borderColor ?? Theme.of(context).colorScheme.primary,
           ),
         ),
         errorBorder: OutlineInputBorder(
@@ -88,7 +90,7 @@ class OutlinedTextFormField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: BorderSide(
-            color: borderColor ?? Theme.of(context).colorScheme.surfaceTint,
+            color: borderColor ?? Theme.of(context).colorScheme.primary,
           ),
         ),
       ),

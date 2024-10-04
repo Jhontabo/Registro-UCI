@@ -7,23 +7,17 @@ extension AsyncValueUI on AsyncValue {
   void dialogOnError(BuildContext context) {
     if (!isLoading && hasError) {
       log(error.toString());
-      final isServerSleeping = error.toString().contains('ClientException');
-
+      final isException = error.toString().length > 10;
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: !isServerSleeping
-                ? const Text(
-                    "Ha ocurrido un error",
-                    textAlign: TextAlign.center,
-                  )
-                : const Text(
-                    "Servidor iniciándose",
-                    textAlign: TextAlign.center,
-                  ),
-            content: isServerSleeping
-                ? const Text("Espere un minuto y vuelva a intentar")
+            title: const Text(
+              "Ha ocurrido un error",
+              textAlign: TextAlign.center,
+            ),
+            content: isException
+                ? Text(error.toString().substring(10))
                 : Text(error.toString()),
             actions: [
               PrimaryButton(
