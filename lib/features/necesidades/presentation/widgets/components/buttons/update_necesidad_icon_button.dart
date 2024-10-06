@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/components/icon_buttons/edit_icon_button.dart';
-import 'package:registro_uci/features/necesidades/data/providers/necesidades_de_registro_provider.dart';
+import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
 import 'package:registro_uci/features/necesidades/domain/models/necesidad.dart';
 import 'package:registro_uci/features/necesidades/presentation/widgets/components/update_necesidad_form.dart';
 
 class UpdateNecesidadIconButton extends ConsumerWidget {
   final Necesidad necesidad;
-  final NecesidadesParams params;
+  final ReporteParams params;
 
   const UpdateNecesidadIconButton({
     super.key,

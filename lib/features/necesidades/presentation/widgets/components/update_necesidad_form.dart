@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_fields/text_form_field.dart';
-import 'package:registro_uci/features/necesidades/data/constants/strings.dart';
-import 'package:registro_uci/features/necesidades/data/dto/update_necesidad_dto.dart';
-import 'package:registro_uci/features/necesidades/data/providers/necesidades_de_registro_provider.dart';
+import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
 import 'package:registro_uci/features/necesidades/domain/models/necesidad.dart';
 import 'package:registro_uci/features/necesidades/presentation/widgets/components/buttons/update_necesidad_form_button.dart';
 
@@ -14,7 +12,7 @@ class UpdateNecesidadForm extends StatefulWidget {
   });
 
   final Necesidad necesidad;
-  final NecesidadesParams params;
+  final ReporteParams params;
 
   @override
   State<UpdateNecesidadForm> createState() => _UpdateNecesidadFormState();

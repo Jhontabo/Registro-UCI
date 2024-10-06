@@ -3,9 +3,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_uci/common/components/bed_widget.dart';
 import 'package:registro_uci/common/extensions/capitalize.dart';
-import 'package:registro_uci/features/necesidades/data/providers/necesidades_de_registro_provider.dart';
+import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
 import 'package:registro_uci/features/registros_diarios/data/providers/registro_diario_provider.dart';
-import 'package:registro_uci/features/registros_diarios/domain/models/registro_diario.dart';
 import 'package:registro_uci/features/registros_diarios/presentation/widgets/components/tiles/control_de_liquidos_tile.dart';
 import 'package:registro_uci/features/registros_diarios/presentation/widgets/components/tiles/control_de_posicion_tile.dart';
 import 'package:registro_uci/features/registros_diarios/presentation/widgets/components/tiles/control_de_riesgos_tile.dart';
@@ -26,7 +25,7 @@ class RegistroDiarioPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final registro = ref.watch(registroDiarioProvider(
-        NecesidadesParams(idIngreso: idIngreso, idRegistro: idRegistro)));
+        ReporteParams(idIngreso: idIngreso, idRegistro: idRegistro)));
 
     return registro.when(
       data: (registroDiario) {

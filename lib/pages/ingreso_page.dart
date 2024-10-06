@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/components/bed_widget.dart';
-import 'package:registro_uci/common/components/tile.dart';
 import 'package:registro_uci/features/ingresos/data/providers/ingreso_by_id_provider.dart';
-import 'package:registro_uci/features/ingresos/domain/models/ingreso.dart';
-import 'package:registro_uci/features/ingresos/presentation/widgets/components/ingreso_widget.dart';
 import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/cateteres_tile.dart';
 import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/detalles_ingreso_tile.dart';
 import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/marcapasos_tile.dart';
 import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/procedimientos_especiales_tile.dart';
 import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/registros_diarios_tile.dart';
-import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/registros_diarios_tile.dart';
 import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/terminar_ingreso_tile.dart';
 import 'package:registro_uci/pages/loading_page.dart';
-import 'package:registro_uci/pages/registros_diarios_page.dart';
 
 class IngresoPage extends ConsumerWidget {
   final String idIngreso;

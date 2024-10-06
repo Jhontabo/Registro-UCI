@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/components/buttons/primary_button.dart';
 import 'package:registro_uci/common/extensions/async_value_ui.dart';
-import 'package:registro_uci/features/necesidades/data/providers/necesidades_de_registro_provider.dart';
+import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
 import 'package:registro_uci/features/necesidades/presentation/controllers/delete_necesidad_controller.dart';
 
 class DeleteNecesidadFormButton extends ConsumerWidget {
@@ -13,7 +13,7 @@ class DeleteNecesidadFormButton extends ConsumerWidget {
   });
 
   final String idNecesidad;
-  final NecesidadesParams params;
+  final ReporteParams params;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:registro_uci/common/components/buttons/secondary_button.dart';
 import 'package:registro_uci/features/ingresos/data/providers/ingreso_by_id_provider.dart';
 import 'package:registro_uci/features/ingresos/domain/models/ingreso.dart';
-import 'package:registro_uci/features/ingresos/presentation/widgets/update_ingreso_form.dart';
 import 'package:registro_uci/pages/update_ingreso_page.dart';
 
 class IngresoDetailsPage extends ConsumerWidget {
@@ -113,6 +112,10 @@ class IngresoDetailsPage extends ConsumerWidget {
               _buildRichText(
                 'Cama',
                 data.cama,
+              ),
+              _buildRichText(
+                'Sala',
+                data.sala.salaToString(),
               ),
               _buildRichText(
                 'Alergias',

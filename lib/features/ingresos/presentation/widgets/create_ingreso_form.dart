@@ -3,7 +3,6 @@ import 'package:registro_uci/common/components/form_fields/date_form_field.dart'
 import 'package:registro_uci/common/components/form_fields/dropdown_button_form_field.dart';
 import 'package:registro_uci/common/components/form_fields/text_form_field.dart';
 import 'package:registro_uci/common/utils/date_picker.dart';
-import 'package:registro_uci/features/ingresos/domain/models/ingreso.dart';
 import 'package:registro_uci/features/ingresos/presentation/validators/create_ingreso_validators.dart';
 import 'package:registro_uci/features/ingresos/presentation/widgets/components/buttons/create_ingreso_form_button.dart';
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/providers/repository_providers.dart';
+import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
 import 'package:registro_uci/features/necesidades/data/abstract_repositories/necesidades_repository.dart';
 import 'package:registro_uci/features/necesidades/data/dto/update_necesidad_dto.dart';
 import 'package:registro_uci/features/necesidades/data/providers/necesidades_de_registro_provider.dart';
@@ -22,7 +23,7 @@ class UpdateNecesidadDeRegistroController extends AsyncNotifier<void> {
     state = await AsyncValue.guard(() => _repository.updateNecesidadDeRegistro(
         idIngreso, idRegistro, idNecesidad, dto));
     ref.invalidate(
-      necesidadesDeRegistroProvider(NecesidadesParams(
+      necesidadesDeRegistroProvider(ReporteParams(
         idIngreso: idIngreso,
         idRegistro: idRegistro,
       )),

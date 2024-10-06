@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/components/buttons/primary_button.dart';
 import 'package:registro_uci/common/extensions/async_value_ui.dart';
+import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
 import 'package:registro_uci/features/necesidades/data/dto/create_necesidad_dto.dart';
-import 'package:registro_uci/features/necesidades/data/providers/necesidades_de_registro_provider.dart';
 import 'package:registro_uci/features/necesidades/presentation/controllers/add_necesidad_controller.dart';
 
 class CreateNecesidadFormButton extends ConsumerWidget {
@@ -17,7 +17,7 @@ class CreateNecesidadFormButton extends ConsumerWidget {
 
   final GlobalKey<FormState> _formKey;
   final TextEditingController _nombreNecesidadController;
-  final NecesidadesParams params;
+  final ReporteParams params;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

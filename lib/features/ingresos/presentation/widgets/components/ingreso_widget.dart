@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/components/bed_widget.dart';
 import 'package:registro_uci/common/components/tappable_container.dart';
-import 'package:registro_uci/features/ingresos/data/providers/ingreso_by_id_provider.dart';
 import 'package:registro_uci/features/ingresos/domain/models/ingreso.dart';
-import 'package:registro_uci/pages/ingreso_details_page.dart';
 import 'package:registro_uci/pages/ingreso_page.dart';
 
 class IngresoWidget extends StatelessWidget {

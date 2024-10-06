@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:registro_uci/features/necesidades/data/providers/necesidades_de_registro_provider.dart';
+import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
 import 'package:registro_uci/features/necesidades/domain/models/necesidad.dart';
 import 'package:registro_uci/features/necesidades/presentation/widgets/components/buttons/delete_necesidad_icon_button.dart';
 import 'package:registro_uci/features/necesidades/presentation/widgets/components/buttons/update_necesidad_icon_button.dart';
 
 class NecesidadActionButtons extends StatelessWidget {
   final Necesidad necesidad;
-  final NecesidadesParams params;
+  final ReporteParams params;
 
   const NecesidadActionButtons({
     super.key,

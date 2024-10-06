@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:registro_uci/features/necesidades/data/providers/necesidades_de_registro_provider.dart';
+import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
 import 'package:registro_uci/features/necesidades/presentation/widgets/components/buttons/delete_necesidad_form_button.dart';
 
 class ConfirmDeleteNecesidadForm extends StatelessWidget {
@@ -10,7 +10,7 @@ class ConfirmDeleteNecesidadForm extends StatelessWidget {
   });
 
   final String idNecesidad;
-  final NecesidadesParams params;
+  final ReporteParams params;
   @override
   Widget build(BuildContext context) {
     return Padding(

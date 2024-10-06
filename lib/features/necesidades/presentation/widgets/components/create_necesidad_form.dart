@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_fields/text_form_field.dart';
-import 'package:registro_uci/features/necesidades/data/providers/necesidades_de_registro_provider.dart';
+import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
 import 'package:registro_uci/features/necesidades/presentation/validators/nombre_necesidad_validator.dart';
 import 'package:registro_uci/features/necesidades/presentation/widgets/components/buttons/create_necesidad_form_button.dart';
 
 class CreateNecesidadForm extends StatefulWidget {
-  final NecesidadesParams params;
+  final ReporteParams params;
   const CreateNecesidadForm({
     super.key,
     required this.params,
