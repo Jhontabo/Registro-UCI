@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_tile.dart';
 import 'package:registro_uci/features/firmas/domain/models/firma.dart';
-import 'package:registro_uci/pages/necesidades_page.dart';
+import 'package:registro_uci/pages/intervenciones_page.dart';
 
 class NecesidadesTile extends StatelessWidget {
   const NecesidadesTile({
@@ -24,7 +24,7 @@ class NecesidadesTile extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => NecesidadesPage(
+            builder: (context) => IntervencionesPage(
               idIngreso: idIngreso,
               idRegistro: idRegistro,
               firma: firma,

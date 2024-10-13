@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_fields/text_form_field.dart';
-import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
+import 'package:registro_uci/features/firmas/domain/models/reporte_params.dart';
 import 'package:registro_uci/features/necesidades/domain/models/necesidad.dart';
 import 'package:registro_uci/features/necesidades/presentation/widgets/components/buttons/update_necesidad_form_button.dart';
 

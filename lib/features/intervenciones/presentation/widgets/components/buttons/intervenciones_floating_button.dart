@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 
-class NecesidadFloatingActionButton extends StatelessWidget {
-  const NecesidadFloatingActionButton({
+class IntervencionesFloatingButton extends StatelessWidget {
+  const IntervencionesFloatingButton({
     super.key,
-    required this.onCreate,
+    // required this.onCreate,
     required this.onImport,
+    required this.onAdd,
   });
 
-  final VoidCallback onCreate;
+  // final VoidCallback onCreate;
   final VoidCallback onImport;
+  final VoidCallback onAdd;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
       onSelected: (value) {
         switch (value) {
-          case 'crear':
-            onCreate();
-            break;
           case 'importar':
             onImport();
+            break;
+          case 'agregar':
+            onAdd();
             break;
         }
       },
       itemBuilder: (BuildContext context) {
         return [
           const PopupMenuItem<String>(
-            value: 'crear',
-            child: Text('Crear nueva necesidad'),
+            value: 'agregar',
+            child: Text('Agregar necesidades'),
           ),
           const PopupMenuItem<String>(
             value: 'importar',

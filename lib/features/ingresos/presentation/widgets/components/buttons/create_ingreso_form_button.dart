@@ -4,7 +4,6 @@ import 'package:registro_uci/common/components/buttons/primary_button.dart';
 import 'package:registro_uci/common/extensions/async_value_ui.dart';
 import 'package:registro_uci/common/extensions/string_to_date.dart';
 import 'package:registro_uci/features/ingresos/data/dto/create_ingreso_dto.dart';
-import 'package:registro_uci/features/ingresos/domain/models/ingreso.dart';
 import 'package:registro_uci/features/ingresos/presentation/controllers/create_ingreso_controller.dart';
 
 class CreateIngresoFormButton extends ConsumerWidget {
@@ -105,7 +104,7 @@ class CreateIngresoFormButton extends ConsumerWidget {
             talla: int.parse(_tallaController.text),
             cama: _camaController.text,
             alergias: _alergiasController.text,
-            sala: sala!.toSala(),
+            sala: sala!,
           );
 
           ref.read(createIngresoControllerProvider.notifier).createIngreso(dto);

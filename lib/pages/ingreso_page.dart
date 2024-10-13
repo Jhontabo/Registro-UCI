@@ -8,6 +8,7 @@ import 'package:registro_uci/features/ingresos/presentation/widgets/components/t
 import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/procedimientos_especiales_tile.dart';
 import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/registros_diarios_tile.dart';
 import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/terminar_ingreso_tile.dart';
+import 'package:registro_uci/features/ingresos/presentation/widgets/components/tiles/tratamientos_antibioticos_tile.dart';
 import 'package:registro_uci/pages/loading_page.dart';
 
 class IngresoPage extends ConsumerWidget {
@@ -45,6 +46,8 @@ class IngresoPage extends ConsumerWidget {
               DetallesIngresoTile(idIngreso: data.idIngreso),
               const SizedBox(height: 10),
               RegistrosDiariosTile(idIngreso: idIngreso),
+              const SizedBox(height: 10),
+              TratamientosAntibioticosTile(idIngreso: idIngreso),
               const SizedBox(height: 10),
               const ProcedimientosEspecialesTile(),
               const SizedBox(height: 10),

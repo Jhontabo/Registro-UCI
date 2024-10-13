@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
+import 'package:registro_uci/features/firmas/domain/models/reporte_params.dart';
 import 'package:registro_uci/features/necesidades/presentation/widgets/components/buttons/delete_necesidad_form_button.dart';
 
 class ConfirmDeleteNecesidadForm extends StatelessWidget {

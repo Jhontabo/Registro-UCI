@@ -4,7 +4,7 @@ import 'package:registro_uci/common/components/buttons/primary_button.dart';
 import 'package:registro_uci/common/extensions/async_value_ui.dart';
 import 'package:registro_uci/features/auth/data/providers/user_name_provider.dart';
 import 'package:registro_uci/features/firmas/data/dto/create_firma_dto.dart';
-import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
+import 'package:registro_uci/features/firmas/domain/models/reporte_params.dart';
 import 'package:registro_uci/features/firmas/presentation/controllers/firmar_reporte_controller.dart';
 
 class FirmarReporteFormButton extends ConsumerWidget {

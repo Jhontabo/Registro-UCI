@@ -10,8 +10,8 @@ const lightColorScheme = ColorScheme(
   onTertiary: Colors.white,
   error: Colors.pink,
   onError: Colors.white,
-  primaryContainer: Colors.white,
-  onPrimaryContainer: Color.fromARGB(255, 255, 255, 255),
+  // primaryContainer: Colors.white,
+  // onPrimaryContainer: Color.fromARGB(255, 255, 255, 255),
 
   secondaryContainer: Colors.white, // google
   onSecondaryContainer: Color.fromARGB(255, 18, 18, 18),

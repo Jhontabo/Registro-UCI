@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_uci/common/components/buttons/secondary_button.dart';
@@ -8,6 +9,7 @@ import 'package:registro_uci/pages/update_ingreso_page.dart';
 
 class IngresoDetailsPage extends ConsumerWidget {
   final String idIngreso;
+
   const IngresoDetailsPage({
     super.key,
     required this.idIngreso,
@@ -21,22 +23,48 @@ class IngresoDetailsPage extends ConsumerWidget {
       data: (data) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Detalles de Ingreso"),
+            title: const Text(
+              "Detalles de Ingreso",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            centerTitle: true,
           ),
           body: ListView(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(16.0),
             children: [
+              // Patient Info Header with Icon
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: Text(
-                      data!.nombrePaciente.toUpperCase(),
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data!.nombrePaciente.toUpperCase(),
+                        style:
+                            Theme.of(context).textTheme.displayMedium!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Identificación: ${data.identificacionPaciente}',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Colors.grey.shade600,
+                            ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 10),
+                  Icon(Icons.person_outline,
+                      size: 60, color: Theme.of(context).colorScheme.primary),
+                ],
+              ),
+              const SizedBox(height: 20),
+              // Action Button (Edit Ingreso)
+              Row(
+                children: [
                   SecondaryButton(
                     child: Row(
                       children: [
@@ -57,102 +85,146 @@ class IngresoDetailsPage extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              _buildRichText(
-                'Fecha de Nacimiento',
-                data.fechaNacimientoPaciente != null
+              const SizedBox(height: 20),
+              // Details List with Icons
+              _buildDetailTile(
+                label: 'Fecha de Nacimiento',
+                icon: Icons.cake_outlined,
+                data: data.fechaNacimientoPaciente != null
                     ? DateFormat('dd/MM/yyyy')
                         .format(data.fechaNacimientoPaciente!)
                     : "Desconocido",
+                context: context,
               ),
-              _buildRichText(
-                'E.P.S. o ARL',
-                data.epsOArl,
+              _buildDetailTile(
+                label: 'E.P.S. o ARL',
+                icon: Icons.local_hospital_outlined,
+                data: data.epsOArl,
+                context: context,
               ),
-              _buildRichText(
-                'Identificación Paciente',
-                data.identificacionPaciente,
+              _buildDetailTile(
+                label: 'Carpeta',
+                icon: Icons.folder_outlined,
+                context: context,
+                data: data.carpeta,
               ),
-              _buildRichText(
-                'Carpeta',
-                data.carpeta,
+              _buildDetailTile(
+                label: 'Fecha de Ingreso',
+                icon: Icons.event_outlined,
+                data: DateFormat('dd/MM/yyyy').format(data.fechaIngreso),
+                context: context,
               ),
-              _buildRichText(
-                'Fecha de Ingreso',
-                DateFormat('dd/MM/yyyy').format(data.fechaIngreso),
+              _buildDetailTile(
+                label: 'Nombre Familiar',
+                icon: Icons.family_restroom_outlined,
+                context: context,
+                data: data.nombreFamiliar,
               ),
-              _buildRichText(
-                'Nombre Familiar',
-                data.nombreFamiliar,
+              _buildDetailTile(
+                label: 'Parentesco Familiar',
+                icon: Icons.people_outline,
+                context: context,
+                data: data.parentescoFamiliar,
               ),
-              _buildRichText(
-                'Parentesco Familiar',
-                data.parentescoFamiliar,
+              _buildDetailTile(
+                label: 'Teléfono Familiar',
+                icon: Icons.phone_outlined,
+                context: context,
+                data: data.telefonoFamiliar,
               ),
-              _buildRichText(
-                'Teléfono Familiar',
-                data.telefonoFamiliar,
+              _buildDetailTile(
+                label: 'Diagnóstico Ingreso',
+                icon: Icons.note_alt_outlined,
+                context: context,
+                data: data.diagnosticoIngreso,
               ),
-              _buildRichText(
-                'Diagnóstico Ingreso',
-                data.diagnosticoIngreso,
+              _buildDetailTile(
+                label: 'Diagnóstico Actual',
+                icon: Icons.local_hospital_outlined,
+                context: context,
+                data: data.diagnosticoActual,
               ),
-              _buildRichText(
-                'Diagnóstico Actual',
-                data.diagnosticoActual,
+              _buildDetailTile(
+                label: 'Peso',
+                icon: Icons.monitor_weight_outlined,
+                context: context,
+                data: '${data.peso.toString()} kg',
               ),
-              _buildRichText(
-                'Peso',
-                '${data.peso.toString()} kg',
+              _buildDetailTile(
+                label: 'Talla',
+                icon: Icons.height_outlined,
+                context: context,
+                data: '${data.talla.toString()} cm',
               ),
-              _buildRichText(
-                'Talla',
-                '${data.talla.toString()} cm',
+              _buildDetailTile(
+                label: 'Cama',
+                icon: Icons.bed_outlined,
+                context: context,
+                data: data.cama,
               ),
-              _buildRichText(
-                'Cama',
-                data.cama,
+              _buildDetailTile(
+                label: 'Sala',
+                icon: Icons.meeting_room_outlined,
+                context: context,
+                data: data.sala.salaToString(),
               ),
-              _buildRichText(
-                'Sala',
-                data.sala.salaToString(),
-              ),
-              _buildRichText(
-                'Alergias',
-                data.alergias ?? "Ninguna",
+              _buildDetailTile(
+                label: 'Alergias',
+                icon: Icons.warning_amber_outlined,
+                context: context,
+                data: data.alergias ?? "Ninguna",
               ),
             ],
           ),
         );
       },
-      error: (error, stackTrace) => Text(error.toString()),
-      loading: () => const CircularProgressIndicator(),
+      error: (error, stackTrace) => Center(
+        child: Text(
+          'Error: $error',
+          style: const TextStyle(color: Colors.red, fontSize: 16),
+        ),
+      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 
-  Widget _buildRichText(String label, String data) {
+  // Method to create modern styled tile with icons
+  Widget _buildDetailTile({
+    required String label,
+    required IconData icon,
+    required String data,
+    required BuildContext context,
+  }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: RichText(
-        text: TextSpan(
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.black,
-            fontFamily: 'PlusJakartaSans',
-          ),
-          children: [
-            TextSpan(
-              text: '$label: ',
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Icon(icon, size: 30, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(width: 10),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontFamily: 'PlusJakartaSans',
+                ),
+                children: [
+                  TextSpan(
+                    text: '$label: ',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  TextSpan(
+                    text: data,
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                ],
               ),
             ),
-            TextSpan(
-              text: data,
-              style: TextStyle(color: Colors.grey.shade600),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

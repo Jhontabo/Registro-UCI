@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_uci/common/components/bed_widget.dart';
 import 'package:registro_uci/common/extensions/capitalize.dart';
-import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
+import 'package:registro_uci/features/firmas/domain/models/reporte_params.dart';
 import 'package:registro_uci/features/registros_diarios/data/providers/registro_diario_provider.dart';
 import 'package:registro_uci/features/registros_diarios/presentation/widgets/components/tiles/control_de_liquidos_tile.dart';
 import 'package:registro_uci/features/registros_diarios/presentation/widgets/components/tiles/control_de_posicion_tile.dart';

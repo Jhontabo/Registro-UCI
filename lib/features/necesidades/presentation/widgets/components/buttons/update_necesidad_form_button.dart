@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/components/buttons/primary_button.dart';
 import 'package:registro_uci/common/extensions/async_value_ui.dart';
-import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
+import 'package:registro_uci/features/firmas/domain/models/reporte_params.dart';
 import 'package:registro_uci/features/necesidades/data/dto/update_necesidad_dto.dart';
 import 'package:registro_uci/features/necesidades/presentation/controllers/update_necesidad_controller.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
+import 'package:registro_uci/features/firmas/domain/models/reporte_params.dart';
 import 'package:registro_uci/features/firmas/presentation/widgets/components/buttons/firmar_reporte_form_button.dart';
 
 class ConfirmFirmarReporteForm extends StatelessWidget {

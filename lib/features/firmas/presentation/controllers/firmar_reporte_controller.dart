@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/providers/repository_providers.dart';
 import 'package:registro_uci/features/firmas/data/dto/create_firma_dto.dart';
-import 'package:registro_uci/features/firmas/domain/models/necesidades_params.dart';
+import 'package:registro_uci/features/firmas/domain/models/reporte_params.dart';
 import 'package:registro_uci/features/registros_diarios/data/abstract_repositories/registros_diarios_repository.dart';
 import 'package:registro_uci/features/registros_diarios/data/providers/registro_diario_provider.dart';
 

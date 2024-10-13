@@ -1,10 +1,9 @@
 import "dart:collection";
 import "package:registro_uci/features/ingresos/data/constants/strings.dart";
-import "package:registro_uci/features/ingresos/domain/models/ingreso.dart";
 
 class CreateIngresoDto extends MapView<String, dynamic> {
   final String nombrePaciente;
-  final Sala sala;
+  final String sala;
   final DateTime? fechaNacimientoPaciente;
   final String epsOArl;
   final String identificacionPaciente;

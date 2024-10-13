@@ -35,7 +35,7 @@ class FirebaseIngresosRepository implements IngresosRepository {
     try {
       await _firestore.collection(FirebaseCollectionNames.ingresos).add(dto);
     } catch (e) {
-      throw Exception('Error al crear el ingreso');
+      throw Exception('Error al crear el ingreso: $e');
     }
   }
 
