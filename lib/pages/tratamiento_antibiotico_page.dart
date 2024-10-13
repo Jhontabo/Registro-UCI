@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:registro_uci/common/components/tile.dart';
 import 'package:registro_uci/features/antibioticos/data/providers/tratamiento_antibiotico_provider.dart';
+import 'package:registro_uci/features/antibioticos/presentation/widgets/components/dias_tratamiento_tile.dart';
 import 'package:registro_uci/features/antibioticos/presentation/widgets/components/finalizar_tratamiento_antibiotico_tile.dart';
 
 class TratamientoAntibioticoPage extends ConsumerWidget {
@@ -142,10 +142,9 @@ class TratamientoAntibioticoPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: 20),
                 // Button for any action, e.g., editing the treatment
-                const Tile(
-                  title: 'Dosis administradas',
-                  subtitle: 'Días de tratamiento',
-                  iconData: Icons.water_drop_outlined,
+                DiasTratamientoAntibioticoTile(
+                  idIngreso: idIngreso,
+                  idTratamientoAntibiotico: idTratamientoAntibiotico,
                 ),
                 const SizedBox(height: 10),
                 FinalizarTratamientoAntibioticoTile(

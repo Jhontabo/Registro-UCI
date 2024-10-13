@@ -24,12 +24,6 @@ class _SelectRegistroDiarioFormState
   String? _selectedFechaRegistro;
 
   // Function to handle button press
-  void _confirmSelection() {
-    if (_selectedFechaRegistro != null) {
-      print("Registro Diario seleccionado: $_selectedFechaRegistro");
-      // Handle further actions
-    }
-  }
 
   bool _isEnabled() {
     if (_selectedFechaRegistro != null) {
@@ -40,8 +34,6 @@ class _SelectRegistroDiarioFormState
 
   @override
   Widget build(BuildContext context) {
-    print(widget.idRegistroToOmit);
-
     final screenHeight = MediaQuery.of(context).size.height;
     final registrosDiariosAsync = ref.watch(
       registrosDiariosDeIngresoProvider(widget.idIngreso),

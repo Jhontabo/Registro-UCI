@@ -8,9 +8,10 @@ import 'package:registro_uci/features/antibioticos/presentation/controllers/crea
 class CreateTratamientoAntibioticoFormButton extends ConsumerWidget {
   final String idIngreso;
   final GlobalKey<FormState> _formKey;
-  final TextEditingController _antibioticoController;
+  final String _antibiotico;
   final TextEditingController _cantidadController;
-  final TextEditingController _frecuenciaController;
+  final int _frecuencia;
+  final TextEditingController _dosisController;
   final DateTime? _fechaInicio;
   final TimeOfDay? _horaInicio;
 
@@ -18,17 +19,19 @@ class CreateTratamientoAntibioticoFormButton extends ConsumerWidget {
     super.key,
     required this.idIngreso,
     required GlobalKey<FormState> formKey,
-    required TextEditingController antibioticoController,
+    required String antibiotico,
     required TextEditingController cantidadController,
-    required TextEditingController frecuenciaController,
+    required int frecuencia,
     required DateTime? fechaInicio,
     required TimeOfDay? horaInicio,
+    required TextEditingController dosisController,
   })  : _formKey = formKey,
-        _antibioticoController = antibioticoController,
+        _antibiotico = antibiotico,
         _cantidadController = cantidadController,
-        _frecuenciaController = frecuenciaController,
+        _frecuencia = frecuencia,
         _fechaInicio = fechaInicio,
-        _horaInicio = horaInicio;
+        _horaInicio = horaInicio,
+        _dosisController = dosisController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,10 +65,11 @@ class CreateTratamientoAntibioticoFormButton extends ConsumerWidget {
           );
           // Create the DTO instance
           final dto = CreateTratamientoAntibioticoDto(
-            antibiotico: _antibioticoController.text,
+            antibiotico: _antibiotico,
             cantidad: int.parse(_cantidadController.text),
-            frecuenciaEn24h: int.parse(_frecuenciaController.text),
+            frecuenciaEn24h: _frecuencia,
             fechaInicio: inicio,
+            dosis: _dosisController.text,
           );
 
           ref

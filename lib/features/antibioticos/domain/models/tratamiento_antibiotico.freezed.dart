@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TratamientoAntibiotico {
   String get idTratamientoAntibiotico => throw _privateConstructorUsedError;
   String get antibiotico => throw _privateConstructorUsedError;
+  String get dosis => throw _privateConstructorUsedError;
   int get cantidad => throw _privateConstructorUsedError;
   int get frecuenciaEn24h => throw _privateConstructorUsedError;
   DateTime get fechaInicio => throw _privateConstructorUsedError;
@@ -37,6 +38,7 @@ abstract class $TratamientoAntibioticoCopyWith<$Res> {
   $Res call(
       {String idTratamientoAntibiotico,
       String antibiotico,
+      String dosis,
       int cantidad,
       int frecuenciaEn24h,
       DateTime fechaInicio,
@@ -59,6 +61,7 @@ class _$TratamientoAntibioticoCopyWithImpl<$Res,
   $Res call({
     Object? idTratamientoAntibiotico = null,
     Object? antibiotico = null,
+    Object? dosis = null,
     Object? cantidad = null,
     Object? frecuenciaEn24h = null,
     Object? fechaInicio = null,
@@ -72,6 +75,10 @@ class _$TratamientoAntibioticoCopyWithImpl<$Res,
       antibiotico: null == antibiotico
           ? _value.antibiotico
           : antibiotico // ignore: cast_nullable_to_non_nullable
+              as String,
+      dosis: null == dosis
+          ? _value.dosis
+          : dosis // ignore: cast_nullable_to_non_nullable
               as String,
       cantidad: null == cantidad
           ? _value.cantidad
@@ -105,6 +112,7 @@ abstract class _$$TratamientoAntibioticoImplCopyWith<$Res>
   $Res call(
       {String idTratamientoAntibiotico,
       String antibiotico,
+      String dosis,
       int cantidad,
       int frecuenciaEn24h,
       DateTime fechaInicio,
@@ -126,6 +134,7 @@ class __$$TratamientoAntibioticoImplCopyWithImpl<$Res>
   $Res call({
     Object? idTratamientoAntibiotico = null,
     Object? antibiotico = null,
+    Object? dosis = null,
     Object? cantidad = null,
     Object? frecuenciaEn24h = null,
     Object? fechaInicio = null,
@@ -139,6 +148,10 @@ class __$$TratamientoAntibioticoImplCopyWithImpl<$Res>
       antibiotico: null == antibiotico
           ? _value.antibiotico
           : antibiotico // ignore: cast_nullable_to_non_nullable
+              as String,
+      dosis: null == dosis
+          ? _value.dosis
+          : dosis // ignore: cast_nullable_to_non_nullable
               as String,
       cantidad: null == cantidad
           ? _value.cantidad
@@ -166,6 +179,7 @@ class _$TratamientoAntibioticoImpl implements _TratamientoAntibiotico {
   const _$TratamientoAntibioticoImpl(
       {required this.idTratamientoAntibiotico,
       required this.antibiotico,
+      required this.dosis,
       required this.cantidad,
       required this.frecuenciaEn24h,
       required this.fechaInicio,
@@ -175,6 +189,8 @@ class _$TratamientoAntibioticoImpl implements _TratamientoAntibiotico {
   final String idTratamientoAntibiotico;
   @override
   final String antibiotico;
+  @override
+  final String dosis;
   @override
   final int cantidad;
   @override
@@ -186,7 +202,7 @@ class _$TratamientoAntibioticoImpl implements _TratamientoAntibiotico {
 
   @override
   String toString() {
-    return 'TratamientoAntibiotico(idTratamientoAntibiotico: $idTratamientoAntibiotico, antibiotico: $antibiotico, cantidad: $cantidad, frecuenciaEn24h: $frecuenciaEn24h, fechaInicio: $fechaInicio, fechaFin: $fechaFin)';
+    return 'TratamientoAntibiotico(idTratamientoAntibiotico: $idTratamientoAntibiotico, antibiotico: $antibiotico, dosis: $dosis, cantidad: $cantidad, frecuenciaEn24h: $frecuenciaEn24h, fechaInicio: $fechaInicio, fechaFin: $fechaFin)';
   }
 
   @override
@@ -199,6 +215,7 @@ class _$TratamientoAntibioticoImpl implements _TratamientoAntibiotico {
                 other.idTratamientoAntibiotico == idTratamientoAntibiotico) &&
             (identical(other.antibiotico, antibiotico) ||
                 other.antibiotico == antibiotico) &&
+            (identical(other.dosis, dosis) || other.dosis == dosis) &&
             (identical(other.cantidad, cantidad) ||
                 other.cantidad == cantidad) &&
             (identical(other.frecuenciaEn24h, frecuenciaEn24h) ||
@@ -211,7 +228,7 @@ class _$TratamientoAntibioticoImpl implements _TratamientoAntibiotico {
 
   @override
   int get hashCode => Object.hash(runtimeType, idTratamientoAntibiotico,
-      antibiotico, cantidad, frecuenciaEn24h, fechaInicio, fechaFin);
+      antibiotico, dosis, cantidad, frecuenciaEn24h, fechaInicio, fechaFin);
 
   @JsonKey(ignore: true)
   @override
@@ -225,6 +242,7 @@ abstract class _TratamientoAntibiotico implements TratamientoAntibiotico {
   const factory _TratamientoAntibiotico(
       {required final String idTratamientoAntibiotico,
       required final String antibiotico,
+      required final String dosis,
       required final int cantidad,
       required final int frecuenciaEn24h,
       required final DateTime fechaInicio,
@@ -234,6 +252,8 @@ abstract class _TratamientoAntibiotico implements TratamientoAntibiotico {
   String get idTratamientoAntibiotico;
   @override
   String get antibiotico;
+  @override
+  String get dosis;
   @override
   int get cantidad;
   @override

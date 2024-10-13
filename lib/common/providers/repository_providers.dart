@@ -1,5 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:registro_uci/features/antibioticos/data/abstract_repositories/dias_tratamiento_repository.dart';
+import 'package:registro_uci/features/antibioticos/data/abstract_repositories/dosis_tratamiento_repository.dart';
 import 'package:registro_uci/features/antibioticos/data/abstract_repositories/tratamientos_antibioticos_repository.dart';
+import 'package:registro_uci/features/antibioticos/data/repositories/firebase_dias_tratamiento_repository.dart';
+import 'package:registro_uci/features/antibioticos/data/repositories/firebase_dosis_tratamiento_repository.dart';
 import 'package:registro_uci/features/antibioticos/data/repositories/firebase_tratamientos_antibioticos_repository.dart';
 import 'package:registro_uci/features/auth/data/abstract_repositories/auth_repository.dart';
 import 'package:registro_uci/features/auth/data/abstract_repositories/users_repository.dart';
@@ -63,4 +67,14 @@ final resultadosProvider = Provider<ResultadosRepository>((ref) {
 final tratamientosAntibioticosRepositoryProvider =
     Provider<TratamientosAntibioticosRepository>((ref) {
   return FirebaseTratamientosAntibioticosRepository();
+});
+
+final diasTratamientoRepositoryProvider =
+    Provider<DiasTratamientoRepository>((ref) {
+  return FirebaseDiasTratamientoRepository();
+});
+
+final dosisTratamientoRepositoryProvider =
+    Provider<DosisTratamientoRepository>((ref) {
+  return FirebaseDosisTratamientoRepository();
 });

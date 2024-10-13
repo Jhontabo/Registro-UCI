@@ -7,6 +7,7 @@ class TratamientoAntibiotico with _$TratamientoAntibiotico {
   const factory TratamientoAntibiotico({
     required String idTratamientoAntibiotico,
     required String antibiotico,
+    required String dosis,
     required int cantidad,
     required int frecuenciaEn24h,
     required DateTime fechaInicio,
@@ -18,6 +19,7 @@ class TratamientoAntibiotico with _$TratamientoAntibiotico {
     return TratamientoAntibiotico(
       idTratamientoAntibiotico: id,
       antibiotico: json['antibiotico'] as String,
+      dosis: json['dosis'] as String,
       cantidad: json['cantidad'] as int,
       frecuenciaEn24h: json['frecuenciaEn24h'] as int,
       fechaInicio: (json['fechaInicio'] as Timestamp).toDate(),
