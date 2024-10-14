@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:registro_uci/features/antibioticos/data/dto/update_dia_tratamiento_dto.dart';
+import 'package:registro_uci/features/antibioticos/data/providers/dia_tratamiento_provider.dart';
 import 'package:registro_uci/features/antibioticos/data/providers/dosis_tratamiento_provider.dart';
 import 'package:registro_uci/features/antibioticos/data/providers/tratamiento_antibiotico_provider.dart';
 import 'package:registro_uci/features/antibioticos/domain/models/dosis_tratamiento.dart';
-// For formatting dates
+import 'package:registro_uci/features/antibioticos/presentation/controllers/update_dia_tratamiento_controller.dart';
 
-// For formatting dates
-
-class DosisTratamientoPage extends ConsumerWidget {
+class DosisTratamientoPage extends ConsumerStatefulWidget {
   final DosisTratamientoParams dosisParams;
   final TratamientoAntibioticoParams tratamientoParams;
 
@@ -19,10 +19,23 @@ class DosisTratamientoPage extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DosisTratamientoPage> createState() =>
+      _DosisTratamientoPageState();
+}
+
+class _DosisTratamientoPageState extends ConsumerState<DosisTratamientoPage> {
+  @override
+  void initState() {
+    super.initState();
+    // You can add any initialization logic here if necessary
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final tratamientoAsyncValue =
-        ref.watch(tratamientoAntibioticoProvider(tratamientoParams));
-    final dosisAsyncValue = ref.watch(dosisTratamientoProvider(dosisParams));
+        ref.watch(tratamientoAntibioticoProvider(widget.tratamientoParams));
+    final dosisAsyncValue =
+        ref.watch(dosisTratamientoProvider(widget.dosisParams));
 
     return Scaffold(
       appBar: AppBar(
@@ -34,27 +47,53 @@ class DosisTratamientoPage extends ConsumerWidget {
           data: (tratamiento) {
             return dosisAsyncValue.when(
               data: (dosisList) {
-                // Calculate total dose and expected dose
-                final totalDosis = dosisList.fold<int>(
-                    0, (sum, dosis) => sum + dosis.cantidad);
-                final expectedDosis =
-                    tratamiento.cantidad * tratamiento.frecuenciaEn24h;
+                final diaTratamiento = ref.watch(
+                  diaTratamientoProvider(
+                    DiaTratamientoParams(
+                        idIngreso: widget.dosisParams.idIngreso,
+                        idTratamientoAntibiotico:
+                            widget.dosisParams.idTratamientoAntibiotico,
+                        idDiaTratamiento: widget.dosisParams.idDiaTratamiento),
+                  ),
+                );
 
-                // Check if the actual dose matches the expected dose
-                final isTreatmentDayComplete = totalDosis == expectedDosis;
+                return diaTratamiento.when(
+                  data: (dia) {
+                    final totalDosis = dosisList.fold<int>(
+                        0, (sum, dosis) => sum + dosis.cantidad);
+                    final expectedDosis =
+                        tratamiento.cantidad * tratamiento.frecuenciaEn24h;
+                    final isTreatmentDayComplete = totalDosis == expectedDosis;
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Doses list
-                    _buildDosesList(dosisList),
-                    const SizedBox(height: 16),
-                    // Progress bar for dosage
-                    _buildProgressBar(totalDosis, expectedDosis),
-                    const SizedBox(height: 32),
-                    // Treatment day status
-                    _buildTreatmentDayStatus(isTreatmentDayComplete),
-                  ],
+                    // Move the update logic to a method that is called after the widget is built
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (isTreatmentDayComplete &&
+                          dia!.valido != isTreatmentDayComplete) {
+                        _updateTratamiento(
+                          ref,
+                          widget.tratamientoParams.idIngreso,
+                          tratamiento.idTratamientoAntibiotico,
+                          widget.dosisParams.idDiaTratamiento,
+                          true,
+                        );
+                      }
+                    });
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildDosesList(dosisList),
+                        const SizedBox(height: 16),
+                        _buildProgressBar(totalDosis, expectedDosis),
+                        const SizedBox(height: 32),
+                        _buildTreatmentDayStatus(isTreatmentDayComplete),
+                      ],
+                    );
+                  },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, _) =>
+                      Text('Error cargando tratamiento: $error'),
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -65,6 +104,28 @@ class DosisTratamientoPage extends ConsumerWidget {
           error: (error, _) => Text('Error cargando tratamiento: $error'),
         ),
       ),
+    );
+  }
+
+  // Method to update the tratamiento if necessary
+  Future<void> _updateTratamiento(
+    WidgetRef ref,
+    String idIngreso,
+    String idTratamientoAntibiotico,
+    String idDiaTratamiento,
+    bool valido,
+  ) async {
+    final controller =
+        ref.read(updateDiaTratamientoControllerProvider.notifier);
+    final dto =
+        UpdateDiaTratamientoDto(valido: valido); // Create DTO for update
+
+    // Call the update method
+    await controller.updateDiaTratamiento(
+      idIngreso,
+      idTratamientoAntibiotico,
+      idDiaTratamiento,
+      dto,
     );
   }
 
@@ -124,7 +185,8 @@ class DosisTratamientoPage extends ConsumerWidget {
           value: progress,
           backgroundColor: Colors.grey[300],
           valueColor: AlwaysStoppedAnimation<Color>(
-              progress >= 1.0 ? Colors.greenAccent : Colors.amber),
+            progress >= 1.0 ? Colors.greenAccent : Colors.amber,
+          ),
           minHeight: 12,
         ),
         const SizedBox(height: 8),

@@ -1,4 +1,5 @@
 import 'package:registro_uci/features/antibioticos/data/dto/create_tratamiento_antibiotico_dto.dart';
+import 'package:registro_uci/features/antibioticos/data/dto/update_tratamiento_antibiotico_dto.dart';
 import 'package:registro_uci/features/antibioticos/domain/models/tratamiento_antibiotico.dart';
 
 abstract class TratamientosAntibioticosRepository {
@@ -19,5 +20,11 @@ abstract class TratamientosAntibioticosRepository {
   Future<void> finalizarTratamientoAntibiotico(
     String idIngreso,
     String idTratamientoAntibiotico,
+  );
+
+  Future<void> updateTratamientoAntibiotico(
+    String idIngreso,
+    String idTratamientoAntibiotico,
+    UpdateTratamientoAntibioticoDto dto,
   );
 }

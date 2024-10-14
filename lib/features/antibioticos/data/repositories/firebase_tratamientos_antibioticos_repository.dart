@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:registro_uci/features/antibioticos/data/abstract_repositories/tratamientos_antibioticos_repository.dart';
 import 'package:registro_uci/features/antibioticos/data/dto/create_tratamiento_antibiotico_dto.dart';
+import 'package:registro_uci/features/antibioticos/data/dto/update_tratamiento_antibiotico_dto.dart';
 import 'package:registro_uci/features/antibioticos/domain/models/tratamiento_antibiotico.dart';
 
 class FirebaseTratamientosAntibioticosRepository
@@ -141,6 +142,27 @@ class FirebaseTratamientosAntibioticosRepository
     } catch (e) {
       log('Error al obtener tratamiento antibiótico: $e');
       throw Exception('Error al obtener el tratamiento antibiótico');
+    }
+  }
+
+  @override
+  Future<void> updateTratamientoAntibiotico(
+    String idIngreso,
+    String idTratamientoAntibiotico,
+    UpdateTratamientoAntibioticoDto dto,
+  ) async {
+    try {
+      final tratamientoRef = _firestore
+          .collection('ingresos')
+          .doc(idIngreso)
+          .collection('tratamientosAntibioticos')
+          .doc(idTratamientoAntibiotico);
+
+      // Update the tratamientoAntibiotico document
+      await tratamientoRef.update(dto);
+    } catch (e) {
+      log('Error al actualizar tratamiento antibiótico: $e');
+      throw Exception('Error al actualizar el tratamiento antibiótico');
     }
   }
 }

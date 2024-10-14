@@ -24,6 +24,8 @@ class DiaTratamientoTile extends StatelessWidget {
         DateFormat('d/MMM h:mm a'); // e.g., 12/Oct 2:00 am
 
     return LiteTile(
+      iconData:
+          diaTratamiento.valido ? Icons.check_circle : Icons.circle_outlined,
       title:
           '${dateFormat.format(diaTratamiento.inicio)} - ${dateFormat.format(diaTratamiento.fin)}',
       onTap: () {
