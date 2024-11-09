@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_tile.dart';
+import 'package:registro_uci/pages/balances_de_liquidos_page.dart';
 
 class ControlDeLiquidosTile extends StatelessWidget {
   const ControlDeLiquidosTile({
@@ -20,7 +21,12 @@ class ControlDeLiquidosTile extends StatelessWidget {
       title: "Control de Líquidos",
       subtitle: "Balance hídrico y manejo de líquidos",
       onTap: () {
-        // Add navigation logic here
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) {
+            return BalancesDeLiquidosPage(
+                idIngreso: idIngreso, idRegistroDiario: idRegistro);
+          },
+        ));
       },
     );
   }

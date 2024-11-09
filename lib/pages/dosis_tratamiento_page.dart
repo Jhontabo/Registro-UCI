@@ -30,6 +30,17 @@ class _DosisTratamientoPageState extends ConsumerState<DosisTratamientoPage> {
     // You can add any initialization logic here if necessary
   }
 
+  Future<void> _refreshData() async {
+    // Refresh the two providers
+    ref.refresh(tratamientoAntibioticoProvider(widget.tratamientoParams));
+    ref.refresh(dosisTratamientoProvider(widget.dosisParams));
+    // Wait for the providers to load the new data
+    await Future.wait([
+      ref.read(tratamientoAntibioticoProvider(widget.tratamientoParams).future),
+      ref.read(dosisTratamientoProvider(widget.dosisParams).future),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final tratamientoAsyncValue =
@@ -41,67 +52,71 @@ class _DosisTratamientoPageState extends ConsumerState<DosisTratamientoPage> {
       appBar: AppBar(
         title: const Text('Tratamiento Antibiótico'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: tratamientoAsyncValue.when(
-          data: (tratamiento) {
-            return dosisAsyncValue.when(
-              data: (dosisList) {
-                final diaTratamiento = ref.watch(
-                  diaTratamientoProvider(
-                    DiaTratamientoParams(
-                        idIngreso: widget.dosisParams.idIngreso,
-                        idTratamientoAntibiotico:
-                            widget.dosisParams.idTratamientoAntibiotico,
-                        idDiaTratamiento: widget.dosisParams.idDiaTratamiento),
-                  ),
-                );
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: tratamientoAsyncValue.when(
+            data: (tratamiento) {
+              return dosisAsyncValue.when(
+                data: (dosisList) {
+                  final diaTratamiento = ref.watch(
+                    diaTratamientoProvider(
+                      DiaTratamientoParams(
+                          idIngreso: widget.dosisParams.idIngreso,
+                          idTratamientoAntibiotico:
+                              widget.dosisParams.idTratamientoAntibiotico,
+                          idDiaTratamiento:
+                              widget.dosisParams.idDiaTratamiento),
+                    ),
+                  );
 
-                return diaTratamiento.when(
-                  data: (dia) {
-                    final totalDosis = dosisList.fold<int>(
-                        0, (sum, dosis) => sum + dosis.cantidad);
-                    final expectedDosis =
-                        tratamiento.cantidad * tratamiento.frecuenciaEn24h;
-                    final isTreatmentDayComplete = totalDosis == expectedDosis;
+                  return diaTratamiento.when(
+                    data: (dia) {
+                      final totalDosis = dosisList.fold<int>(
+                          0, (sum, dosis) => sum + dosis.cantidad);
+                      final expectedDosis =
+                          tratamiento.cantidad * tratamiento.frecuenciaEn24h;
+                      final isTreatmentDayComplete =
+                          totalDosis == expectedDosis;
 
-                    // Move the update logic to a method that is called after the widget is built
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (isTreatmentDayComplete &&
-                          dia!.valido != isTreatmentDayComplete) {
-                        _updateTratamiento(
-                          ref,
-                          widget.tratamientoParams.idIngreso,
-                          tratamiento.idTratamientoAntibiotico,
-                          widget.dosisParams.idDiaTratamiento,
-                          true,
-                        );
-                      }
-                    });
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (isTreatmentDayComplete &&
+                            dia!.valido != isTreatmentDayComplete) {
+                          _updateTratamiento(
+                            ref,
+                            widget.tratamientoParams.idIngreso,
+                            tratamiento.idTratamientoAntibiotico,
+                            widget.dosisParams.idDiaTratamiento,
+                            true,
+                          );
+                        }
+                      });
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildDosesList(dosisList),
-                        const SizedBox(height: 16),
-                        _buildProgressBar(totalDosis, expectedDosis),
-                        const SizedBox(height: 32),
-                        _buildTreatmentDayStatus(isTreatmentDayComplete),
-                      ],
-                    );
-                  },
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (error, _) =>
-                      Text('Error cargando tratamiento: $error'),
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => Text('Error cargando dosis: $error'),
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Text('Error cargando tratamiento: $error'),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildDosesList(dosisList),
+                          const SizedBox(height: 16),
+                          _buildProgressBar(totalDosis, expectedDosis),
+                          const SizedBox(height: 32),
+                          _buildTreatmentDayStatus(isTreatmentDayComplete),
+                        ],
+                      );
+                    },
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, _) =>
+                        Text('Error cargando tratamiento: $error'),
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) => Text('Error cargando dosis: $error'),
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, _) => Text('Error cargando tratamiento: $error'),
+          ),
         ),
       ),
     );

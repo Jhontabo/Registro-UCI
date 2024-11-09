@@ -6,4 +6,5 @@ class FirebaseCollectionNames {
   static const String registrosDiarios = 'registrosDiarios';
   static const String monitoriasHemodinamicas = 'monitoriasHemodinamicas';
   static const String necesidades = 'necesidades';
+  static const String balancesDeLiquidos = 'balancesDeLiquidos';
 }

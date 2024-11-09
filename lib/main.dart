@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       home: Consumer(
         builder: (context, ref, child) {
           final isLoggedIn = ref.watch(isLoggedInProvider);
-          // return const CreateMonitoriaHemodinamicaPage();
+          // return const LiquidosAdministradosScreen();
           if (isLoggedIn) {
             return const IngresosPage();
           } else {

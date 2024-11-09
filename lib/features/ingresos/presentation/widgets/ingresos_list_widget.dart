@@ -60,18 +60,24 @@ class IngresosList extends ConsumerWidget {
     // Watch the ingresosBySalaProvider based on the selected Sala
     final ingresos = ref.watch(ingresosBySalaProvider(selectedSala));
 
-    return ingresos.when(
-      data: (data) {
-        return ListView(
-          padding: const EdgeInsets.all(15),
-          children: data.map((e) {
-            return IngresoWidget(ingreso: e);
-          }).toList(),
-        );
+    return RefreshIndicator(
+      onRefresh: () async {
+        // Invalidate the provider on refresh
+        ref.invalidate(ingresosBySalaProvider(selectedSala));
       },
-      error: (error, stackTrace) => Text(error.toString()),
-      loading: () =>
-          const SizedBox(width: 20, child: CircularProgressIndicator()),
+      child: ingresos.when(
+        data: (data) {
+          return ListView(
+            padding: const EdgeInsets.all(15),
+            children: data.map((e) {
+              return IngresoWidget(ingreso: e);
+            }).toList(),
+          );
+        },
+        error: (error, stackTrace) => Text(error.toString()),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        skipLoadingOnRefresh: false,
+      ),
     );
   }
 }

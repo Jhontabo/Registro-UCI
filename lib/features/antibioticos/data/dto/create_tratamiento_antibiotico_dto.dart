@@ -20,4 +20,25 @@ class CreateTratamientoAntibioticoDto extends MapView<String, dynamic> {
           'fechaInicio': fechaInicio,
           'dosis': dosis,
         });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is CreateTratamientoAntibioticoDto &&
+        other.antibiotico == antibiotico &&
+        other.cantidad == cantidad &&
+        other.frecuenciaEn24h == frecuenciaEn24h &&
+        other.fechaInicio == fechaInicio &&
+        other.dosis == dosis;
+  }
+
+  @override
+  int get hashCode {
+    return antibiotico.hashCode ^
+        cantidad.hashCode ^
+        frecuenciaEn24h.hashCode ^
+        fechaInicio.hashCode ^
+        dosis.hashCode;
+  }
 }

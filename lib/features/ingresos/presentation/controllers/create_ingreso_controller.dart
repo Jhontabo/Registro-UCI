@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/providers/repository_providers.dart';
 import 'package:registro_uci/features/ingresos/data/abstract_repositories/ingresos_repository.dart';
 import 'package:registro_uci/features/ingresos/data/dto/create_ingreso_dto.dart';
-import 'package:registro_uci/features/ingresos/data/providers/all_ingresos_provider.dart';
+import 'package:registro_uci/features/ingresos/data/providers/ingresos_by_sala_provider.dart';
 
 class CreateIngresoController extends AsyncNotifier<void> {
   late final IngresosRepository _repository =
@@ -15,9 +15,7 @@ class CreateIngresoController extends AsyncNotifier<void> {
   Future<void> createIngreso(CreateIngresoDto dto) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() => _repository.createIngreso(dto));
-    ref.invalidate(
-      allIngresosProvider,
-    );
+    ref.invalidate(ingresosBySalaProvider);
   }
 }
 

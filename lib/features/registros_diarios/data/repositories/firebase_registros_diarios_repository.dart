@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:registro_uci/common/constants/firebase_collection_names.dart';
+import 'package:registro_uci/features/balance_liquidos/data/dto/create_balace_de_liquidos_dto.dart';
 import 'package:registro_uci/features/firmas/data/dto/create_firma_dto.dart';
 import 'package:registro_uci/features/firmas/domain/models/firma.dart';
 import 'package:registro_uci/features/monitorias_hemodinamicas/data/dto/create_monitoria_hemodinamica_dto.dart';
@@ -95,6 +96,49 @@ class FirebaseRegistrosDiariosRepository
           final monitoriaDocRef = monitoriasRef.doc('${monitoria.hora}');
           transaction.set(monitoriaDocRef, monitoria);
         }
+
+        // Create 24 Balance de Líquidos with specific orden and hora mapping
+        final horas = [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ];
+        final balancesDeLiquidos = List.generate(
+          24,
+          (index) => CreateBalanceDeLiquidosDto(
+            orden: index + 1,
+            hora: horas[index],
+          ),
+        );
+
+        final balancesDeLiquidosRef =
+            docRef.collection(FirebaseCollectionNames.balancesDeLiquidos);
+
+        for (var balance in balancesDeLiquidos) {
+          final balanceDocRef = balancesDeLiquidosRef.doc('${balance.hora}');
+          transaction.set(balanceDocRef, balance);
+        }
       });
     } catch (e) {
       rethrow;
@@ -155,4 +199,54 @@ class FirebaseRegistrosDiariosRepository
       throw Exception('Error al obtener la firma');
     }
   }
+
+  // @override
+  // Future<int> getBalanceAcumuladoUntilHora(
+  //   String idIngreso,
+  //   String idRegistroDiario,
+  //   int hora, // limit
+  // ) async {
+  //   int totalBalanceAcumulado = 0;
+
+  //   // Reference to balancesDeLiquidos subcollection
+  //   CollectionReference balancesDeLiquidosRef = _firestore
+  //       .collection('ingresos')
+  //       .doc(idIngreso)
+  //       .collection('registrosDiarios')
+  //       .doc(idRegistroDiario)
+  //       .collection('balancesDeLiquidos');
+
+  //   // Get all balancesDeLiquidos sorted by 'orden'
+  //   QuerySnapshot balancesSnapshot =
+  //       await balancesDeLiquidosRef.orderBy('orden').get();
+
+  //   // Iterate through balancesDeLiquidos documents
+  //   for (var balanceDoc in balancesSnapshot.docs) {
+  //     Map<String, dynamic> balanceData =
+  //         balanceDoc.data() as Map<String, dynamic>;
+
+  //     // Check if the current balance has reached the specified 'hora'
+  //     if (balanceData['hora'] != null && balanceData['hora'] > hora) {
+  //       break;
+  //     }
+
+  //     // Reference to administrados subcollection for the current balance
+  //     CollectionReference administradosRef =
+  //         balanceDoc.reference.collection('administrados');
+
+  //     // Sum the 'cantidad' field for each administrado in the subcollection
+  //     QuerySnapshot administradosSnapshot = await administradosRef.get();
+  //     int balanceTotalForThisBalance =
+  //         administradosSnapshot.docs.fold(0, (suma, administradoDoc) {
+  //       Map<String, dynamic> administradoData =
+  //           administradoDoc.data() as Map<String, dynamic>;
+  //       return suma + int.parse(administradoData['cantidad'] ?? 0);
+  //     });
+
+  //     // Add to the total balance
+  //     totalBalanceAcumulado += balanceTotalForThisBalance;
+  //   }
+
+  //   return totalBalanceAcumulado;
+  // }
 }
