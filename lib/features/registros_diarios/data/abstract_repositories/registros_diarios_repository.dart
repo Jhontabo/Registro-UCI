@@ -29,9 +29,9 @@ abstract class IRegistrosDiariosRepository {
     String tipoFirma,
   );
 
-  // Future<int> getBalanceAcumuladoUntilHora(
-  //   String idIngreso,
-  //   String idRegistroDiario,
-  //   int hora,
-  // );
+  Future<int> getBalanceAcumuladoUntilHora(
+    String idIngreso,
+    String idRegistroDiario,
+    int hora,
+  );
 }

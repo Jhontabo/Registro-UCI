@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/bed_widget.dart';
 import 'package:registro_uci/features/balance_liquidos/presentation/widgets/balances_de_liquidos_list.dart';
+import 'package:registro_uci/features/calculo_administrados/ui.dart';
 
 class BalancesDeLiquidosPage extends StatelessWidget {
   final String idIngreso;
@@ -29,9 +30,14 @@ class BalancesDeLiquidosPage extends StatelessWidget {
           ],
         ),
       ),
-      body: BalancesDeLiquidosList(
-        idIngreso: idIngreso,
-        idRegistroDiario: idRegistroDiario,
+      body: ListView(
+        children: [
+          BalanceCard(idIngreso: idIngreso, idRegistroDiario: idRegistroDiario),
+          BalancesDeLiquidosList(
+            idIngreso: idIngreso,
+            idRegistroDiario: idRegistroDiario,
+          ),
+        ],
       ),
     );
   }

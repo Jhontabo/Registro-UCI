@@ -22,6 +22,8 @@ class BalancesDeLiquidosList extends ConsumerWidget {
       data: (data) {
         return ListView.separated(
           itemCount: data.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) => BalanceDeLiquidosTile(
             balance: data.elementAt(index),
             params: params,

@@ -32,8 +32,8 @@ class _DosisTratamientoPageState extends ConsumerState<DosisTratamientoPage> {
 
   Future<void> _refreshData() async {
     // Refresh the two providers
-    ref.refresh(tratamientoAntibioticoProvider(widget.tratamientoParams));
-    ref.refresh(dosisTratamientoProvider(widget.dosisParams));
+    ref.invalidate(tratamientoAntibioticoProvider(widget.tratamientoParams));
+    ref.invalidate(dosisTratamientoProvider(widget.dosisParams));
     // Wait for the providers to load the new data
     await Future.wait([
       ref.read(tratamientoAntibioticoProvider(widget.tratamientoParams).future),

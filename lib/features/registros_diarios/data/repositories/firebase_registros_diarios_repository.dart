@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -200,53 +202,75 @@ class FirebaseRegistrosDiariosRepository
     }
   }
 
-  // @override
-  // Future<int> getBalanceAcumuladoUntilHora(
-  //   String idIngreso,
-  //   String idRegistroDiario,
-  //   int hora, // limit
-  // ) async {
-  //   int totalBalanceAcumulado = 0;
+  @override
+  Future<int> getBalanceAcumuladoUntilHora(
+    String idIngreso,
+    String idRegistroDiario,
+    int hora, // limit
+  ) async {
+    int totalBalanceAcumulado = 0;
 
-  //   // Reference to balancesDeLiquidos subcollection
-  //   CollectionReference balancesDeLiquidosRef = _firestore
-  //       .collection('ingresos')
-  //       .doc(idIngreso)
-  //       .collection('registrosDiarios')
-  //       .doc(idRegistroDiario)
-  //       .collection('balancesDeLiquidos');
+    // Reference to balancesDeLiquidos subcollection
+    CollectionReference balancesDeLiquidosRef = _firestore
+        .collection('ingresos')
+        .doc(idIngreso)
+        .collection('registrosDiarios')
+        .doc(idRegistroDiario)
+        .collection('balancesDeLiquidos');
 
-  //   // Get all balancesDeLiquidos sorted by 'orden'
-  //   QuerySnapshot balancesSnapshot =
-  //       await balancesDeLiquidosRef.orderBy('orden').get();
+    // Get all balancesDeLiquidos sorted by 'orden'
+    QuerySnapshot balancesSnapshot =
+        await balancesDeLiquidosRef.orderBy('orden').get();
 
-  //   // Iterate through balancesDeLiquidos documents
-  //   for (var balanceDoc in balancesSnapshot.docs) {
-  //     Map<String, dynamic> balanceData =
-  //         balanceDoc.data() as Map<String, dynamic>;
+    // Iterate through balancesDeLiquidos documents
+    var shouldBreak = false;
+    for (var balanceDoc in balancesSnapshot.docs) {
+      Map<String, dynamic> balanceData =
+          balanceDoc.data() as Map<String, dynamic>;
 
-  //     // Check if the current balance has reached the specified 'hora'
-  //     if (balanceData['hora'] != null && balanceData['hora'] > hora) {
-  //       break;
-  //     }
+      // Check if the current balance has reached the specified 'hora'
+      if (balanceData['hora'] != null && balanceData['hora'] == hora) {
+        shouldBreak = true;
+      }
 
-  //     // Reference to administrados subcollection for the current balance
-  //     CollectionReference administradosRef =
-  //         balanceDoc.reference.collection('administrados');
+      log(balanceData['hora'].toString());
 
-  //     // Sum the 'cantidad' field for each administrado in the subcollection
-  //     QuerySnapshot administradosSnapshot = await administradosRef.get();
-  //     int balanceTotalForThisBalance =
-  //         administradosSnapshot.docs.fold(0, (suma, administradoDoc) {
-  //       Map<String, dynamic> administradoData =
-  //           administradoDoc.data() as Map<String, dynamic>;
-  //       return suma + int.parse(administradoData['cantidad'] ?? 0);
-  //     });
+      // Reference to administrados subcollection for the current balance
+      CollectionReference administradosRef =
+          balanceDoc.reference.collection('administrados');
 
-  //     // Add to the total balance
-  //     totalBalanceAcumulado += balanceTotalForThisBalance;
-  //   }
+      // Sum the 'cantidad' field for each administrado in the subcollection
+      QuerySnapshot administradosSnapshot = await administradosRef.get();
+      int balanceTotalForThisBalance =
+          administradosSnapshot.docs.fold(0, (suma, administradoDoc) {
+        Map<String, dynamic> administradoData =
+            administradoDoc.data() as Map<String, dynamic>;
+        final result = suma + (administradoData['cantidad'] ?? 0) as int;
+        print(result.toString());
+        return result;
+      });
 
-  //   return totalBalanceAcumulado;
-  // }
+      // Add to the total balance
+      totalBalanceAcumulado += balanceTotalForThisBalance;
+
+      if (shouldBreak) {
+        break;
+      }
+    }
+
+    // Update the registroDiario document with the calculated total
+    DocumentReference registroDiarioRef = _firestore
+        .collection('ingresos')
+        .doc(idIngreso)
+        .collection('registrosDiarios')
+        .doc(idRegistroDiario);
+
+    await registroDiarioRef.update({
+      'totalAdministrados': totalBalanceAcumulado,
+      'fechaCalculoTotalAdministrados': FieldValue.serverTimestamp(),
+      'totalAdministradoCalculatedUntil': hora,
+    });
+
+    return totalBalanceAcumulado;
+  }
 }
