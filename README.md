@@ -6,7 +6,7 @@ Esta aplicación de Flutter ha sido desarrollada para la unidad de cuidados inte
 
 - Flutter SDK: [Version 3.22.2](https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_3.22.2-stable.zip)
 - Una cuenta de Firebase [Link de registro](https://console.firebase.google.com/u/0/)
-- Node.js v18 o superior
+- Node.js v18 o superior [Guía de Instalación](https://firebase.google.com/docs/cli#install-cli-windows)
 
 ## Clonar el Repositorio
 
