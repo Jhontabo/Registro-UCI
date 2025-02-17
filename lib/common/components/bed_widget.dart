@@ -36,7 +36,6 @@ class BedProviderWidget extends ConsumerWidget {
                   }
                 : null,
             child: Ink(
-              width: 80, // quitar de la columna
               decoration: BoxDecoration(
                 color: isActive
                     ? Theme.of(context).colorScheme.secondary
@@ -45,13 +44,14 @@ class BedProviderWidget extends ConsumerWidget {
               ),
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize:
+                    MainAxisSize.min, // 📌 Ajusta el tamaño al contenido
                 children: [
-                  const Icon(
-                    Icons.bed,
-                    color: Colors.white,
-                    size: 25,
-                  ),
+                  const Icon(Icons.bed,
+                      color: Colors.white,
+                      size: 20), // 📌 Reduce el tamaño del icono
+                  const SizedBox(
+                      width: 5), // 📌 Agrega espacio entre icono y número
                   Text(
                     isActive ? data.cama : '---',
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
@@ -90,7 +90,6 @@ class BedInfoWidget extends ConsumerWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(6),
         child: Ink(
-          width: 80, // quitar de la columna
           decoration: BoxDecoration(
             color: isActive
                 ? Theme.of(context).colorScheme.secondary
@@ -99,13 +98,14 @@ class BedInfoWidget extends ConsumerWidget {
           ),
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize:
+                MainAxisSize.min, // 📌 Evita que se expanda más de lo necesario
             children: [
-              const Icon(
-                Icons.bed,
-                color: Colors.white,
-                size: 25,
-              ),
+              const Icon(Icons.bed,
+                  color: Colors.white,
+                  size: 20), // 📌 Reduce el tamaño del icono
+              const SizedBox(
+                  width: 5), // 📌 Agrega espacio entre icono y número
               Text(
                 isActive ? bed : '---',
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(

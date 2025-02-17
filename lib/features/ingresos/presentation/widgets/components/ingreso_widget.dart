@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:registro_uci/common/components/bed_widget.dart';
+//import 'package:registro_uci/common/components/bed_widget.dart';
 import 'package:registro_uci/common/components/tappable_container.dart';
 import 'package:registro_uci/features/ingresos/domain/models/ingreso.dart';
 import 'package:registro_uci/pages/ingreso_page.dart';
@@ -26,108 +26,108 @@ class IngresoWidget extends StatelessWidget {
             },
           ));
         },
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment
+              .start, // 📌 Alinea todo el contenido a la izquierda
           children: [
-            SizedBox(
-              // color: Colors.amber,
-              width: (MediaQuery.of(context).size.width - 60) - 120,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            /// **Sección de información del paciente**
+            Text(
+              ingreso.nombrePaciente.toUpperCase(),
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 5),
+            RichText(
+              text: TextSpan(
                 children: [
-                  Text(
-                    ingreso.nombrePaciente.toUpperCase(),
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                  const TextSpan(
+                    text: 'Edad: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.black),
                   ),
-                  const SizedBox(height: 10),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: 'Edad: ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextSpan(
-                          text: ingreso.fechaNacimientoPaciente != null
-                              ? _calculateAge(ingreso.fechaNacimientoPaciente!)
-                              : 'Desconocido',
-                          style: TextStyle(
-                            color: Colors.grey.shade700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: 'Diagnóstico: ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextSpan(
-                          text: ingreso.diagnosticoActual,
-                          style: TextStyle(
-                            color: Colors.grey.shade700,
-                          ),
-                        ),
-                      ],
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  TextSpan(
+                    text: ingreso.fechaNacimientoPaciente != null
+                        ? _calculateAge(ingreso.fechaNacimientoPaciente!)
+                        : 'Desconocido',
+                    style: TextStyle(color: Colors.grey.shade700),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              width: 80,
-              child: Column(
+            const SizedBox(height: 5),
+            RichText(
+              text: TextSpan(
                 children: [
-                  BedInfoWidget(
-                    isActive: isActive,
-                    bed: ingreso.cama,
+                  const TextSpan(
+                    text: 'Diagnóstico: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.black),
                   ),
-                  const SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: isActive
-                          ? Colors.blue.shade400
-                          : Colors.grey.shade400,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Icon(
-                          Icons.calendar_month,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                        Text(
-                          "0${_calculateDaysPassed(ingreso.fechaIngreso, ingreso.fechaFin)}",
-                          style:
-                              Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
-                        )
-                      ],
-                    ),
-                  )
+                  TextSpan(
+                    text: ingreso.diagnosticoActual,
+                    style: TextStyle(color: Colors.grey.shade700),
+                  ),
                 ],
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(
+                height: 10), // 📌 Espacio entre la información y los iconos
+
+            /// **Sección de iconos alineados a la izquierda**
+            Row(
+              mainAxisAlignment: MainAxisAlignment
+                  .start, // 📌 Alinea los iconos a la izquierda
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min, // 📌 Ajusta al contenido
+                    children: [
+                      const Icon(Icons.bed, color: Colors.white, size: 20),
+                      const SizedBox(width: 5),
+                      Text(
+                        ingreso.cama, // ✅ Eliminamos "UCI"
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10), // 📌 Espacio entre los botones
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color:
+                        isActive ? Colors.blue.shade400 : Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min, // 📌 Ajusta al contenido
+                    children: [
+                      const Icon(Icons.calendar_today,
+                          color: Colors.white, size: 20),
+                      const SizedBox(width: 5),
+                      Text(
+                        "0${_calculateDaysPassed(ingreso.fechaIngreso, ingreso.fechaFin)}",
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),

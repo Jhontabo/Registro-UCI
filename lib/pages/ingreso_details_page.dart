@@ -39,13 +39,22 @@ class IngresoDetailsPage extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        data!.nombrePaciente.toUpperCase(),
-                        style:
-                            Theme.of(context).textTheme.displayMedium!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 22,
-                                ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width *
+                            0.7, // 📌 Limita el ancho máximo del texto
+                        child: Text(
+                          data!.nombrePaciente.toUpperCase(),
+                          style:
+                              Theme.of(context).textTheme.titleMedium!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize:
+                                        18, // 📌 Reduce el tamaño de la fuente
+                                  ),
+                          maxLines:
+                              2, // 📌 Permite hasta 2 líneas antes de cortar
+                          overflow: TextOverflow
+                              .ellipsis, // 📌 Si es demasiado largo, muestra "..."
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
