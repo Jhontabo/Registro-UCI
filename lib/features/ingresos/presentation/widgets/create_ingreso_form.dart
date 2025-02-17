@@ -125,6 +125,7 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
                   Icons.folder_outlined,
                   size: 25,
                 ),
+                textInputType: TextInputType.number,
                 validator: carpetaValidator,
               ),
               const SizedBox(height: 15),

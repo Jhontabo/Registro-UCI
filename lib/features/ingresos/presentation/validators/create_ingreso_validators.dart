@@ -18,6 +18,8 @@ String? Function(String?) identificacionPacienteValidator = (String? value) {
 String? Function(String?) carpetaValidator = (String? value) {
   if (value == null || value.isEmpty) {
     return 'Este campo es obligatorio';
+  } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+    return 'Solo se permiten números';
   }
   return null;
 };
