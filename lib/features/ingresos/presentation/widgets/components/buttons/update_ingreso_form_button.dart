@@ -90,12 +90,12 @@ class UpdateIngresoFormButton extends ConsumerWidget {
             identificacionPaciente: _identificacionPacienteController.text,
             carpeta: _carpetaController.text,
             nombreFamiliar: _nombreFamiliarController.text,
-            parentescoFamiliar: selectedParentescoFamiliar == 'Otro'
-                ? _otherParentescoFamiliarController.text
-                : selectedParentescoFamiliar!,
             epsOArl: selectedEpsArl == 'Otro'
                 ? _otherEpsArlController.text
                 : selectedEpsArl!,
+            parentescoFamiliar: selectedParentescoFamiliar == 'Otro'
+                ? _otherParentescoFamiliarController.text
+                : selectedParentescoFamiliar!,
             telefonoFamiliar: _telefonoFamiliarController.text,
             diagnosticoIngreso: _diagnosticoIngresoController.text,
             diagnosticoActual: _diagnosticoIngresoController.text,

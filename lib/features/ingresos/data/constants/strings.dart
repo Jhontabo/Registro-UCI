@@ -19,5 +19,4 @@ class Strings {
   static const String alergias = 'alergias';
   static const String fechaFin = 'fechaFin';
   static const String sala = 'sala';
-  static const String selectedEpsArl = "selectedEpsArl";
 }

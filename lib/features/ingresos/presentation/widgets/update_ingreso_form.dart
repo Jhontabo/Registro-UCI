@@ -199,10 +199,10 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
                   });
                 },
                 label: "Seleccionar EPS o ARL",
+                value: selectedEpsArl,
                 values: epsArlList, // Lista de EPS
                 prefixIcon: const Icon(Icons.local_hospital),
-                validator: (value) =>
-                    value == null ? 'Seleccione una EPS o ARL' : null,
+                validator: epsOArlValidator,
               ),
 
 // Campo visible si se selecciona "Otro" en EPS
