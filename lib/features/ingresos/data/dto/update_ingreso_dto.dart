@@ -17,7 +17,6 @@ class UpdateIngresoDto extends MapView<String, dynamic> {
   final int talla;
   final String cama;
   final String? alergias;
-  final String selectedEpsArl; // ✅ Agregar este campo
 
   UpdateIngresoDto({
     required this.nombrePaciente,
@@ -35,7 +34,6 @@ class UpdateIngresoDto extends MapView<String, dynamic> {
     required this.cama,
     required this.alergias,
     required this.sala,
-    required this.selectedEpsArl, // ✅ Asegurar que esté aquí
   }) : super({
           Strings.nombrePaciente: nombrePaciente,
           Strings.fechaNacimientoPaciente: fechaNacimientoPaciente,
@@ -52,6 +50,5 @@ class UpdateIngresoDto extends MapView<String, dynamic> {
           Strings.cama: cama,
           Strings.alergias: alergias,
           Strings.sala: sala,
-          Strings.selectedEpsArl: selectedEpsArl, // ✅ Agregar al mapa
         });
 }

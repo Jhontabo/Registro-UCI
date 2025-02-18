@@ -25,6 +25,13 @@ String? Function(String?) carpetaValidator = (String? value) {
   return null;
 };
 
+String? Function(String?) epsOArlValidator = (String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Este campo es obligatorio';
+  }
+  return null;
+};
+
 String? Function(String?) fechaNacimientoValidator = (String? value) {
   if (value == null || value.isEmpty) {
     return 'Este campo es obligatorio';
@@ -35,18 +42,6 @@ String? Function(String?) fechaNacimientoValidator = (String? value) {
   }
   return null;
 };
-
-// Validación de EPS o ARL, considerando la opción "Otro"
-String? epsOArlValidator(
-    String? value, bool isOtherSelected, String? otherValue) {
-  if (value == null || value.isEmpty) {
-    return 'Este campo es obligatorio';
-  }
-  if (isOtherSelected && (otherValue == null || otherValue.isEmpty)) {
-    return 'Debes especificar la EPS o ARL';
-  }
-  return null;
-}
 
 String? Function(String?) pesoValidator = (String? value) {
   if (value == null || value.isEmpty) {

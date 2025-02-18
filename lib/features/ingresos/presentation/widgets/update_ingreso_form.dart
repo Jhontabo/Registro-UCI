@@ -33,6 +33,7 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
   late TextEditingController _tallaController;
   late TextEditingController _camaController;
   late TextEditingController _alergiasController;
+  late TextEditingController _otherEpsArlController;
 
   String? selectedParentescoFamiliar;
   String? selectedSala;
@@ -69,6 +70,15 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
       selectedParentescoFamiliar = 'Otro';
       _otherParentescoFamiliarController.text =
           widget.ingreso.parentescoFamiliar;
+    }
+
+    _otherEpsArlController = TextEditingController();
+
+    if (epsArlList.contains(widget.ingreso.epsOArl)) {
+      selectedEpsArl = widget.ingreso.epsOArl;
+    } else {
+      selectedEpsArl = 'Otro';
+      _otherEpsArlController.text = widget.ingreso.epsOArl;
     }
 
     _nombrePacienteController = TextEditingController();
@@ -125,6 +135,7 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
     _tallaController.dispose();
     _camaController.dispose();
     _alergiasController.dispose();
+    _otherEpsArlController.dispose();
     super.dispose();
   }
 
@@ -368,13 +379,14 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
             nombrePacienteController: _nombrePacienteController,
             fechaNacimientoPacienteController:
                 _fechaNacimientoPacienteController,
-            epsOArlController: _epsOArlController,
             identificacionPacienteController: _identificacionPacienteController,
             carpetaController: _carpetaController,
             nombreFamiliarController: _nombreFamiliarController,
             selectedParentescoFamiliar: selectedParentescoFamiliar,
             otherParentescoFamiliarController:
                 _otherParentescoFamiliarController,
+            selectedEpsArl: selectedEpsArl,
+            otherEpsArlController: _otherEpsArlController,
             telefonoFamiliarController: _telefonoFamiliarController,
             diagnosticoIngresoController: _diagnosticoIngresoController,
             pesoController: _pesoController,
@@ -382,7 +394,6 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
             camaController: _camaController,
             alergiasController: _alergiasController,
             sala: selectedSala!,
-            selectedEpsArl: selectedEpsArl,
           ),
         ],
       ),

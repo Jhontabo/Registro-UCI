@@ -12,12 +12,12 @@ class CreateIngresoFormButton extends ConsumerWidget {
     required GlobalKey<FormState> formKey,
     required TextEditingController nombrePacienteController,
     required TextEditingController fechaNacimientoPacienteController,
-    required TextEditingController epsOArlController,
     required TextEditingController identificacionPacienteController,
     required TextEditingController carpetaController,
     required TextEditingController nombreFamiliarController,
     required this.selectedParentescoFamiliar,
     required TextEditingController otherParentescoFamiliarController,
+    required this.selectedEpsArl,
     required TextEditingController otherEpsArlController, // Cambiado aquí
     required TextEditingController telefonoFamiliarController,
     required TextEditingController diagnosticoIngresoController,
@@ -25,12 +25,10 @@ class CreateIngresoFormButton extends ConsumerWidget {
     required TextEditingController tallaController,
     required TextEditingController camaController,
     required TextEditingController alergiasController,
-    required this.selectedEpsArl,
     required this.sala,
   })  : _formKey = formKey,
         _nombrePacienteController = nombrePacienteController,
         _fechaNacimientoPacienteController = fechaNacimientoPacienteController,
-        _epsOArlController = epsOArlController,
         _identificacionPacienteController = identificacionPacienteController,
         _carpetaController = carpetaController,
         _nombreFamiliarController = nombreFamiliarController,
@@ -46,7 +44,6 @@ class CreateIngresoFormButton extends ConsumerWidget {
   final GlobalKey<FormState> _formKey;
   final TextEditingController _nombrePacienteController;
   final TextEditingController _fechaNacimientoPacienteController;
-  final TextEditingController _epsOArlController;
   final TextEditingController _identificacionPacienteController;
   final TextEditingController _carpetaController;
   final TextEditingController _nombreFamiliarController;
@@ -97,13 +94,13 @@ class CreateIngresoFormButton extends ConsumerWidget {
             epsOArl: selectedEpsArl == 'Otro'
                 ? _otherEpsArlController.text
                 : selectedEpsArl!,
+            parentescoFamiliar: selectedParentescoFamiliar == 'Otro'
+                ? _otherParentescoFamiliarController.text
+                : selectedParentescoFamiliar!,
             identificacionPaciente: _identificacionPacienteController.text,
             carpeta: _carpetaController.text,
             fechaIngreso: DateTime(year, month, day),
             nombreFamiliar: _nombreFamiliarController.text,
-            parentescoFamiliar: selectedParentescoFamiliar == 'Otro'
-                ? _otherParentescoFamiliarController.text
-                : selectedParentescoFamiliar!,
             telefonoFamiliar: _telefonoFamiliarController.text,
             diagnosticoIngreso: _diagnosticoIngresoController.text,
             diagnosticoActual: _diagnosticoIngresoController.text,
@@ -112,7 +109,6 @@ class CreateIngresoFormButton extends ConsumerWidget {
             cama: _camaController.text,
             alergias: _alergiasController.text,
             sala: sala!,
-            selectedEpsArl: selectedEpsArl!,
           );
 
           ref.read(createIngresoControllerProvider.notifier).createIngreso(dto);

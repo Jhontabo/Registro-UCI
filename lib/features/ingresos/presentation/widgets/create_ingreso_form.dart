@@ -93,9 +93,6 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
     super.dispose();
   }
 
-  final TextEditingController _customEpsController =
-      TextEditingController(); // Controlador para la EPS personalizada
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -164,7 +161,7 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
                 label: "Seleccionar EPS o ARL",
                 values: epsArlList, // Lista de EPS
                 prefixIcon: const Icon(Icons.local_hospital),
-                validator: otherEpsArlValidator,
+                validator: epsOArlValidator,
               ),
 
 // Campo visible si se selecciona "Otro" en EPS
@@ -334,13 +331,13 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
             nombrePacienteController: _nombrePacienteController,
             fechaNacimientoPacienteController:
                 _fechaNacimientoPacienteController,
-            epsOArlController: _epsOArlController,
             identificacionPacienteController: _identificacionPacienteController,
             carpetaController: _carpetaController,
             nombreFamiliarController: _nombreFamiliarController,
             selectedParentescoFamiliar: selectedParentescoFamiliar,
             otherParentescoFamiliarController:
                 _otherParentescoFamiliarController,
+            selectedEpsArl: selectedEpsArl,
             otherEpsArlController: _otherEpsArlController,
             telefonoFamiliarController: _telefonoFamiliarController,
             diagnosticoIngresoController: _diagnosticoIngresoController,
@@ -349,7 +346,6 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
             camaController: _camaController,
             alergiasController: _alergiasController,
             sala: selectedSala,
-            selectedEpsArl: selectedEpsArl,
           ),
         ],
       ),

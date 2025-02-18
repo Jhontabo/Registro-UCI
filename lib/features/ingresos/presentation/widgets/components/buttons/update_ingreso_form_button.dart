@@ -12,12 +12,13 @@ class UpdateIngresoFormButton extends ConsumerWidget {
     required GlobalKey<FormState> formKey,
     required TextEditingController nombrePacienteController,
     required TextEditingController fechaNacimientoPacienteController,
-    required TextEditingController epsOArlController,
     required TextEditingController identificacionPacienteController,
     required TextEditingController carpetaController,
     required TextEditingController nombreFamiliarController,
     required this.selectedParentescoFamiliar,
     required TextEditingController otherParentescoFamiliarController,
+    required this.selectedEpsArl,
+    required TextEditingController otherEpsArlController,
     required TextEditingController telefonoFamiliarController,
     required TextEditingController diagnosticoIngresoController,
     required TextEditingController pesoController,
@@ -26,15 +27,14 @@ class UpdateIngresoFormButton extends ConsumerWidget {
     required TextEditingController alergiasController,
     required this.idIngreso, // Pass the idIngreso for updating
     required this.sala,
-    required this.selectedEpsArl,
   })  : _formKey = formKey,
         _nombrePacienteController = nombrePacienteController,
         _fechaNacimientoPacienteController = fechaNacimientoPacienteController,
-        _epsOArlController = epsOArlController,
         _identificacionPacienteController = identificacionPacienteController,
         _carpetaController = carpetaController,
         _nombreFamiliarController = nombreFamiliarController,
         _otherParentescoFamiliarController = otherParentescoFamiliarController,
+        _otherEpsArlController = otherEpsArlController,
         _telefonoFamiliarController = telefonoFamiliarController,
         _diagnosticoIngresoController = diagnosticoIngresoController,
         _pesoController = pesoController,
@@ -45,12 +45,12 @@ class UpdateIngresoFormButton extends ConsumerWidget {
   final GlobalKey<FormState> _formKey;
   final TextEditingController _nombrePacienteController;
   final TextEditingController _fechaNacimientoPacienteController;
-  final TextEditingController _epsOArlController;
   final TextEditingController _identificacionPacienteController;
   final TextEditingController _carpetaController;
   final TextEditingController _nombreFamiliarController;
   final String? selectedParentescoFamiliar;
   final String? selectedEpsArl;
+  final TextEditingController _otherEpsArlController;
   final TextEditingController _otherParentescoFamiliarController;
   final TextEditingController _telefonoFamiliarController;
   final TextEditingController _diagnosticoIngresoController;
@@ -87,13 +87,15 @@ class UpdateIngresoFormButton extends ConsumerWidget {
             nombrePaciente: _nombrePacienteController.text,
             fechaNacimientoPaciente:
                 _fechaNacimientoPacienteController.text.toDateTime(),
-            epsOArl: _epsOArlController.text,
             identificacionPaciente: _identificacionPacienteController.text,
             carpeta: _carpetaController.text,
             nombreFamiliar: _nombreFamiliarController.text,
             parentescoFamiliar: selectedParentescoFamiliar == 'Otro'
                 ? _otherParentescoFamiliarController.text
                 : selectedParentescoFamiliar!,
+            epsOArl: selectedEpsArl == 'Otro'
+                ? _otherEpsArlController.text
+                : selectedEpsArl!,
             telefonoFamiliar: _telefonoFamiliarController.text,
             diagnosticoIngreso: _diagnosticoIngresoController.text,
             diagnosticoActual: _diagnosticoIngresoController.text,
@@ -102,7 +104,6 @@ class UpdateIngresoFormButton extends ConsumerWidget {
             cama: _camaController.text,
             alergias: _alergiasController.text,
             sala: sala,
-            selectedEpsArl: selectedEpsArl!,
           );
 
           // Use the update controller to update the ingreso
