@@ -22,7 +22,6 @@ class UpdateIngresoForm extends StatefulWidget {
 class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
   late TextEditingController _nombrePacienteController;
   late TextEditingController _fechaNacimientoPacienteController;
-  late TextEditingController _epsOArlController;
   late TextEditingController _identificacionPacienteController;
   late TextEditingController _carpetaController;
   late TextEditingController _nombreFamiliarController;
@@ -37,6 +36,7 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
 
   String? selectedParentescoFamiliar;
   String? selectedSala;
+  String? selectedEpsArl;
 
   final List<String> listaParentescos = [
     'Padre/Madre',
@@ -46,8 +46,6 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
     'Otro',
   ];
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   final List<String> epsArlList = [
     'Nueva EPS', 'SURA', 'Sanitas', 'Compensar', 'Famisanar',
     'Coomeva', 'Salud Total', 'Aliansalud', 'Colpatria', 'Medimás',
@@ -55,7 +53,8 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
     'Otro', // Agregar opción "Otro"
   ];
 
-  String? selectedEpsArl;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -87,9 +86,6 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
     _fechaNacimientoPacienteController = TextEditingController();
     _fechaNacimientoPacienteController.text =
         widget.ingreso.fechaNacimientoPaciente.toString().split(" ")[0];
-
-    _epsOArlController = TextEditingController();
-    _epsOArlController.text = widget.ingreso.epsOArl;
 
     _identificacionPacienteController = TextEditingController();
     _identificacionPacienteController.text =
@@ -124,7 +120,7 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
   void dispose() {
     _nombrePacienteController.dispose();
     _fechaNacimientoPacienteController.dispose();
-    _epsOArlController.dispose();
+
     _identificacionPacienteController.dispose();
     _carpetaController.dispose();
     _nombreFamiliarController.dispose();
@@ -216,7 +212,7 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
                   children: [
                     const SizedBox(height: 15),
                     OutlinedTextFormField(
-                      controller: _epsOArlController,
+                      controller: _otherEpsArlController,
                       hint: "Ingrese la EPS o ARL",
                       validator: otherEpsArlValidator,
                     ),

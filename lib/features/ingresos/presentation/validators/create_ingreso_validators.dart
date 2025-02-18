@@ -25,13 +25,6 @@ String? Function(String?) carpetaValidator = (String? value) {
   return null;
 };
 
-String? Function(String?) epsOArlValidator = (String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Este campo es obligatorio';
-  }
-  return null;
-};
-
 String? Function(String?) fechaNacimientoValidator = (String? value) {
   if (value == null || value.isEmpty) {
     return 'Este campo es obligatorio';
@@ -82,14 +75,14 @@ String? Function(String?) nombreFamiliarValidator = (String? value) {
   return null;
 };
 
-String? Function(String?) parentescoFamiliarValidator = (String? value) {
+String? Function(String?) salaValidator = (String? value) {
   if (value == null || value.isEmpty) {
     return 'Este campo es obligatorio';
   }
   return null;
 };
 
-String? Function(String?) salaValidator = (String? value) {
+String? Function(String?) parentescoFamiliarValidator = (String? value) {
   if (value == null || value.isEmpty) {
     return 'Este campo es obligatorio';
   }
@@ -100,6 +93,13 @@ String? Function(String?) salaValidator = (String? value) {
 String? Function(String?) otherParentescoFamiliarValidator = (String? value) {
   if (value == null || value.isEmpty) {
     return 'Debes especificar el parentesco';
+  }
+  return null;
+};
+
+String? Function(String?) epsOArlValidator = (String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Este campo es obligatorio';
   }
   return null;
 };
