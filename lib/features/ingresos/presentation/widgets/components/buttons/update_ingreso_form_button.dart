@@ -26,6 +26,7 @@ class UpdateIngresoFormButton extends ConsumerWidget {
     required TextEditingController alergiasController,
     required this.idIngreso, // Pass the idIngreso for updating
     required this.sala,
+    required this.selectedEpsArl,
   })  : _formKey = formKey,
         _nombrePacienteController = nombrePacienteController,
         _fechaNacimientoPacienteController = fechaNacimientoPacienteController,
@@ -49,6 +50,7 @@ class UpdateIngresoFormButton extends ConsumerWidget {
   final TextEditingController _carpetaController;
   final TextEditingController _nombreFamiliarController;
   final String? selectedParentescoFamiliar;
+  final String? selectedEpsArl;
   final TextEditingController _otherParentescoFamiliarController;
   final TextEditingController _telefonoFamiliarController;
   final TextEditingController _diagnosticoIngresoController;
@@ -100,6 +102,7 @@ class UpdateIngresoFormButton extends ConsumerWidget {
             cama: _camaController.text,
             alergias: _alergiasController.text,
             sala: sala,
+            selectedEpsArl: selectedEpsArl!,
           );
 
           // Use the update controller to update the ingreso

@@ -47,6 +47,14 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  final List<String> epsArlList = [
+    'Nueva EPS', 'SURA', 'Sanitas', 'Compensar', 'Famisanar',
+    'Coomeva', 'Salud Total', 'Aliansalud', 'Colpatria', 'Medimás',
+    'AXA Colpatria', 'Positiva', 'Bolívar', 'La Equidad', 'Seguros del Estado',
+    'Otro', // Agregar opción "Otro"
+  ];
+
+  String? selectedEpsArl;
   @override
   void initState() {
     super.initState();
@@ -165,7 +173,6 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
                   Icons.folder_outlined,
                   size: 25,
                 ),
-                textInputType: TextInputType.number,
                 validator: carpetaValidator,
               ),
               const SizedBox(height: 15),
@@ -178,15 +185,34 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
                 validator: fechaNacimientoValidator,
               ),
               const SizedBox(height: 15),
-              OutlinedTextFormField(
-                controller: _epsOArlController,
-                label: "EPS o ARL",
-                prefixIcon: const Icon(
-                  Icons.local_hospital_outlined,
-                  size: 25,
-                ),
-                // validator: epsOArlValidator,
+              EnumDropdownButtonFormField(
+                onSelected: (eps) {
+                  setState(() {
+                    selectedEpsArl = eps;
+                  });
+                },
+                label: "Seleccionar EPS o ARL",
+                values: epsArlList, // Lista de EPS
+                prefixIcon: const Icon(Icons.local_hospital),
+                validator: (value) =>
+                    value == null ? 'Seleccione una EPS o ARL' : null,
               ),
+
+// Campo visible si se selecciona "Otro" en EPS
+              Visibility(
+                visible: selectedEpsArl == 'Otro',
+                child: Column(
+                  children: [
+                    const SizedBox(height: 15),
+                    OutlinedTextFormField(
+                      controller: _epsOArlController,
+                      hint: "Ingrese la EPS o ARL",
+                      validator: otherEpsArlValidator,
+                    ),
+                  ],
+                ),
+              ),
+
               const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -356,6 +382,7 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
             camaController: _camaController,
             alergiasController: _alergiasController,
             sala: selectedSala!,
+            selectedEpsArl: selectedEpsArl,
           ),
         ],
       ),

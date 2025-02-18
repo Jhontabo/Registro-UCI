@@ -1,61 +1,57 @@
 import "dart:collection";
-
 import "package:registro_uci/features/ingresos/data/constants/strings.dart";
 
 class UpdateIngresoDto extends MapView<String, dynamic> {
-  final String? nombrePaciente;
+  final String nombrePaciente;
+  final String sala;
   final DateTime? fechaNacimientoPaciente;
-  final String? epsOArl;
-  final String? identificacionPaciente;
-  final String? carpeta;
-  final String? nombreFamiliar;
-  final String? parentescoFamiliar;
-  final String? telefonoFamiliar;
-  final String? diagnosticoIngreso;
-  final String? diagnosticoActual;
-  final int? peso;
-  final int? talla;
-  final String? cama;
+  final String epsOArl;
+  final String identificacionPaciente;
+  final String carpeta;
+  final String nombreFamiliar;
+  final String parentescoFamiliar;
+  final String telefonoFamiliar;
+  final String diagnosticoIngreso;
+  final String diagnosticoActual;
+  final int peso;
+  final int talla;
+  final String cama;
   final String? alergias;
-  final String? sala;
+  final String selectedEpsArl; // ✅ Agregar este campo
 
   UpdateIngresoDto({
-    this.nombrePaciente,
-    this.fechaNacimientoPaciente,
-    this.epsOArl,
-    this.identificacionPaciente,
-    this.carpeta,
-    this.nombreFamiliar,
-    this.parentescoFamiliar,
-    this.telefonoFamiliar,
-    this.diagnosticoIngreso,
-    this.diagnosticoActual,
-    this.peso,
-    this.talla,
-    this.cama,
-    this.alergias,
-    this.sala,
+    required this.nombrePaciente,
+    required this.fechaNacimientoPaciente,
+    required this.epsOArl,
+    required this.identificacionPaciente,
+    required this.carpeta,
+    required this.nombreFamiliar,
+    required this.parentescoFamiliar,
+    required this.telefonoFamiliar,
+    required this.diagnosticoIngreso,
+    required this.diagnosticoActual,
+    required this.peso,
+    required this.talla,
+    required this.cama,
+    required this.alergias,
+    required this.sala,
+    required this.selectedEpsArl, // ✅ Asegurar que esté aquí
   }) : super({
-          if (nombrePaciente != null) Strings.nombrePaciente: nombrePaciente,
-          if (fechaNacimientoPaciente != null)
-            Strings.fechaNacimientoPaciente: fechaNacimientoPaciente,
-          if (epsOArl != null) Strings.epsOArl: epsOArl,
-          if (identificacionPaciente != null)
-            Strings.identificacionPaciente: identificacionPaciente,
-          if (carpeta != null) Strings.carpeta: carpeta,
-          if (nombreFamiliar != null) Strings.nombreFamiliar: nombreFamiliar,
-          if (parentescoFamiliar != null)
-            Strings.parentescoFamiliar: parentescoFamiliar,
-          if (telefonoFamiliar != null)
-            Strings.telefonoFamiliar: telefonoFamiliar,
-          if (diagnosticoIngreso != null)
-            Strings.diagnosticoIngreso: diagnosticoIngreso,
-          if (diagnosticoActual != null)
-            Strings.diagnosticoActual: diagnosticoActual,
-          if (peso != null) Strings.peso: peso,
-          if (talla != null) Strings.talla: talla,
-          if (cama != null) Strings.cama: cama,
-          if (alergias != null) Strings.alergias: alergias,
-          if (sala != null) Strings.sala: sala,
+          Strings.nombrePaciente: nombrePaciente,
+          Strings.fechaNacimientoPaciente: fechaNacimientoPaciente,
+          Strings.epsOArl: epsOArl,
+          Strings.identificacionPaciente: identificacionPaciente,
+          Strings.carpeta: carpeta,
+          Strings.nombreFamiliar: nombreFamiliar,
+          Strings.parentescoFamiliar: parentescoFamiliar,
+          Strings.telefonoFamiliar: telefonoFamiliar,
+          Strings.diagnosticoIngreso: diagnosticoIngreso,
+          Strings.diagnosticoActual: diagnosticoActual,
+          Strings.peso: peso,
+          Strings.talla: talla,
+          Strings.cama: cama,
+          Strings.alergias: alergias,
+          Strings.sala: sala,
+          Strings.selectedEpsArl: selectedEpsArl, // ✅ Agregar al mapa
         });
 }

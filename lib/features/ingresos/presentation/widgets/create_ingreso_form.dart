@@ -29,6 +29,7 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
   late TextEditingController _tallaController;
   late TextEditingController _camaController;
   late TextEditingController _alergiasController;
+  late TextEditingController _otherEpsArlController;
 
   String? selectedParentescoFamiliar;
 
@@ -43,6 +44,16 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
   ];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final List<String> epsArlList = [
+    'Nueva EPS', 'SURA', 'Sanitas', 'Compensar', 'Famisanar',
+    'Coomeva', 'Salud Total', 'Aliansalud', 'Colpatria', 'Medimás',
+    'AXA Colpatria', 'Positiva', 'Bolívar', 'La Equidad', 'Seguros del Estado',
+    'Otro', // Agregar opción "Otro"
+  ];
+
+  String? selectedEpsArl;
+  // Variable para mostrar campo de texto
 
   @override
   void initState() {
@@ -60,6 +71,7 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
     _tallaController = TextEditingController();
     _camaController = TextEditingController();
     _alergiasController = TextEditingController();
+    _otherEpsArlController = TextEditingController();
   }
 
   @override
@@ -77,8 +89,12 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
     _tallaController.dispose();
     _camaController.dispose();
     _alergiasController.dispose();
+    _otherEpsArlController.dispose();
     super.dispose();
   }
+
+  final TextEditingController _customEpsController =
+      TextEditingController(); // Controlador para la EPS personalizada
 
   @override
   Widget build(BuildContext context) {
@@ -138,15 +154,34 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
                 // we are not validating this since it is optional
               ),
               const SizedBox(height: 15),
-              OutlinedTextFormField(
-                controller: _epsOArlController,
-                label: "EPS o ARL",
-                prefixIcon: const Icon(
-                  Icons.local_hospital_outlined,
-                  size: 25,
-                ),
-                validator: epsOArlValidator,
+
+              EnumDropdownButtonFormField(
+                onSelected: (eps) {
+                  setState(() {
+                    selectedEpsArl = eps;
+                  });
+                },
+                label: "Seleccionar EPS o ARL",
+                values: epsArlList, // Lista de EPS
+                prefixIcon: const Icon(Icons.local_hospital),
+                validator: otherEpsArlValidator,
               ),
+
+// Campo visible si se selecciona "Otro" en EPS
+              Visibility(
+                visible: selectedEpsArl == 'Otro',
+                child: Column(
+                  children: [
+                    const SizedBox(height: 15),
+                    OutlinedTextFormField(
+                      controller: _epsOArlController,
+                      hint: "Ingrese la EPS o ARL",
+                      validator: otherEpsArlValidator,
+                    ),
+                  ],
+                ),
+              ),
+
               const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -306,6 +341,7 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
             selectedParentescoFamiliar: selectedParentescoFamiliar,
             otherParentescoFamiliarController:
                 _otherParentescoFamiliarController,
+            otherEpsArlController: _otherEpsArlController,
             telefonoFamiliarController: _telefonoFamiliarController,
             diagnosticoIngresoController: _diagnosticoIngresoController,
             pesoController: _pesoController,
@@ -313,6 +349,7 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
             camaController: _camaController,
             alergiasController: _alergiasController,
             sala: selectedSala,
+            selectedEpsArl: selectedEpsArl,
           ),
         ],
       ),

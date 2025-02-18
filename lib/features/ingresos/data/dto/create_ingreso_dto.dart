@@ -18,6 +18,7 @@ class CreateIngresoDto extends MapView<String, dynamic> {
   final int talla;
   final String cama;
   final String? alergias;
+  final String selectedEpsArl; // ✅ Agregando la propiedad faltante
 
   CreateIngresoDto({
     required this.nombrePaciente,
@@ -36,6 +37,7 @@ class CreateIngresoDto extends MapView<String, dynamic> {
     required this.cama,
     required this.alergias,
     required this.sala,
+    required this.selectedEpsArl, // ✅ Agregando en el constructor
   }) : super({
           Strings.nombrePaciente: nombrePaciente,
           Strings.fechaNacimientoPaciente: fechaNacimientoPaciente,
@@ -53,5 +55,6 @@ class CreateIngresoDto extends MapView<String, dynamic> {
           Strings.cama: cama,
           Strings.alergias: alergias,
           Strings.sala: sala,
+          Strings.selectedEpsArl: selectedEpsArl, // ✅ Agregando en el mapa
         });
 }
