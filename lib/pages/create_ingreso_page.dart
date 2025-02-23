@@ -8,13 +8,7 @@ class CreateIngresoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Crear Ingreso",
-          // style: Theme.of(context)
-          //     .textTheme
-          //     .titleLarge!
-          //     .copyWith(fontWeight: FontWeight.w500),
-        ),
+        title: const Text("Crear Ingreso"),
       ),
       body: ListView(
         padding: const EdgeInsets.all(15),

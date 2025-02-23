@@ -14,7 +14,9 @@ class MarcapasosTile extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const RegistroMarcapasosPage(),
+            builder: (context) {
+              return const CreateMarcapasoPage();
+            },
           ),
         );
       },
