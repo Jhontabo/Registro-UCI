@@ -13,7 +13,6 @@ class CreateMarcapasoForm extends ConsumerStatefulWidget {
 }
 
 class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
-  final TextEditingController cedulaController = TextEditingController();
   final TextEditingController fechaController = TextEditingController();
   final TextEditingController frecuenciaController = TextEditingController();
   final TextEditingController sensibilidadController = TextEditingController();
@@ -31,7 +30,6 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
 
   @override
   void dispose() {
-    cedulaController.dispose();
     fechaController.dispose();
     frecuenciaController.dispose();
     sensibilidadController.dispose();
@@ -54,18 +52,6 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-
-            // Campo de cédula del paciente
-            TextFormField(
-              controller: cedulaController,
-              decoration: const InputDecoration(
-                labelText: "Cédula del Paciente",
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-
             // Campo de fecha
             TextFormField(
               controller: fechaController,
@@ -90,7 +76,6 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               },
             ),
             const SizedBox(height: 16),
-
             // Dropdown para modo
             DropdownButtonFormField<String>(
               value: selectedModo,
@@ -112,7 +97,6 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               }).toList(),
             ),
             const SizedBox(height: 16),
-
             // Dropdown para vía
             DropdownButtonFormField<String>(
               value: selectedVia,
@@ -134,7 +118,6 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               }).toList(),
             ),
             const SizedBox(height: 16),
-
             // Dropdown para frecuencia
             DropdownButtonFormField<int>(
               decoration: const InputDecoration(
@@ -158,7 +141,6 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               }).toList(),
             ),
             const SizedBox(height: 16),
-
             // Dropdown para sensibilidad
             DropdownButtonFormField<double>(
               decoration: const InputDecoration(
@@ -182,7 +164,6 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               }).toList(),
             ),
             const SizedBox(height: 16),
-
             // Dropdown para salida
             DropdownButtonFormField<double>(
               decoration: const InputDecoration(
@@ -206,21 +187,11 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               }).toList(),
             ),
             const SizedBox(height: 26),
-
             // Botón de registrar
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  if (cedulaController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content:
-                              Text("Debe ingresar la cédula del paciente.")),
-                    );
-                    return;
-                  }
-
                   await registrarController.registrarMarcapaso(
                     CreateMarcapasoDto(
                       fechaColocacion: fechaController.text,
@@ -230,11 +201,8 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
                       sensibilidad:
                           double.tryParse(sensibilidadController.text) ?? 0,
                       salida: double.tryParse(salidaController.text) ?? 0,
-                      cedulaPaciente: cedulaController
-                          .text, // Se usa la cédula del paciente
                     ),
                   );
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                         content: Text("Marcapaso registrado exitosamente.")),

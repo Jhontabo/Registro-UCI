@@ -14,10 +14,6 @@ class RegistrarMarcapasoController {
   RegistrarMarcapasoController(this._repository);
 
   Future<void> registrarMarcapaso(CreateMarcapasoDto dto) async {
-    if (dto.cedulaPaciente.isEmpty) {
-      throw Exception("Debe ingresar la cédula del paciente.");
-    }
-
     await _repository.registrarMarcapaso(dto);
   }
 }
