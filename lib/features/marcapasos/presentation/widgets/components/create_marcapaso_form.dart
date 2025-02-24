@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_uci/features/marcapasos/data/dto/create_marcapaso_dto.dart';
 import 'package:registro_uci/features/marcapasos/presentation/controllers/registrar_marcapaso_controller.dart';
 import '../../../data/constants/constants.dart'; // Importa las listas
+import 'package:intl/intl.dart'; // Para formatear la fecha
 
 class CreateMarcapasoForm extends ConsumerStatefulWidget {
   const CreateMarcapasoForm({super.key});
@@ -12,6 +13,7 @@ class CreateMarcapasoForm extends ConsumerStatefulWidget {
 }
 
 class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
+  final TextEditingController cedulaController = TextEditingController();
   final TextEditingController fechaController = TextEditingController();
   final TextEditingController frecuenciaController = TextEditingController();
   final TextEditingController sensibilidadController = TextEditingController();
@@ -21,7 +23,15 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
   String? selectedVia;
 
   @override
+  void initState() {
+    super.initState();
+    // Establecer la fecha actual por defecto
+    fechaController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  }
+
+  @override
   void dispose() {
+    cedulaController.dispose();
     fechaController.dispose();
     frecuenciaController.dispose();
     sensibilidadController.dispose();
@@ -44,6 +54,42 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
+
+            // Campo de cédula del paciente
+            TextFormField(
+              controller: cedulaController,
+              decoration: const InputDecoration(
+                labelText: "Cédula del Paciente",
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 16),
+
+            // Campo de fecha
+            TextFormField(
+              controller: fechaController,
+              decoration: const InputDecoration(
+                labelText: "Fecha de colocación",
+                border: OutlineInputBorder(),
+              ),
+              readOnly: true,
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2101),
+                );
+                if (pickedDate != null) {
+                  setState(() {
+                    fechaController.text =
+                        DateFormat('yyyy-MM-dd').format(pickedDate);
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 16),
 
             // Dropdown para modo
             DropdownButtonFormField<String>(
@@ -166,6 +212,15 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
+                  if (cedulaController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content:
+                              Text("Debe ingresar la cédula del paciente.")),
+                    );
+                    return;
+                  }
+
                   await registrarController.registrarMarcapaso(
                     CreateMarcapasoDto(
                       fechaColocacion: fechaController.text,
@@ -175,7 +230,14 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
                       sensibilidad:
                           double.tryParse(sensibilidadController.text) ?? 0,
                       salida: double.tryParse(salidaController.text) ?? 0,
+                      cedulaPaciente: cedulaController
+                          .text, // Se usa la cédula del paciente
                     ),
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text("Marcapaso registrado exitosamente.")),
                   );
                 },
                 child: const Text("REGISTRAR MARCAPASO"),

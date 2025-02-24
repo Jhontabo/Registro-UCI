@@ -5,6 +5,7 @@ class CreateMarcapasoDto {
   final int frecuencia;
   final double sensibilidad;
   final double salida;
+  final String cedulaPaciente; // Se usa la cédula en lugar del userId
 
   CreateMarcapasoDto({
     required this.fechaColocacion,
@@ -13,6 +14,7 @@ class CreateMarcapasoDto {
     required this.frecuencia,
     required this.sensibilidad,
     required this.salida,
+    required this.cedulaPaciente,
   });
 
   Map<String, dynamic> toJson() {
@@ -23,6 +25,7 @@ class CreateMarcapasoDto {
       "frecuencia": frecuencia,
       "sensibilidad": sensibilidad,
       "salida": salida,
+      "cedulaPaciente": cedulaPaciente, // Se guarda la cédula del paciente
     };
   }
 }
