@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import './../features/marcapasos/presentation/widgets/components/create_marcapaso_form.dart';
 
 class CreateMarcapasoPage extends StatelessWidget {
-  const CreateMarcapasoPage({super.key});
+  final String idIngreso; // 🔥 Se recibe el idIngreso
+
+  const CreateMarcapasoPage({super.key, required this.idIngreso});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,8 @@ class CreateMarcapasoPage extends StatelessWidget {
               maxWidth:
                   600, // Evita desbordamiento horizontal en pantallas grandes
             ),
-            child: const CreateMarcapasoForm(),
+            child: CreateMarcapasoForm(
+                idIngreso: idIngreso), // 🔥 Se pasa el idIngreso
           ),
         ),
       ),

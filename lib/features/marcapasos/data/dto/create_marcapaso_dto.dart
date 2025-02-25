@@ -1,13 +1,14 @@
 class CreateMarcapasoDto {
+  final String idIngreso; // 🔥 Asociar marcapaso a un Ingreso
   final String fechaColocacion;
   final String modo;
   final String via;
   final int frecuencia;
   final double sensibilidad;
   final double salida;
-  // ID del usuario al que se le colocó el marcapaso
 
   CreateMarcapasoDto({
+    required this.idIngreso,
     required this.fechaColocacion,
     required this.modo,
     required this.via,
@@ -18,6 +19,7 @@ class CreateMarcapasoDto {
 
   Map<String, dynamic> toJson() {
     return {
+      "idIngreso": idIngreso, // 🔥 Se guarda el Ingreso asociado
       "fechaColocacion": fechaColocacion,
       "modo": modo,
       "via": via,

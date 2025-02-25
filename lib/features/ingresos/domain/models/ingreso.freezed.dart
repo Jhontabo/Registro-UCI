@@ -16,7 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Ingreso {
-  String get idIngreso => throw _privateConstructorUsedError;
+  String get idIngreso =>
+      throw _privateConstructorUsedError; // ✅ Se agregó idIngreso correctamente
   String get nombrePaciente => throw _privateConstructorUsedError;
   DateTime? get fechaNacimientoPaciente => throw _privateConstructorUsedError;
   String get epsOArl => throw _privateConstructorUsedError;
@@ -334,6 +335,7 @@ class _$IngresoImpl implements _Ingreso {
 
   @override
   final String idIngreso;
+// ✅ Se agregó idIngreso correctamente
   @override
   final String nombrePaciente;
   @override
@@ -464,7 +466,7 @@ abstract class _Ingreso implements Ingreso {
 
   @override
   String get idIngreso;
-  @override
+  @override // ✅ Se agregó idIngreso correctamente
   String get nombrePaciente;
   @override
   DateTime? get fechaNacimientoPaciente;

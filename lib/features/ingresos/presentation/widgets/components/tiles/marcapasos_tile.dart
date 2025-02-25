@@ -3,7 +3,9 @@ import 'package:registro_uci/common/components/tile.dart';
 import 'package:registro_uci/pages/registro_marcapasos_page.dart'; // Asegúrate de importar la página correcta
 
 class MarcapasosTile extends StatelessWidget {
-  const MarcapasosTile({super.key});
+  final String idIngreso; // 🔥 Se añade el idIngreso como parámetro
+
+  const MarcapasosTile({super.key, required this.idIngreso});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,8 @@ class MarcapasosTile extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return const CreateMarcapasoPage();
+              return CreateMarcapasoPage(
+                  idIngreso: idIngreso); // ✅ Se pasa idIngreso correctamente
             },
           ),
         );

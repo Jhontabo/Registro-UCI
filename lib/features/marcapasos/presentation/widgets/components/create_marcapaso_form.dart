@@ -1,58 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:registro_uci/common/components/buttons/primary_button.dart';
 import 'package:registro_uci/features/marcapasos/data/dto/create_marcapaso_dto.dart';
-import 'package:registro_uci/features/marcapasos/presentation/controllers/registrar_marcapaso_controller.dart';
-import '../../../data/constants/constants.dart'; // Importa las listas
-import 'package:intl/intl.dart'; // Para formatear la fecha
+import 'package:registro_uci/features/marcapasos/data/providers/marcapasos_provider.dart';
+import 'package:intl/intl.dart';
+import 'package:registro_uci/features/marcapasos/data/constants/constants.dart'; // 🔥 Importamos las constantes
 
 class CreateMarcapasoForm extends ConsumerStatefulWidget {
-  const CreateMarcapasoForm({super.key});
+  final String idIngreso; // 🔥 Asociado al paciente
+
+  const CreateMarcapasoForm({super.key, required this.idIngreso});
 
   @override
   _CreateMarcapasoFormState createState() => _CreateMarcapasoFormState();
 }
 
 class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
-  final TextEditingController fechaController = TextEditingController();
-  final TextEditingController frecuenciaController = TextEditingController();
-  final TextEditingController sensibilidadController = TextEditingController();
-  final TextEditingController salidaController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  late TextEditingController fechaController;
   String? selectedModo;
   String? selectedVia;
+  int? selectedFrecuencia;
+  double? selectedSensibilidad;
+  double? selectedSalida;
 
   @override
   void initState() {
     super.initState();
-    // Establecer la fecha actual por defecto
-    fechaController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    fechaController = TextEditingController(
+      text: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    );
   }
 
   @override
   void dispose() {
     fechaController.dispose();
-    frecuenciaController.dispose();
-    sensibilidadController.dispose();
-    salidaController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final registrarController = ref.watch(registrarMarcapasoControllerProvider);
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
+    return Form(
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
               "Registro de Marcapaso",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            // Campo de fecha
+
+            // **Fecha de colocación**
             TextFormField(
               controller: fechaController,
               decoration: const InputDecoration(
@@ -76,140 +78,111 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               },
             ),
             const SizedBox(height: 16),
-            // Dropdown para modo
+
+            // **Dropdown Modo** (Usando las constantes)
             DropdownButtonFormField<String>(
-              value: selectedModo,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Modo",
               ),
-              hint: const Text("Seleccione modo"),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedModo = newValue;
-                });
-              },
-              items: modosMarcapaso.map((mode) {
-                return DropdownMenuItem<String>(
-                  value: mode,
-                  child: Text(mode),
-                );
+              value: selectedModo,
+              onChanged: (value) => setState(() => selectedModo = value),
+              items: modosMarcapaso.map((modo) {
+                return DropdownMenuItem(value: modo, child: Text(modo));
               }).toList(),
             ),
             const SizedBox(height: 16),
-            // Dropdown para vía
+
+            // **Dropdown Vía** (Usando las constantes)
             DropdownButtonFormField<String>(
-              value: selectedVia,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Vía",
               ),
-              hint: const Text("Seleccione vía"),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedVia = newValue;
-                });
-              },
+              value: selectedVia,
+              onChanged: (value) => setState(() => selectedVia = value),
               items: viasMarcapaso.map((via) {
-                return DropdownMenuItem<String>(
-                  value: via,
-                  child: Text(via),
-                );
+                return DropdownMenuItem(value: via, child: Text(via));
               }).toList(),
             ),
             const SizedBox(height: 16),
-            // Dropdown para frecuencia
+
+            // **Dropdown Frecuencia** (Usando las constantes)
             DropdownButtonFormField<int>(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Frecuencia",
               ),
-              hint: const Text("Seleccione frecuencia"),
-              value: frecuenciaController.text.isNotEmpty
-                  ? int.tryParse(frecuenciaController.text)
-                  : null,
-              onChanged: (int? newValue) {
-                setState(() {
-                  frecuenciaController.text = newValue?.toString() ?? '';
-                });
-              },
+              value: selectedFrecuencia,
+              onChanged: (value) => setState(() => selectedFrecuencia = value),
               items: frecuenciasMarcapaso.map((freq) {
-                return DropdownMenuItem<int>(
-                  value: freq,
-                  child: Text(freq.toString()),
-                );
+                return DropdownMenuItem(value: freq, child: Text("$freq"));
               }).toList(),
             ),
             const SizedBox(height: 16),
-            // Dropdown para sensibilidad
+
+            // **Dropdown Sensibilidad** (Usando las constantes)
             DropdownButtonFormField<double>(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Sensibilidad",
               ),
-              hint: const Text("Seleccione sensibilidad"),
-              value: sensibilidadController.text.isNotEmpty
-                  ? double.tryParse(sensibilidadController.text)
-                  : null,
-              onChanged: (double? newValue) {
-                setState(() {
-                  sensibilidadController.text = newValue?.toString() ?? '';
-                });
-              },
-              items: sensibilidadesMarcapaso.map((s) {
-                return DropdownMenuItem<double>(
-                  value: s,
-                  child: Text(s.toString()),
-                );
+              value: selectedSensibilidad,
+              onChanged: (value) =>
+                  setState(() => selectedSensibilidad = value),
+              items: sensibilidadesMarcapaso.map((sens) {
+                return DropdownMenuItem(value: sens, child: Text("$sens"));
               }).toList(),
             ),
             const SizedBox(height: 16),
-            // Dropdown para salida
+
+            // **Dropdown Salida** (Usando las constantes)
             DropdownButtonFormField<double>(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Salida",
               ),
-              hint: const Text("Seleccione salida"),
-              value: salidaController.text.isNotEmpty
-                  ? double.tryParse(salidaController.text)
-                  : null,
-              onChanged: (double? newValue) {
-                setState(() {
-                  salidaController.text = newValue?.toString() ?? '';
-                });
-              },
-              items: salidasMarcapaso.map((s) {
-                return DropdownMenuItem<double>(
-                  value: s,
-                  child: Text(s.toString()),
-                );
+              value: selectedSalida,
+              onChanged: (value) => setState(() => selectedSalida = value),
+              items: salidasMarcapaso.map((salida) {
+                return DropdownMenuItem(value: salida, child: Text("$salida"));
               }).toList(),
             ),
-            const SizedBox(height: 26),
-            // Botón de registrar
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  await registrarController.registrarMarcapaso(
-                    CreateMarcapasoDto(
-                      fechaColocacion: fechaController.text,
-                      modo: selectedModo ?? "",
-                      via: selectedVia ?? "",
-                      frecuencia: int.tryParse(frecuenciaController.text) ?? 0,
-                      sensibilidad:
-                          double.tryParse(sensibilidadController.text) ?? 0,
-                      salida: double.tryParse(salidaController.text) ?? 0,
-                    ),
+            const SizedBox(height: 16),
+
+            // **Botón de Registro**
+            PrimaryButton(
+              onTap: () async {
+                if (_formKey.currentState!.validate()) {
+                  final dto = CreateMarcapasoDto(
+                    idIngreso: widget.idIngreso, // 🔥 Se asocia al paciente
+                    fechaColocacion: fechaController.text,
+                    modo: selectedModo ?? "No definido",
+                    via: selectedVia ?? "No definida",
+                    frecuencia: selectedFrecuencia ?? 0,
+                    sensibilidad: selectedSensibilidad ?? 0,
+                    salida: selectedSalida ?? 0,
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text("Marcapaso registrado exitosamente.")),
-                  );
-                },
-                child: const Text("REGISTRAR MARCAPASO"),
-              ),
+
+                  try {
+                    await ref.read(registrarMarcapasoProvider(dto).future);
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content:
+                                Text("✅ Marcapaso registrado exitosamente.")),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("⚠ Error al registrar: $e")),
+                      );
+                    }
+                  }
+                }
+              },
+              child: const Text("REGISTRAR MARCAPASO"),
             ),
           ],
         ),

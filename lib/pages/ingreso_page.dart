@@ -45,22 +45,23 @@ class IngresoPage extends ConsumerWidget {
             children: [
               DetallesIngresoTile(idIngreso: data.idIngreso),
               const SizedBox(height: 10),
-              RegistrosDiariosTile(idIngreso: idIngreso),
+              RegistrosDiariosTile(idIngreso: data.idIngreso),
               const SizedBox(height: 10),
-              TratamientosAntibioticosTile(idIngreso: idIngreso),
+              TratamientosAntibioticosTile(idIngreso: data.idIngreso),
               const SizedBox(height: 10),
               const ProcedimientosEspecialesTile(),
               const SizedBox(height: 10),
-              const MarcapasosTile(),
+              MarcapasosTile(
+                  idIngreso: data.idIngreso), // ✅ Se obtiene correctamente
               const SizedBox(height: 10),
               const CateteresTile(),
               const SizedBox(height: 10),
-              TerminarIngresoTile(idIngreso: idIngreso),
+              TerminarIngresoTile(idIngreso: data.idIngreso),
             ],
           ),
         );
       },
-      error: (error, stackTrace) => Text(error.toString()),
+      error: (error, stackTrace) => Text("Error: ${error.toString()}"),
       loading: () => const LoadingPage(),
     );
   }

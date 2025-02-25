@@ -4,13 +4,14 @@ import 'package:registro_uci/features/ingresos/data/constants/strings.dart';
 
 part 'ingreso.freezed.dart';
 
-// Enum for 'Sala'
+// Enum para 'Sala'
 enum Sala { A, B, C, D }
 
 @freezed
 class Ingreso with _$Ingreso {
   const factory Ingreso({
     required String idIngreso,
+    // ✅ Se agregó idIngreso correctamente
     required String nombrePaciente,
     DateTime? fechaNacimientoPaciente,
     required String epsOArl,
@@ -27,38 +28,47 @@ class Ingreso with _$Ingreso {
     required String cama,
     String? alergias,
     DateTime? fechaFin,
-    required Sala sala, // New enum property
+    required Sala sala,
   }) = _Ingreso;
 
   factory Ingreso.fromJson(Map<String, dynamic> json, {required String id}) {
     return Ingreso(
-      idIngreso: id,
-      nombrePaciente: json[Strings.nombrePaciente] as String,
+      idIngreso: id, // ✅ Se usa el ID que se pasa en la función
+      nombrePaciente: json[Strings.nombrePaciente] as String? ?? "Desconocido",
       fechaNacimientoPaciente: json[Strings.fechaNacimientoPaciente] != null
           ? (json[Strings.fechaNacimientoPaciente] as Timestamp).toDate()
           : null,
-      epsOArl: json[Strings.epsOArl] as String,
-      identificacionPaciente: json[Strings.identificacionPaciente] as String,
-      carpeta: json[Strings.carpeta] as String,
-      fechaIngreso: (json[Strings.fechaIngreso] as Timestamp).toDate(),
-      nombreFamiliar: json[Strings.nombreFamiliar] as String,
-      parentescoFamiliar: json[Strings.parentescoFamiliar] as String,
-      telefonoFamiliar: json[Strings.telefonoFamiliar] as String,
-      diagnosticoIngreso: json[Strings.diagnosticoIngreso] as String,
-      diagnosticoActual: json[Strings.diagnosticoActual] as String,
-      peso: (json[Strings.peso] as num).toDouble(),
-      talla: json[Strings.talla] as int,
-      cama: json[Strings.cama] as String,
+      epsOArl: json[Strings.epsOArl] as String? ?? "No especificado",
+      identificacionPaciente:
+          json[Strings.identificacionPaciente] as String? ?? "",
+      carpeta: json[Strings.carpeta] as String? ?? "",
+      fechaIngreso: (json[Strings.fechaIngreso] as Timestamp?)?.toDate() ??
+          DateTime.now(),
+      nombreFamiliar:
+          json[Strings.nombreFamiliar] as String? ?? "No registrado",
+      parentescoFamiliar:
+          json[Strings.parentescoFamiliar] as String? ?? "No registrado",
+      telefonoFamiliar:
+          json[Strings.telefonoFamiliar] as String? ?? "No registrado",
+      diagnosticoIngreso:
+          json[Strings.diagnosticoIngreso] as String? ?? "No disponible",
+      diagnosticoActual:
+          json[Strings.diagnosticoActual] as String? ?? "No disponible",
+      peso: (json[Strings.peso] as num?)?.toDouble() ?? 0.0,
+      talla: json[Strings.talla] as int? ?? 0,
+      cama: json[Strings.cama] as String? ?? "No asignada",
       alergias: json[Strings.alergias] as String?,
       fechaFin: json[Strings.fechaFin] != null
           ? (json[Strings.fechaFin] as Timestamp).toDate()
           : null,
-      sala: (json[Strings.sala] as String)
-          .toSala(), // Convert from string to enum
+      sala: json[Strings.sala] != null
+          ? (json[Strings.sala] as String).toSala()
+          : Sala.A, // Valor por defecto si es null
     );
   }
 }
 
+// Extensión para convertir String a Enum Sala
 extension ToSala on String {
   Sala toSala() {
     switch (this) {
@@ -71,11 +81,12 @@ extension ToSala on String {
       case 'D':
         return Sala.D;
       default:
-        throw Exception('Invalid Sala value');
+        throw Exception('Valor inválido para Sala');
     }
   }
 }
 
+// Extensión para convertir Enum Sala a String
 extension SalaToString on Sala {
   String salaToString() {
     switch (this) {
