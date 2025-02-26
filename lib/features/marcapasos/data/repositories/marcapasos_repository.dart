@@ -9,20 +9,20 @@ class MarcapasosRepository {
   MarcapasosRepository({FirebaseFirestore? firestore})
       : firestore = firestore ?? FirebaseFirestore.instance;
 
-  /// 🔥 **Registrar un marcapaso vinculado a un paciente**
+  /// 🔥 **Registrar un marcapaso vinculado a un ingreso**
   Future<void> registrarMarcapaso(CreateMarcapasoDto dto) async {
     await firestore
-        .collection('pacientes') // 🔥 Se asegura de asociarlo con el paciente
-        .doc(dto.idIngreso) // 🔥 Busca al paciente por su ID
         .collection(
-            'marcapasos') // 🔥 Guarda dentro de la subcolección del paciente
+            'ingresos') // 🔥 Se asocia con un ingreso, no con un paciente
+        .doc(dto.idIngreso) // 🔥 Usa idIngreso en lugar de idPaciente
+        .collection('marcapasos') // 🔥 Subcolección correcta
         .add(dto.toJson());
   }
 
-  /// 🔥 **Obtener todos los marcapasos de un paciente**
-  Future<List<Marcapaso>> getMarcapasosByPaciente(String idIngreso) async {
+  /// 🔥 **Obtener todos los marcapasos de un ingreso**
+  Future<List<Marcapaso>> getMarcapasosByIngreso(String idIngreso) async {
     final querySnapshot = await firestore
-        .collection('pacientes')
+        .collection('ingresos') // 🔥 Se asegura de buscar en ingresos
         .doc(idIngreso)
         .collection('marcapasos')
         .get();
@@ -32,10 +32,10 @@ class MarcapasosRepository {
         .toList();
   }
 
-  /// 🔥 **Obtener un marcapaso específico de un paciente**
+  /// 🔥 **Obtener un marcapaso específico de un ingreso**
   Future<Marcapaso?> getMarcapaso(String idIngreso, String idMarcapaso) async {
     final docSnapshot = await firestore
-        .collection('pacientes')
+        .collection('ingresos') // 🔥 Se asegura de buscar en ingresos
         .doc(idIngreso)
         .collection('marcapasos')
         .doc(idMarcapaso)
@@ -53,7 +53,7 @@ class MarcapasosRepository {
   Future<void> updateMarcapaso(
       String idIngreso, String idMarcapaso, UpdateMarcapasoDto dto) async {
     await firestore
-        .collection('pacientes')
+        .collection('ingresos') // 🔥 Se asegura de actualizar en ingresos
         .doc(idIngreso)
         .collection('marcapasos')
         .doc(idMarcapaso)
@@ -63,7 +63,7 @@ class MarcapasosRepository {
   /// 🔥 **Eliminar un marcapaso**
   Future<void> deleteMarcapaso(String idIngreso, String idMarcapaso) async {
     await firestore
-        .collection('pacientes')
+        .collection('ingresos') // 🔥 Se asegura de eliminar desde ingresos
         .doc(idIngreso)
         .collection('marcapasos')
         .doc(idMarcapaso)

@@ -14,37 +14,38 @@ final registrarMarcapasoProvider =
   await repository.registrarMarcapaso(dto);
 });
 
-/// 🔥 **Obtener todos los marcapasos de un paciente**
-final marcapasosByPacienteProvider =
-    FutureProvider.family<List<Marcapaso>, String>((ref, idPaciente) async {
+/// 🔥 **Obtener todos los marcapasos de un ingreso**
+final marcapasosByIngresoProvider =
+    FutureProvider.family<List<Marcapaso>, String>((ref, idIngreso) async {
   final repository = ref.read(marcapasosRepositoryProvider);
-  return await repository.getMarcapasosByPaciente(idPaciente);
+  return await repository.getMarcapasosByIngreso(idIngreso);
 });
 
-/// 🔥 **Obtener un marcapaso específico de un paciente**
-final marcapasoByIdProvider = FutureProvider.family<Marcapaso?,
-    ({String idPaciente, String idMarcapaso})>((ref, params) async {
+/// 🔥 **Obtener un marcapaso específico de un ingreso**
+final marcapasoByIdProvider =
+    FutureProvider.family<Marcapaso?, ({String idIngreso, String idMarcapaso})>(
+        (ref, params) async {
   final repository = ref.read(marcapasosRepositoryProvider);
-  return await repository.getMarcapaso(params.idPaciente, params.idMarcapaso);
+  return await repository.getMarcapaso(params.idIngreso, params.idMarcapaso);
 });
 
 /// 🔥 **Actualizar un marcapaso**
 final actualizarMarcapasoProvider = FutureProvider.family<
     void,
     ({
-      String idPaciente,
+      String idIngreso,
       String idMarcapaso,
       UpdateMarcapasoDto dto
     })>((ref, params) async {
   final repository = ref.read(marcapasosRepositoryProvider);
   await repository.updateMarcapaso(
-      params.idPaciente, params.idMarcapaso, params.dto);
+      params.idIngreso, params.idMarcapaso, params.dto);
 });
 
 /// 🔥 **Eliminar un marcapaso**
 final eliminarMarcapasoProvider =
-    FutureProvider.family<void, ({String idPaciente, String idMarcapaso})>(
+    FutureProvider.family<void, ({String idIngreso, String idMarcapaso})>(
         (ref, params) async {
   final repository = ref.read(marcapasosRepositoryProvider);
-  await repository.deleteMarcapaso(params.idPaciente, params.idMarcapaso);
+  await repository.deleteMarcapaso(params.idIngreso, params.idMarcapaso);
 });
