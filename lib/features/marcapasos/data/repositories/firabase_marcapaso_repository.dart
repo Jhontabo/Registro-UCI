@@ -42,53 +42,52 @@ class FirebaseMarcapasosRepository implements MarcapasosRepository {
     }
   }
 
-  /// 🔥 **Obtener todos los marcapasos de un ingreso**
   @override
   Future<List<Marcapaso>> getMarcapasosByIngreso(String idIngreso) async {
     try {
-      print("📡 Obteniendo marcapasos para ingreso: $idIngreso");
+      log("📡 Obteniendo marcapasos para ingreso: $idIngreso");
 
       final querySnapshot = await _firestore
-          .collection(FirebaseCollectionNames.ingresos)
+          .collection('ingresos')
           .doc(idIngreso)
-          .collection(FirebaseCollectionNames.marcapasos)
+          .collection('marcapasos')
           .get();
 
-      if (querySnapshot.docs.isEmpty) {
-        print(
-            "⚠ No se encontraron marcapasos en Firestore para ingreso: $idIngreso");
-      }
+      log("📡 Documentos encontrados: ${querySnapshot.docs.length}");
 
       return querySnapshot.docs.map((doc) {
-        print("✅ Marcapaso encontrado: ${doc.data()}");
+        log("✅ Documento encontrado: ${doc.data()} con ID: ${doc.id}");
         return Marcapaso.fromJson(doc.data()..addAll({'id': doc.id}));
       }).toList();
     } catch (e) {
-      print("❌ Error al obtener marcapasos: $e");
+      log("❌ Error al obtener marcapasos para ingreso $idIngreso: $e");
       throw Exception('Error al obtener marcapasos');
     }
   }
 
-  /// 🔥 **Obtener un marcapaso específico**
   @override
   Future<Marcapaso?> getMarcapasoById(
       String idIngreso, String idMarcapaso) async {
     try {
+      log("📡 Buscando marcapaso con ID: $idMarcapaso en el ingreso: $idIngreso");
+
       final docSnapshot = await _firestore
-          .collection(FirebaseCollectionNames.ingresos)
+          .collection('ingresos')
           .doc(idIngreso)
-          .collection(FirebaseCollectionNames.marcapasos)
+          .collection('marcapasos')
           .doc(idMarcapaso)
           .get();
 
       if (docSnapshot.exists) {
+        log("✅ Marcapaso encontrado: ${docSnapshot.data()}");
         return Marcapaso.fromJson(
             docSnapshot.data()!..addAll({'id': docSnapshot.id}));
       } else {
+        log("⚠️ No se encontró el marcapaso con ID: $idMarcapaso");
         return null;
       }
     } catch (e) {
-      log('❌ Error al obtener el marcapaso $idMarcapaso del ingreso $idIngreso: $e');
+      log("❌ Error al obtener el marcapaso: $e");
       throw Exception('Error al obtener el marcapaso');
     }
   }

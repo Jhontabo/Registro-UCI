@@ -1,6 +1,6 @@
 class Marcapaso {
   final String id;
-  final String idPaciente; // Para asociarlo a un paciente
+  final String idIngreso;
   final String fechaColocacion;
   final String modo;
   final String via;
@@ -10,7 +10,7 @@ class Marcapaso {
 
   Marcapaso({
     required this.id,
-    required this.idPaciente,
+    required this.idIngreso,
     required this.fechaColocacion,
     required this.modo,
     required this.via,
@@ -21,21 +21,21 @@ class Marcapaso {
 
   factory Marcapaso.fromJson(Map<String, dynamic> json) {
     return Marcapaso(
-      id: json['id'],
-      idPaciente: json['idPaciente'],
-      fechaColocacion: json['fechaColocacion'],
-      modo: json['modo'],
-      via: json['via'],
-      frecuencia: json['frecuencia'],
-      sensibilidad: json['sensibilidad'],
-      salida: json['salida'],
+      id: json['id'] ?? '',
+      idIngreso: json['idIngreso'] ?? '',
+      fechaColocacion: json['fechaColocacion'] ?? '',
+      modo: json['modo'] ?? 'Desconocido',
+      via: json['via'] ?? 'Desconocida',
+      frecuencia: json['frecuencia'] ?? 0,
+      sensibilidad: (json['sensibilidad'] as num?)?.toDouble() ?? 0.0,
+      salida: (json['salida'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       "id": id,
-      "idPaciente": idPaciente,
+      "idIngreso": idIngreso,
       "fechaColocacion": fechaColocacion,
       "modo": modo,
       "via": via,
