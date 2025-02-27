@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_uci/features/marcapasos/data/providers/marcapasos_provider.dart';
 import 'package:registro_uci/features/marcapasos/domain/models/marcapaso.dart';
+import '../features/marcapasos/presentation/widgets/components/buttons/create_marcapasos_floating_button.dart';
 
 class ListadoMarcapasosPage extends ConsumerWidget {
   final String idIngreso;
@@ -63,6 +64,10 @@ class ListadoMarcapasosPage extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text("Error: $err")),
       ),
+
+      // 🔥 **Aquí agregamos el FloatingActionButton**
+      floatingActionButton:
+          CreateMarcapasosFloatingButton(idIngreso: idIngreso),
     );
   }
 }

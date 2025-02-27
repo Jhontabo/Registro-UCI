@@ -46,17 +46,25 @@ class FirebaseMarcapasosRepository implements MarcapasosRepository {
   @override
   Future<List<Marcapaso>> getMarcapasosByIngreso(String idIngreso) async {
     try {
+      print("📡 Obteniendo marcapasos para ingreso: $idIngreso");
+
       final querySnapshot = await _firestore
           .collection(FirebaseCollectionNames.ingresos)
           .doc(idIngreso)
           .collection(FirebaseCollectionNames.marcapasos)
           .get();
 
+      if (querySnapshot.docs.isEmpty) {
+        print(
+            "⚠ No se encontraron marcapasos en Firestore para ingreso: $idIngreso");
+      }
+
       return querySnapshot.docs.map((doc) {
+        print("✅ Marcapaso encontrado: ${doc.data()}");
         return Marcapaso.fromJson(doc.data()..addAll({'id': doc.id}));
       }).toList();
     } catch (e) {
-      log('❌ Error al obtener marcapasos del ingreso $idIngreso: $e');
+      print("❌ Error al obtener marcapasos: $e");
       throw Exception('Error al obtener marcapasos');
     }
   }
