@@ -19,8 +19,29 @@ const List<String> viasMarcapaso = [
   'Vena basílica derecha',
 ];
 
-List<int> frecuenciasMarcapaso = [for (int i = 30; i <= 180; i += 5) i];
+// ✅ `final` en lugar de `const` debido al `for`
+final List<int> frecuenciasMarcapaso = [for (int i = 30; i <= 180; i += 5) i];
 
-const List<double> sensibilidadesMarcapaso = [20, 10, 5, 3, 2, 1, 0.5];
+// ✅ Agregado `.0` para evitar problemas con `double`
+const List<double> sensibilidadesMarcapaso = [
+  20.0,
+  10.0,
+  5.0,
+  3.0,
+  2.0,
+  1.0,
+  0.5
+];
 
-const List<double> salidasMarcapaso = [0.1, 0.2, 0.5, 1, 2, 5, 7, 10, 15, 20];
+const List<double> salidasMarcapaso = [
+  0.1,
+  0.2,
+  0.5,
+  1.0,
+  2.0,
+  5.0,
+  7.0,
+  10.0,
+  15.0,
+  20.0
+];

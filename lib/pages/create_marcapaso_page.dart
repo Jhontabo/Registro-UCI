@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './../features/marcapasos/presentation/widgets/components/create_marcapaso_form.dart';
+import 'package:registro_uci/features/marcapasos/presentation/widgets/components/create_marcapaso_form.dart';
 
 class CreateMarcapasoPage extends StatelessWidget {
   final String idIngreso; // 🔥 Se recibe el idIngreso
@@ -13,6 +13,8 @@ class CreateMarcapasoPage extends StatelessWidget {
         title: const Text("Crear Marcapaso"),
       ),
       body: SingleChildScrollView(
+        keyboardDismissBehavior:
+            ScrollViewKeyboardDismissBehavior.onDrag, // 🔥 Mejora la UX
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: ConstrainedBox(

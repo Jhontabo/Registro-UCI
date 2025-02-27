@@ -15,6 +15,7 @@ class UpdateMarcapasoDto {
     this.salida,
   });
 
+  /// 🔥 **Convierte solo los valores que no sean `null` a JSON**
   Map<String, dynamic> toJson() {
     return {
       if (fechaColocacion != null) "fechaColocacion": fechaColocacion,

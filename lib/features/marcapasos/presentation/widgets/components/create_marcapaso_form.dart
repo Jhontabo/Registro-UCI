@@ -4,10 +4,10 @@ import 'package:registro_uci/common/components/buttons/primary_button.dart';
 import 'package:registro_uci/features/marcapasos/data/dto/create_marcapaso_dto.dart';
 import 'package:registro_uci/features/marcapasos/data/providers/marcapasos_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:registro_uci/features/marcapasos/data/constants/constants.dart'; // 🔥 Importamos las constantes
+import 'package:registro_uci/features/marcapasos/data/constants/constants.dart';
 
 class CreateMarcapasoForm extends ConsumerStatefulWidget {
-  final String idIngreso; // 🔥 Asociado al paciente
+  final String idIngreso;
 
   const CreateMarcapasoForm({super.key, required this.idIngreso});
 
@@ -79,7 +79,7 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
             ),
             const SizedBox(height: 16),
 
-            // **Dropdown Modo** (Usando las constantes)
+            // **Dropdown Modo**
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -90,10 +90,11 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               items: modosMarcapaso.map((modo) {
                 return DropdownMenuItem(value: modo, child: Text(modo));
               }).toList(),
+              validator: (value) => value == null ? "Seleccione un modo" : null,
             ),
             const SizedBox(height: 16),
 
-            // **Dropdown Vía** (Usando las constantes)
+            // **Dropdown Vía**
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -104,10 +105,11 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               items: viasMarcapaso.map((via) {
                 return DropdownMenuItem(value: via, child: Text(via));
               }).toList(),
+              validator: (value) => value == null ? "Seleccione una vía" : null,
             ),
             const SizedBox(height: 16),
 
-            // **Dropdown Frecuencia** (Usando las constantes)
+            // **Dropdown Frecuencia**
             DropdownButtonFormField<int>(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -118,10 +120,12 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               items: frecuenciasMarcapaso.map((freq) {
                 return DropdownMenuItem(value: freq, child: Text("$freq"));
               }).toList(),
+              validator: (value) =>
+                  value == null ? "Seleccione una frecuencia" : null,
             ),
             const SizedBox(height: 16),
 
-            // **Dropdown Sensibilidad** (Usando las constantes)
+            // **Dropdown Sensibilidad**
             DropdownButtonFormField<double>(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -133,10 +137,12 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               items: sensibilidadesMarcapaso.map((sens) {
                 return DropdownMenuItem(value: sens, child: Text("$sens"));
               }).toList(),
+              validator: (value) =>
+                  value == null ? "Seleccione una sensibilidad" : null,
             ),
             const SizedBox(height: 16),
 
-            // **Dropdown Salida** (Usando las constantes)
+            // **Dropdown Salida**
             DropdownButtonFormField<double>(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -147,6 +153,8 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               items: salidasMarcapaso.map((salida) {
                 return DropdownMenuItem(value: salida, child: Text("$salida"));
               }).toList(),
+              validator: (value) =>
+                  value == null ? "Seleccione una salida" : null,
             ),
             const SizedBox(height: 16),
 
@@ -155,13 +163,13 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
               onTap: () async {
                 if (_formKey.currentState!.validate()) {
                   final dto = CreateMarcapasoDto(
-                    idIngreso: widget.idIngreso, // 🔥 Se asocia al paciente
+                    idIngreso: widget.idIngreso,
                     fechaColocacion: fechaController.text,
                     modo: selectedModo ?? "No definido",
                     via: selectedVia ?? "No definida",
                     frecuencia: selectedFrecuencia ?? 0,
-                    sensibilidad: selectedSensibilidad ?? 0,
-                    salida: selectedSalida ?? 0,
+                    sensibilidad: selectedSensibilidad ?? 0.0,
+                    salida: selectedSalida ?? 0.0,
                   );
 
                   try {

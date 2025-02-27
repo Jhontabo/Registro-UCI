@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:registro_uci/features/marcapasos/data/dto/create_marcapaso_dto.dart';
-import 'package:registro_uci/features/marcapasos/data/dto/update_marcapso_dto.dart';
+import 'package:registro_uci/features/marcapasos/data/dto/update_marcapaso_dto.dart';
 import 'package:registro_uci/features/marcapasos/domain/models/marcapaso.dart';
 
 class MarcapasosRepository {
