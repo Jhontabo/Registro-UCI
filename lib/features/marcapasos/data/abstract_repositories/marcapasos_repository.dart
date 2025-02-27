@@ -12,7 +12,7 @@ abstract class MarcapasosRepository {
   Future<void> createMarcapaso(CreateMarcapasoDto dto);
 
   /// 🔥 Obtiene los marcapasos asociados a un ingreso específico
-  Future<List<Marcapaso>> getMarcapasosByIngreso(String idIngreso);
+  Stream<List<Marcapaso>> getMarcapasosByIngreso(String idIngreso);
 
   /// 🔥 Obtiene un marcapaso específico de un ingreso
   Future<Marcapaso?> getMarcapasoById(String idIngreso, String idMarcapaso);

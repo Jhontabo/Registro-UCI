@@ -24,10 +24,9 @@ final allMarcapasosProvider = FutureProvider<List<Marcapaso>>((ref) async {
 
 /// 🔹 **Obtener todos los marcapasos de un ingreso específico**
 final marcapasosByIngresoProvider =
-    FutureProvider.family<List<Marcapaso>, String>((ref, idIngreso) async {
-  print("📡 Llamando a getMarcapasosByIngreso con idIngreso: $idIngreso");
+    StreamProvider.family<List<Marcapaso>, String>((ref, idIngreso) {
   final repository = ref.read(marcapasosRepositoryProvider);
-  return await repository.getMarcapasosByIngreso(idIngreso);
+  return repository.getMarcapasosByIngreso(idIngreso);
 });
 
 /// 🔹 **Obtener un marcapaso específico de un ingreso**

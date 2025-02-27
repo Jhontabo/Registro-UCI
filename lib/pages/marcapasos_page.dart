@@ -51,6 +51,10 @@ class ListadoMarcapasosPage extends ConsumerWidget {
                         idIngreso: idIngreso,
                         idMarcapaso: marcapaso.id,
                       )).future);
+
+                      // 🔥 Asegurar actualización en tiempo real
+                      ref.invalidate(marcapasosByIngresoProvider);
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Marcapaso eliminado")),
                       );
@@ -65,7 +69,7 @@ class ListadoMarcapasosPage extends ConsumerWidget {
         error: (err, _) => Center(child: Text("Error: $err")),
       ),
 
-      // 🔥 **Aquí agregamos el FloatingActionButton**
+      // 🔥 Asegurar que el botón flotante aparezca correctamente
       floatingActionButton:
           CreateMarcapasosFloatingButton(idIngreso: idIngreso),
     );
