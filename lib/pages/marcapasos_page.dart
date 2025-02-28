@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_uci/features/marcapasos/data/providers/marcapasos_provider.dart';
 import 'package:registro_uci/features/marcapasos/domain/models/marcapaso.dart';
+import '../pages/upddate_marcapasos_page.dart';
 import '../features/marcapasos/presentation/widgets/components/buttons/create_marcapasos_floating_button.dart';
 
 class ListadoMarcapasosPage extends ConsumerWidget {
@@ -44,21 +45,40 @@ class ListadoMarcapasosPage extends ConsumerWidget {
                       Text("Salida: ${marcapaso.salida} V"),
                     ],
                   ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () async {
-                      await ref.read(eliminarMarcapasoProvider((
-                        idIngreso: idIngreso,
-                        idMarcapaso: marcapaso.id,
-                      )).future);
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => EditMarcapasoPage(
+                                idIngreso: idIngreso,
+                                marcapaso: marcapaso,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () async {
+                          await ref.read(eliminarMarcapasoProvider((
+                            idIngreso: idIngreso,
+                            idMarcapaso: marcapaso.id,
+                          )).future);
 
-                      // 🔥 Asegurar actualización en tiempo real
-                      ref.invalidate(marcapasosByIngresoProvider);
+                          // 🔥 Asegurar actualización en tiempo real
+                          ref.invalidate(marcapasosByIngresoProvider);
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Marcapaso eliminado")),
-                      );
-                    },
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Marcapaso eliminado")),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
               );
