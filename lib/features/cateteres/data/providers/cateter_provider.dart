@@ -7,24 +7,22 @@ import 'package:registro_uci/features/cateteres/data/dto/update_cateter_dto.dart
 
 /// 🔹 **Provee la instancia del repositorio de catéteres**
 final cateteresRepositoryProvider = Provider<CateteresRepository>((ref) {
-  return FirebaseCateterRepository(); // 🔥 Usa la implementación real
+  return FirebaseCateterRepository();
 });
 
-/// 🔹 **Registrar un catéter**
-final registrarCateterProvider =
-    FutureProvider.family<void, CreateCateterDto>((ref, dto) async {
-  final repository = ref.read(cateteresRepositoryProvider);
-  await repository.createCateter(dto); // 🔥 Método corregido
-});
-
-/// 🔹 **Obtener todos los catéteres de la base de datos**
+/// 🔹 **Obtener todos los catéteres en tiempo real**
 final allCateteresProvider = StreamProvider<List<Cateter>>((ref) {
-  return ref.watch(cateteresRepositoryProvider).getAllCateteres();
+  return ref
+      .watch(cateteresRepositoryProvider)
+      .getAllCateteres(); // ✅ Escuchar en tiempo real
 });
 
+/// 🔹 **Obtener los catéteres de un ingreso específico en tiempo real**
 final cateteresByIngresoProvider =
     StreamProvider.family<List<Cateter>, String>((ref, idIngreso) {
-  return ref.read(cateteresRepositoryProvider).getCateteresByIngreso(idIngreso);
+  return ref
+      .watch(cateteresRepositoryProvider)
+      .getCateteresByIngreso(idIngreso); // ✅ Debe usar watch()
 });
 
 /// 🔹 **Obtener un catéter específico de un ingreso**
@@ -33,6 +31,15 @@ final cateterByIdProvider =
         (ref, params) async {
   final repository = ref.read(cateteresRepositoryProvider);
   return await repository.getCateterById(params.idIngreso, params.idCateter);
+});
+
+/// 🔹 **Registrar un catéter**
+final registrarCateterProvider =
+    FutureProvider.family<void, CreateCateterDto>((ref, dto) async {
+  final repository = ref.read(cateteresRepositoryProvider);
+  await repository.createCateter(dto);
+  ref.invalidate(
+      cateteresByIngresoProvider); // 🔥 Forzar actualización en tiempo real
 });
 
 /// 🔹 **Actualizar un catéter**
@@ -46,6 +53,8 @@ final actualizarCateterProvider = FutureProvider.family<
   final repository = ref.read(cateteresRepositoryProvider);
   await repository.updateCateter(
       params.idIngreso, params.idCateter, params.dto);
+  ref.invalidate(
+      cateteresByIngresoProvider); // 🔥 Forzar actualización en tiempo real
 });
 
 /// 🔹 **Eliminar un catéter**
@@ -54,4 +63,6 @@ final eliminarCateterProvider =
         (ref, params) async {
   final repository = ref.read(cateteresRepositoryProvider);
   await repository.deleteCateter(params.idIngreso, params.idCateter);
+  ref.invalidate(
+      cateteresByIngresoProvider); // 🔥 Forzar actualización en tiempo real
 });

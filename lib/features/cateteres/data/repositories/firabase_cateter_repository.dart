@@ -30,11 +30,16 @@ class FirebaseCateterRepository implements CateteresRepository {
           .collection('ingresos')
           .doc(dto.idIngreso)
           .collection('cateteres')
-          .add(dto.toJson());
-      log('✅ Catéter registrado correctamente para el ingreso ${dto.idIngreso}');
+          .add({
+        "tipo": dto.tipo,
+        "sitio": dto.sitio,
+        "fechaInsercion":
+            Timestamp.fromDate(dto.fechaInsercion), // ✅ Almacena como Timestamp
+        "lugarProcedencia": dto.lugarProcedencia,
+      });
+      print("✅ Catéter agregado correctamente");
     } catch (e) {
-      log('❌ Error al registrar el catéter: $e');
-      throw Exception('Error al registrar el catéter');
+      print("❌ Error al agregar catéter: $e");
     }
   }
 
@@ -45,10 +50,13 @@ class FirebaseCateterRepository implements CateteresRepository {
         .collection('ingresos')
         .doc(idIngreso)
         .collection('cateteres')
+        .orderBy('fechaInsercion', descending: true)
         .snapshots()
-        .map((querySnapshot) => querySnapshot.docs
-            .map((doc) => Cateter.fromFirestore(doc))
-            .toList());
+        .map((snapshot) {
+      print(
+          "📡 Actualización en tiempo real recibida: ${snapshot.docs.length} catéteres");
+      return snapshot.docs.map((doc) => Cateter.fromFirestore(doc)).toList();
+    });
   }
 
   /// 🔥 **Obtener un catéter específico por ID**
