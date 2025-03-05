@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../../../pages/create_marcapaso_page.dart';
+import '../../../../../../pages/create_cateter_page.dart';
 
-class CreateMarcapasosFloatingButton extends StatelessWidget {
+class CreateCateterFloatingButton extends StatelessWidget {
   final String idIngreso; // Recibe el ID del ingreso
 
-  const CreateMarcapasosFloatingButton({
+  const CreateCateterFloatingButton({
     super.key,
     required this.idIngreso, // Aseguramos que se pase el ID al constructor
   });
@@ -16,7 +16,7 @@ class CreateMarcapasosFloatingButton extends StatelessWidget {
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) {
-            return CreateMarcapasoPage(idIngreso: idIngreso);
+            return CreateCateterPage(idIngreso: idIngreso);
           },
         ));
       },

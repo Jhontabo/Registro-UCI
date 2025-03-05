@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/tile.dart';
+import '../../../../../../pages/catateres_page.dart'; // ✅ Importa la página correcta
 
 class CateteresTile extends StatelessWidget {
-  const CateteresTile({super.key});
+  final String idIngreso; // 🔥 Se añade el idIngreso como parámetro
+
+  const CateteresTile({super.key, required this.idIngreso});
 
   @override
   Widget build(BuildContext context) {
     return Tile(
       iconData: Icons.vaccines_outlined,
-      title: "Cateteres",
-      subtitle: "Registro de cateteres del paciente",
-      onTap: () {},
+      title: "Catéteres",
+      subtitle: "Lista de catéteres registrados",
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return ListadoCateteresPage(
+                // ✅ Página de lista de catéteres
+                idIngreso: idIngreso,
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

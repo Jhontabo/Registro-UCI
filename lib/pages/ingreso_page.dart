@@ -54,7 +54,7 @@ class IngresoPage extends ConsumerWidget {
               MarcapasosTile(
                   idIngreso: data.idIngreso), // ✅ Se obtiene correctamente
               const SizedBox(height: 10),
-              const CateteresTile(),
+              CateteresTile(idIngreso: data.idIngreso),
               const SizedBox(height: 10),
               TerminarIngresoTile(idIngreso: data.idIngreso),
             ],
