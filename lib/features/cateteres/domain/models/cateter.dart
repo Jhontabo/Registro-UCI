@@ -35,7 +35,6 @@ class Cateter with _$Cateter {
   @override
   Map<String, dynamic> toJson() {
     return {
-      "id": id,
       "tipo": tipo,
       "sitio": sitio,
       "fechaInsercion":

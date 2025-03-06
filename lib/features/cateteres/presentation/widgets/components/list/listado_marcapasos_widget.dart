@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart'; // ✅ Importación para formatear las fechas
 import '../../../../domain/models/cateter.dart';
-import '../../../../data/providers/cateter_provider.dart';
+import '../../../../data/providers/cateteres_providers.dart';
 
 class ListadoCateteresWidget extends ConsumerWidget {
   final String idIngreso;
@@ -40,13 +40,45 @@ class ListadoCateteresWidget extends ConsumerWidget {
                     Text("Lugar: ${cateter.lugarProcedencia}"),
                   ],
                 ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () {
+                        // TODO: Navegar a la pantalla de edición del catéter
+                        print("✏️ Editar catéter ${cateter.id}");
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () async {
+                        await ref.read(eliminarCateterProvider((
+                          idIngreso: idIngreso,
+                          idCateter: cateter.id,
+                        )).future);
+                        print("🗑️ Catéter eliminado: ${cateter.id}");
+                      },
+                    ),
+                  ],
+                ),
               ),
             );
           },
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => Center(child: Text("Error: $error")),
+      error: (error, _) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error, color: Colors.red, size: 50),
+            const SizedBox(height: 10),
+            const Text("Error al cargar los catéteres."),
+            Text("$error", style: const TextStyle(color: Colors.red)),
+          ],
+        ),
+      ),
     );
   }
 }

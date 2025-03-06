@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/components/buttons/primary_button.dart';
 import 'package:registro_uci/features/cateteres/data/dto/update_cateter_dto.dart';
-import 'package:registro_uci/features/cateteres/data/providers/cateter_provider.dart';
+import 'package:registro_uci/features/cateteres/data/providers/cateteres_providers.dart';
+import 'package:intl/intl.dart';
 
 class UpdateCateterFormButton extends ConsumerWidget {
   final GlobalKey<FormState> formKey;
@@ -28,47 +29,74 @@ class UpdateCateterFormButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // ✅ Se obtiene la instancia con los parámetros correctos
+    final futureProvider = actualizarCateterProvider((
+      idIngreso: idIngreso,
+      idCateter: idCateter,
+      dto: UpdateCateterDto(
+        tipo: tipoController.text.isNotEmpty ? tipoController.text : null,
+        sitio: sitioController.text.isNotEmpty ? sitioController.text : null,
+        fechaInsercion: fechaInsercionController.text.isNotEmpty
+            ? _parseFecha(fechaInsercionController.text)
+            : null,
+        fechaRetiro: fechaRetiroController.text.isNotEmpty
+            ? _parseFecha(fechaRetiroController.text)
+            : null,
+        lugarProcedencia: lugarProcedenciaController.text.isNotEmpty
+            ? lugarProcedenciaController.text
+            : null,
+      ),
+    ));
+
+    final estado = ref.watch(futureProvider);
+
     return PrimaryButton(
-      onTap: () async {
-        if (formKey.currentState!.validate()) {
-          final dto = UpdateCateterDto(
-            tipo: tipoController.text.isNotEmpty ? tipoController.text : null,
-            sitio:
-                sitioController.text.isNotEmpty ? sitioController.text : null,
-            fechaInsercion: fechaInsercionController.text.isNotEmpty
-                ? fechaInsercionController.text
-                : null,
-            fechaRetiro: fechaRetiroController.text.isNotEmpty
-                ? fechaRetiroController.text
-                : null,
-            lugarProcedencia: lugarProcedenciaController.text.isNotEmpty
-                ? lugarProcedenciaController.text
-                : null,
-          );
+      onTap: estado.isLoading
+          ? null
+          : () async {
+              if (formKey.currentState!.validate()) {
+                try {
+                  print(
+                      "🛠️ Actualizando catéter ID: $idCateter en Ingreso: $idIngreso");
 
-          try {
-            await ref.read(actualizarCateterProvider((
-              idIngreso: idIngreso,
-              idCateter: idCateter,
-              dto: dto,
-            )).future);
+                  await ref.read(futureProvider.future);
 
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text("✅ Catéter actualizado exitosamente.")),
-              );
-            }
-          } catch (e) {
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("⚠ Error al actualizar: $e")),
-              );
-            }
-          }
-        }
-      },
-      child: const Text("ACTUALIZAR CATÉTER"),
+                  // ✅ Forzar actualización en tiempo real
+                  ref.invalidate(cateteresByIngresoProvider);
+
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("✅ Catéter actualizado exitosamente."),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("⚠ Error al actualizar: $e")),
+                    );
+                  }
+                }
+              }
+            },
+      child: estado.when(
+        data: (_) => const Text("ACTUALIZAR CATÉTER"),
+        loading: () =>
+            const CircularProgressIndicator(), // 🔄 Indica que está actualizando
+        error: (error, _) =>
+            Text("⚠ Error: $error", style: const TextStyle(color: Colors.red)),
+      ),
     );
+  }
+
+  /// 🔥 **Función para manejar fechas de forma segura**
+  DateTime? _parseFecha(String fechaTexto) {
+    try {
+      return DateTime.parse(fechaTexto);
+    } catch (e) {
+      print("❌ Error al parsear fecha: $e");
+      return null; // 🔄 Retorna null en caso de error
+    }
   }
 }

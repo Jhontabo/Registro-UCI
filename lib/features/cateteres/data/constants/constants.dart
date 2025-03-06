@@ -28,10 +28,3 @@ const List<String> lugaresProcedenciaCateter = [
   'Quirófano',
   'Cuidado intermedio',
 ];
-
-/// 🔹 **Lista de Fechas de Retiro Predefinidas** (Ejemplo de opciones rápidas)
-final List<String> fechasRetiroCateter = [
-  DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
-  DateTime.now().toIso8601String(),
-  DateTime.now().add(const Duration(days: 1)).toIso8601String(),
-];

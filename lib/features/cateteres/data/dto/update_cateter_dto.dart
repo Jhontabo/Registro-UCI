@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UpdateCateterDto {
-  final String? tipo; // Venoso central, venoso periférico, arterial
-  final String? sitio; // Yugular, radial, femoral, etc.
-  final String? fechaInsercion;
-  final String? fechaRetiro; // Opcional
-  final String? lugarProcedencia; // Hospitalización, urgencias, etc.
+  final String? tipo;
+  final String? sitio;
+  final DateTime? fechaInsercion; // ✅ Convertir a DateTime
+  final DateTime? fechaRetiro; // ✅ Convertir a DateTime
+  final String? lugarProcedencia;
 
   UpdateCateterDto({
     this.tipo,
@@ -18,8 +20,10 @@ class UpdateCateterDto {
     return {
       if (tipo != null) "tipo": tipo,
       if (sitio != null) "sitio": sitio,
-      if (fechaInsercion != null) "fechaInsercion": fechaInsercion,
-      if (fechaRetiro != null) "fechaRetiro": fechaRetiro,
+      if (fechaInsercion != null)
+        "fechaInsercion": Timestamp.fromDate(fechaInsercion!), // ✅ Cambio
+      if (fechaRetiro != null)
+        "fechaRetiro": Timestamp.fromDate(fechaRetiro!), // ✅ Cambio
       if (lugarProcedencia != null) "lugarProcedencia": lugarProcedencia,
     };
   }

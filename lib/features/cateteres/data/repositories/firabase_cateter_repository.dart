@@ -11,15 +11,11 @@ class FirebaseCateterRepository implements CateteresRepository {
   /// 🔥 **Obtener todos los catéteres en tiempo real**
   @override
   Stream<List<Cateter>> getAllCateteres() {
-    // 👈 Cambiado para coincidir con la interfaz
-    return _firestore
-        .collectionGroup(
-            'cateteres') // 🔥 Obtiene catéteres de todos los ingresos
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Cateter.fromFirestore(
-                doc)) // Manejo de documentos correctamente
-            .toList());
+    return _firestore.collectionGroup('cateteres').snapshots().map((snapshot) {
+      print(
+          "📡 Actualización en tiempo real: ${snapshot.docs.length} catéteres");
+      return snapshot.docs.map((doc) => Cateter.fromFirestore(doc)).toList();
+    });
   }
 
   /// 🔥 **Registrar un nuevo catéter vinculado a un ingreso**
@@ -33,13 +29,17 @@ class FirebaseCateterRepository implements CateteresRepository {
           .add({
         "tipo": dto.tipo,
         "sitio": dto.sitio,
-        "fechaInsercion":
-            Timestamp.fromDate(dto.fechaInsercion), // ✅ Almacena como Timestamp
+        "fechaInsercion": Timestamp.fromDate(dto.fechaInsercion),
+        "fechaRetiro": dto.fechaRetiro != null
+            ? Timestamp.fromDate(dto.fechaRetiro!)
+            : null,
         "lugarProcedencia": dto.lugarProcedencia,
       });
-      print("✅ Catéter agregado correctamente");
+
+      log("✅ Catéter agregado correctamente");
     } catch (e) {
-      print("❌ Error al agregar catéter: $e");
+      log("❌ Error al agregar catéter: $e");
+      throw Exception("Error al agregar catéter");
     }
   }
 
@@ -53,8 +53,7 @@ class FirebaseCateterRepository implements CateteresRepository {
         .orderBy('fechaInsercion', descending: true)
         .snapshots()
         .map((snapshot) {
-      print(
-          "📡 Actualización en tiempo real recibida: ${snapshot.docs.length} catéteres");
+      log("📡 Actualización en tiempo real recibida: ${snapshot.docs.length} catéteres");
       return snapshot.docs.map((doc) => Cateter.fromFirestore(doc)).toList();
     });
   }
@@ -78,7 +77,7 @@ class FirebaseCateterRepository implements CateteresRepository {
       }
     } catch (e) {
       log("❌ Error al obtener el catéter: $e");
-      throw Exception('Error al obtener el catéter');
+      throw Exception("Error al obtener el catéter");
     }
   }
 
@@ -93,10 +92,11 @@ class FirebaseCateterRepository implements CateteresRepository {
           .collection('cateteres')
           .doc(idCateter)
           .update(dto.toJson());
-      log('✅ Catéter $idCateter actualizado correctamente');
+
+      log("✅ Catéter $idCateter actualizado correctamente");
     } catch (e) {
-      log('❌ Error al actualizar el catéter $idCateter: $e');
-      throw Exception('Error al actualizar el catéter');
+      log("❌ Error al actualizar el catéter $idCateter: $e");
+      throw Exception("Error al actualizar el catéter");
     }
   }
 
@@ -110,10 +110,11 @@ class FirebaseCateterRepository implements CateteresRepository {
           .collection('cateteres')
           .doc(idCateter)
           .delete();
-      log('✅ Catéter $idCateter eliminado correctamente');
+
+      log("✅ Catéter $idCateter eliminado correctamente");
     } catch (e) {
-      log('❌ Error al eliminar el catéter $idCateter: $e');
-      throw Exception('Error al eliminar el catéter');
+      log("❌ Error al eliminar el catéter $idCateter: $e");
+      throw Exception("Error al eliminar el catéter");
     }
   }
 }

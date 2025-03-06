@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../features/cateteres/data/repositories/cateteres_repository.dart';
-import 'package:registro_uci/features/cateteres/domain/models/cateter.dart';
 import 'package:intl/intl.dart';
+import 'package:registro_uci/features/cateteres/data/constants/constants.dart';
+import 'package:registro_uci/features/cateteres/data/dto/update_cateter_dto.dart';
+import 'package:registro_uci/features/cateteres/data/providers/cateteres_providers.dart';
+import 'package:registro_uci/features/cateteres/domain/models/cateter.dart';
 
 class EditCateterPage extends ConsumerStatefulWidget {
   final String idIngreso;
@@ -15,82 +17,57 @@ class EditCateterPage extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<EditCateterPage> createState() => _EditCateterPageState();
+  _EditCateterPageState createState() => _EditCateterPageState();
 }
 
 class _EditCateterPageState extends ConsumerState<EditCateterPage> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  late TextEditingController _tipoController;
-  late TextEditingController _fechaColocacionController;
-  late TextEditingController _ubicacionController;
-  late TextEditingController _duracionController;
+  late TextEditingController fechaInsercionController;
+  late TextEditingController fechaRetiroController;
+  String? selectedTipo;
+  String? selectedSitio;
+  String? selectedLugarProcedencia;
 
   @override
   void initState() {
     super.initState();
+    fechaInsercionController = TextEditingController(
+        text: DateFormat('yyyy-MM-dd').format(widget.cateter.fechaInsercion));
+    fechaRetiroController = TextEditingController(
+        text: widget.cateter.fechaRetiro != null
+            ? DateFormat('yyyy-MM-dd').format(widget.cateter.fechaRetiro!)
+            : "");
 
-    _tipoController = TextEditingController(text: widget.cateter.tipo);
-
-    // ✅ Convierte `DateTime` a String en formato 'yyyy-MM-dd'
-    _fechaColocacionController = TextEditingController(
-      text: DateFormat('yyyy-MM-dd').format(widget.cateter.fechaInsercion),
-    );
-
-    _ubicacionController = TextEditingController(text: widget.cateter.sitio);
-
-    // ✅ Manejo seguro de `fechaRetiro`
-    if (widget.cateter.fechaRetiro != null) {
-      DateTime fechaInsercion =
-          widget.cateter.fechaInsercion; // ✅ Ya es DateTime
-      DateTime fechaRetiro = widget.cateter.fechaRetiro!; // ✅ Ya es DateTime
-
-      int diasDuracion = fechaRetiro.difference(fechaInsercion).inDays;
-
-      _duracionController =
-          TextEditingController(text: diasDuracion.toString());
-    } else {
-      _duracionController = TextEditingController(text: 'No retirado');
-    }
+    selectedTipo =
+        tiposCateter.contains(widget.cateter.tipo) ? widget.cateter.tipo : null;
+    selectedSitio = sitiosCateter.contains(widget.cateter.sitio)
+        ? widget.cateter.sitio
+        : null;
+    selectedLugarProcedencia =
+        lugaresProcedenciaCateter.contains(widget.cateter.lugarProcedencia)
+            ? widget.cateter.lugarProcedencia
+            : null;
   }
 
   @override
   void dispose() {
-    _tipoController.dispose();
-    _fechaColocacionController.dispose();
-    _ubicacionController.dispose();
-    _duracionController.dispose();
+    fechaInsercionController.dispose();
+    fechaRetiroController.dispose();
     super.dispose();
   }
 
-  Future<void> _guardarCambios() async {
-    if (_formKey.currentState!.validate()) {
-      final nuevoCateter = Cateter(
-        id: widget.cateter.id,
-        tipo: _tipoController.text,
-        sitio: _ubicacionController.text,
-
-        // ✅ Mantener fechaInsercion como DateTime
-        fechaInsercion: _fechaColocacionController.text.isNotEmpty
-            ? DateTime.parse(
-                _fechaColocacionController.text) // ✅ Usa DateTime directamente
-            : DateTime.now(),
-
-        fechaRetiro: null, // Puedes agregar otro campo si es necesario
-        lugarProcedencia: "Hospitalización",
-      );
-
-      await ref
-          .read(cateteresRepositoryProvider)
-          .agregarCateter(widget.idIngreso, nuevoCateter);
-
-      ref.invalidate(cateteresByIngresoProvider);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Catéter actualizado correctamente")),
-      );
-
-      Navigator.of(context).pop();
+  Future<void> _seleccionarFecha(TextEditingController controller) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        controller.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
     }
   }
 
@@ -98,43 +75,109 @@ class _EditCateterPageState extends ConsumerState<EditCateterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Editar Catéter")),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                controller: _tipoController,
-                decoration: const InputDecoration(labelText: "Tipo de catéter"),
+              // **Tipo de catéter**
+              DropdownButtonFormField<String>(
+                value: selectedTipo,
+                onChanged: (value) => setState(() => selectedTipo = value),
+                items: tiposCateter.map((tipo) {
+                  return DropdownMenuItem(value: tipo, child: Text(tipo));
+                }).toList(),
+                decoration: const InputDecoration(labelText: "Tipo de Catéter"),
                 validator: (value) =>
-                    value!.isEmpty ? "Campo obligatorio" : null,
+                    value == null ? "Seleccione un tipo de catéter" : null,
               ),
-              TextFormField(
-                controller: _fechaColocacionController,
+              const SizedBox(height: 16),
+
+              // **Sitio de inserción**
+              DropdownButtonFormField<String>(
+                value: selectedSitio,
+                onChanged: (value) => setState(() => selectedSitio = value),
+                items: sitiosCateter.map((sitio) {
+                  return DropdownMenuItem(value: sitio, child: Text(sitio));
+                }).toList(),
                 decoration:
-                    const InputDecoration(labelText: "Fecha de colocación"),
+                    const InputDecoration(labelText: "Sitio de Inserción"),
                 validator: (value) =>
-                    value!.isEmpty ? "Campo obligatorio" : null,
+                    value == null ? "Seleccione un sitio de inserción" : null,
               ),
+              const SizedBox(height: 16),
+
+              // **Lugar de procedencia**
+              DropdownButtonFormField<String>(
+                value: selectedLugarProcedencia,
+                onChanged: (value) =>
+                    setState(() => selectedLugarProcedencia = value),
+                items: lugaresProcedenciaCateter.map((lugar) {
+                  return DropdownMenuItem(value: lugar, child: Text(lugar));
+                }).toList(),
+                decoration:
+                    const InputDecoration(labelText: "Lugar de Procedencia"),
+                validator: (value) =>
+                    value == null ? "Seleccione un lugar de procedencia" : null,
+              ),
+              const SizedBox(height: 16),
+
+              // **Fecha de inserción**
               TextFormField(
-                controller: _ubicacionController,
-                decoration: const InputDecoration(labelText: "Ubicación"),
+                controller: fechaInsercionController,
+                decoration:
+                    const InputDecoration(labelText: "Fecha de Inserción"),
+                readOnly: true,
+                onTap: () => _seleccionarFecha(fechaInsercionController),
                 validator: (value) =>
-                    value!.isEmpty ? "Campo obligatorio" : null,
+                    value!.isEmpty ? "Seleccione una fecha de inserción" : null,
               ),
+              const SizedBox(height: 16),
+
+              // **Fecha de retiro**
               TextFormField(
-                controller: _duracionController,
-                decoration: const InputDecoration(
-                    labelText: "Duración estimada (días)"),
-                keyboardType: TextInputType.number,
-                validator: (value) =>
-                    value!.isEmpty ? "Campo obligatorio" : null,
+                controller: fechaRetiroController,
+                decoration: const InputDecoration(labelText: "Fecha de Retiro"),
+                readOnly: true,
+                onTap: () => _seleccionarFecha(fechaRetiroController),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
+
+              // **Botón de actualizar**
               ElevatedButton(
-                onPressed: _guardarCambios,
-                child: const Text("Guardar cambios"),
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    final dto = UpdateCateterDto(
+                      tipo: selectedTipo,
+                      sitio: selectedSitio,
+                      fechaInsercion: fechaInsercionController.text.isNotEmpty
+                          ? DateTime.parse(fechaInsercionController.text)
+                          : null,
+                      fechaRetiro: fechaRetiroController.text.isNotEmpty
+                          ? DateTime.parse(fechaRetiroController.text)
+                          : null,
+                      lugarProcedencia: selectedLugarProcedencia,
+                    );
+
+                    await ref.read(actualizarCateterProvider((
+                      idIngreso: widget.idIngreso,
+                      idCateter: widget.cateter.id,
+                      dto: dto,
+                    )).future);
+
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("✅ Catéter actualizado exitosamente."),
+                        ),
+                      );
+                      Navigator.pop(context);
+                    }
+                  }
+                },
+                child: const Text("Guardar Cambios"),
               ),
             ],
           ),

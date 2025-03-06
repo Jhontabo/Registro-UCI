@@ -45,7 +45,7 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
       lastDate: DateTime.now(),
     );
 
-    if (picked != null && picked != _fechaInsercion) {
+    if (picked != null) {
       setState(() {
         _fechaInsercion = picked;
       });
@@ -54,12 +54,9 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
 
   Future<void> _guardarCateter() async {
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
       if (_fechaInsercion == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Debe seleccionar una fecha")),
-        );
+        setState(
+            () {}); // 🔥 Para actualizar la UI y mostrar el mensaje de error
         return;
       }
 
@@ -123,22 +120,46 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
                   value == null ? 'Seleccione un lugar' : null,
             ),
             const SizedBox(height: 20),
+
+            // 🔥 Mejor manejo de la fecha seleccionada
             ListTile(
-              title: Text(_fechaInsercion == null
-                  ? "Seleccione una fecha"
-                  : "Fecha: ${DateFormat('yyyy-MM-dd').format(_fechaInsercion!)}"), // ✅ Formato corregido
+              title: Text(
+                _fechaInsercion == null
+                    ? "Seleccione una fecha"
+                    : "Fecha: ${DateFormat('yyyy-MM-dd').format(_fechaInsercion!)}",
+              ),
               trailing: const Icon(Icons.calendar_today),
-              onTap: _seleccionarFecha, // ✅ Permite seleccionar la fecha
+              onTap: _seleccionarFecha,
             ),
+            if (_fechaInsercion ==
+                null) // 🔥 Mostrar error si la fecha no está seleccionada
+              const Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: Text(
+                  "Debe seleccionar una fecha",
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
+
             const SizedBox(height: 20),
+
+            // 🔥 Deshabilitar el botón de "Guardar" mientras está cargando
             estado.when(
               data: (_) => ElevatedButton(
                 onPressed: _guardarCateter,
                 child: const Text("Guardar"),
               ),
               loading: () => const CircularProgressIndicator(),
-              error: (e, _) =>
+              error: (e, _) => Column(
+                children: [
                   Text('Error: $e', style: const TextStyle(color: Colors.red)),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _guardarCateter,
+                    child: const Text("Reintentar"),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

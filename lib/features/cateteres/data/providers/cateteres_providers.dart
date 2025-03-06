@@ -12,9 +12,7 @@ final cateteresRepositoryProvider = Provider<CateteresRepository>((ref) {
 
 /// 🔹 **Obtener todos los catéteres en tiempo real**
 final allCateteresProvider = StreamProvider<List<Cateter>>((ref) {
-  return ref
-      .watch(cateteresRepositoryProvider)
-      .getAllCateteres(); // ✅ Escuchar en tiempo real
+  return ref.watch(cateteresRepositoryProvider).getAllCateteres();
 });
 
 /// 🔹 **Obtener los catéteres de un ingreso específico en tiempo real**
@@ -22,7 +20,7 @@ final cateteresByIngresoProvider =
     StreamProvider.family<List<Cateter>, String>((ref, idIngreso) {
   return ref
       .watch(cateteresRepositoryProvider)
-      .getCateteresByIngreso(idIngreso); // ✅ Debe usar watch()
+      .getCateteresByIngreso(idIngreso);
 });
 
 /// 🔹 **Obtener un catéter específico de un ingreso**
@@ -38,11 +36,11 @@ final registrarCateterProvider =
     FutureProvider.family<void, CreateCateterDto>((ref, dto) async {
   final repository = ref.read(cateteresRepositoryProvider);
   await repository.createCateter(dto);
+  ref.invalidate(allCateteresProvider); // 🔥 Actualizar todos los catéteres
   ref.invalidate(
-      cateteresByIngresoProvider); // 🔥 Forzar actualización en tiempo real
+      cateteresByIngresoProvider); // 🔥 Actualizar ingreso específico
 });
 
-/// 🔹 **Actualizar un catéter**
 final actualizarCateterProvider = FutureProvider.family<
     void,
     ({
@@ -51,10 +49,15 @@ final actualizarCateterProvider = FutureProvider.family<
       UpdateCateterDto dto
     })>((ref, params) async {
   final repository = ref.read(cateteresRepositoryProvider);
-  await repository.updateCateter(
-      params.idIngreso, params.idCateter, params.dto);
-  ref.invalidate(
-      cateteresByIngresoProvider); // 🔥 Forzar actualización en tiempo real
+
+  try {
+    await repository.updateCateter(
+        params.idIngreso, params.idCateter, params.dto);
+    ref.invalidate(allCateteresProvider);
+    ref.refresh(cateteresByIngresoProvider(params.idIngreso));
+  } catch (e) {
+    throw Exception("⚠️ Error al actualizar el catéter: $e");
+  }
 });
 
 /// 🔹 **Eliminar un catéter**
@@ -63,6 +66,6 @@ final eliminarCateterProvider =
         (ref, params) async {
   final repository = ref.read(cateteresRepositoryProvider);
   await repository.deleteCateter(params.idIngreso, params.idCateter);
-  ref.invalidate(
-      cateteresByIngresoProvider); // 🔥 Forzar actualización en tiempo real
+  ref.invalidate(allCateteresProvider);
+  ref.invalidate(cateteresByIngresoProvider);
 });
