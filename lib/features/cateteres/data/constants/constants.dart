@@ -11,8 +11,10 @@ const List<String> sitiosCateter = [
   'Yugular izquierdo',
   'Subclavia derecho',
   'Subclavia izquierdo',
-  'Periférico miembro superior derecho',
-  'Periférico miembro superior izquierdo',
+  'Periférico superior derecho',
+  'Periférico superior izquierdo',
+  'Periférico inferior derecho',
+  'Periférico inferior izquierdo',
   'Radial derecho',
   'Radial izquierdo',
   'Pedial derecho',
@@ -26,5 +28,5 @@ const List<String> lugaresProcedenciaCateter = [
   'Hospitalización',
   'Urgencias',
   'Quirófano',
-  'Cuidado intermedio',
+  'Cuidados intesivos'
 ];

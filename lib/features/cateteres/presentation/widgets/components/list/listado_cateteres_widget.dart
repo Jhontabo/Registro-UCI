@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart'; // ✅ Importación para formatear las fechas
 import '../../../../domain/models/cateter.dart';
 import '../../../../data/providers/cateteres_providers.dart';
 
@@ -8,6 +7,8 @@ class ListadoCateteresWidget extends ConsumerWidget {
   final String idIngreso;
 
   const ListadoCateteresWidget({super.key, required this.idIngreso});
+
+  // Función para formatear las fechas
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,17 +27,17 @@ class ListadoCateteresWidget extends ConsumerWidget {
 
             return Card(
               child: ListTile(
-                title: Text(cateter.tipo,
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                title: Text(
+                  cateter.tipo,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Sitio: ${cateter.sitio}"),
-                    Text(
-                        "Fecha Inserción: ${DateFormat('yyyy-MM-dd').format(cateter.fechaInsercion)}"),
+                    Text("Fecha Inserción: ${(cateter.fechaInsercion)}"),
                     if (cateter.fechaRetiro != null)
-                      Text(
-                          "Fecha Retiro: ${DateFormat('yyyy-MM-dd').format(cateter.fechaRetiro!)}"),
+                      Text("Fecha Retiro: ${(cateter.fechaRetiro)}"),
                     Text("Lugar: ${cateter.lugarProcedencia}"),
                   ],
                 ),

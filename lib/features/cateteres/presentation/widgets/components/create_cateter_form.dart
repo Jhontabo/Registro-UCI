@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart'; // ✅ Importar para formatear la fecha
 import '../../../data/dto/create_cateter_dto.dart';
 import '../../../presentation/controllers/create_cateter_controller.dart';
+import '../../../data/constants/constants.dart'; // Importamos el archivo de constantes
 
 class CreateCateterForm extends ConsumerStatefulWidget {
   final String idIngreso;
@@ -18,25 +19,6 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
   DateTime _fechaInsercion = DateTime.now(); // ✅ Ahora es seleccionable
 
   late TextEditingController fechaController; // Definir el controlador
-  final List<String> tipos = [
-    "Venoso central",
-    "Venoso periférico",
-    "Arterial"
-  ];
-  final List<String> sitios = [
-    "Yugular derecho",
-    "Yugular izquierdo",
-    "Radial derecho",
-    "Radial izquierdo",
-    "Femoral derecho",
-    "Femoral izquierdo"
-  ];
-  final List<String> lugares = [
-    "Hospitalización",
-    "Urgencias",
-    "Quirófano",
-    "Cuidado intermedio"
-  ];
 
   @override
   void initState() {
@@ -93,6 +75,7 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
           child: Column(
             children: [
               const SizedBox(height: 20),
+
               // 🔥 Mejor manejo de la fecha seleccionada
               TextFormField(
                 controller: fechaController,
@@ -107,7 +90,7 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
               // **Dropdown Tipo de Catéter**
               DropdownButtonFormField<String>(
                 value: _tipo,
-                items: tipos
+                items: tiposCateter
                     .map((tipo) =>
                         DropdownMenuItem(value: tipo, child: Text(tipo)))
                     .toList(),
@@ -121,7 +104,7 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
               // **Dropdown Sitio**
               DropdownButtonFormField<String>(
                 value: _sitio,
-                items: sitios
+                items: sitiosCateter
                     .map((sitio) =>
                         DropdownMenuItem(value: sitio, child: Text(sitio)))
                     .toList(),
@@ -135,7 +118,7 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
               // **Dropdown Lugar de Procedencia**
               DropdownButtonFormField<String>(
                 value: _lugarProcedencia,
-                items: lugares
+                items: lugaresProcedenciaCateter
                     .map((lugar) =>
                         DropdownMenuItem(value: lugar, child: Text(lugar)))
                     .toList(),
