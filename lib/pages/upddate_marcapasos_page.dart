@@ -4,7 +4,7 @@ import 'package:registro_uci/features/marcapasos/data/dto/update_marcapaso_dto.d
 import 'package:registro_uci/features/marcapasos/data/providers/marcapasos_provider.dart';
 import 'package:registro_uci/features/marcapasos/domain/models/marcapaso.dart';
 import 'package:intl/intl.dart';
-import '../features/marcapasos/data/constants/constants.dart';
+import '../features/marcapasos/data/constants/constants.dart'; // Importación de las constantes
 
 class EditMarcapasoPage extends ConsumerStatefulWidget {
   final String idIngreso;
@@ -29,6 +29,9 @@ class _EditMarcapasoPageState extends ConsumerState<EditMarcapasoPage> {
   late TextEditingController salidaController;
   String? selectedModo;
   String? selectedVia;
+  int? selectedFrecuencia;
+  double? selectedSensibilidad;
+  double? selectedSalida;
 
   @override
   void initState() {
@@ -42,12 +45,23 @@ class _EditMarcapasoPageState extends ConsumerState<EditMarcapasoPage> {
     salidaController =
         TextEditingController(text: widget.marcapaso.salida.toString());
 
-    // ✅ Asegurar que el valor seleccionado exista en la lista de opciones
+    // Asegurar que el valor seleccionado exista en la lista de opciones
     selectedModo = modosMarcapaso.contains(widget.marcapaso.modo)
         ? widget.marcapaso.modo
         : null;
     selectedVia = viasMarcapaso.contains(widget.marcapaso.via)
         ? widget.marcapaso.via
+        : null;
+    selectedFrecuencia =
+        frecuenciasMarcapaso.contains(widget.marcapaso.frecuencia)
+            ? widget.marcapaso.frecuencia
+            : null;
+    selectedSensibilidad =
+        sensibilidadesMarcapaso.contains(widget.marcapaso.sensibilidad)
+            ? widget.marcapaso.sensibilidad
+            : null;
+    selectedSalida = salidasMarcapaso.contains(widget.marcapaso.salida)
+        ? widget.marcapaso.salida
         : null;
   }
 
@@ -98,43 +112,60 @@ class _EditMarcapasoPageState extends ConsumerState<EditMarcapasoPage> {
               DropdownButtonFormField<String>(
                 value: selectedModo,
                 onChanged: (value) => setState(() => selectedModo = value),
-                items: ['Modo VVI', 'Modo AAI', 'Modo DDD'].map((modo) {
+                items: modosMarcapaso.map((modo) {
                   return DropdownMenuItem(value: modo, child: Text(modo));
                 }).toList(),
                 decoration: const InputDecoration(labelText: "Modo"),
               ),
               const SizedBox(height: 16),
 
+              // **Vía**
               DropdownButtonFormField<String>(
-                value: selectedVia, // ✅ Puede ser null si no existe en la lista
+                value: selectedVia,
                 onChanged: (value) => setState(() => selectedVia = value),
                 items: viasMarcapaso.map((via) {
                   return DropdownMenuItem(value: via, child: Text(via));
                 }).toList(),
                 decoration: const InputDecoration(labelText: "Vía"),
-                hint: const Text(
-                    "Seleccione una vía"), // ✅ Mostrar si el valor no es válido
+                hint: const Text("Seleccione una vía"),
               ),
+              const SizedBox(height: 16),
+
               // **Frecuencia**
-              TextFormField(
-                controller: frecuenciaController,
-                keyboardType: TextInputType.number,
+              DropdownButtonFormField<int>(
+                value: selectedFrecuencia,
+                onChanged: (value) =>
+                    setState(() => selectedFrecuencia = value),
+                items: frecuenciasMarcapaso.map((frecuencia) {
+                  return DropdownMenuItem(
+                      value: frecuencia, child: Text(frecuencia.toString()));
+                }).toList(),
                 decoration: const InputDecoration(labelText: "Frecuencia"),
               ),
               const SizedBox(height: 16),
 
               // **Sensibilidad**
-              TextFormField(
-                controller: sensibilidadController,
-                keyboardType: TextInputType.number,
+              DropdownButtonFormField<double>(
+                value: selectedSensibilidad,
+                onChanged: (value) =>
+                    setState(() => selectedSensibilidad = value),
+                items: sensibilidadesMarcapaso.map((sensibilidad) {
+                  return DropdownMenuItem(
+                      value: sensibilidad,
+                      child: Text(sensibilidad.toString()));
+                }).toList(),
                 decoration: const InputDecoration(labelText: "Sensibilidad"),
               ),
               const SizedBox(height: 16),
 
               // **Salida**
-              TextFormField(
-                controller: salidaController,
-                keyboardType: TextInputType.number,
+              DropdownButtonFormField<double>(
+                value: selectedSalida,
+                onChanged: (value) => setState(() => selectedSalida = value),
+                items: salidasMarcapaso.map((salida) {
+                  return DropdownMenuItem(
+                      value: salida, child: Text(salida.toString()));
+                }).toList(),
                 decoration: const InputDecoration(labelText: "Salida"),
               ),
               const SizedBox(height: 16),
@@ -146,9 +177,10 @@ class _EditMarcapasoPageState extends ConsumerState<EditMarcapasoPage> {
                     fechaColocacion: fechaController.text,
                     modo: selectedModo,
                     via: selectedVia,
-                    frecuencia: int.parse(frecuenciaController.text),
-                    sensibilidad: double.parse(sensibilidadController.text),
-                    salida: double.parse(salidaController.text),
+                    frecuencia: selectedFrecuencia ??
+                        0, // Se debe asignar un valor predeterminado si es null
+                    sensibilidad: selectedSensibilidad ?? 0.0,
+                    salida: selectedSalida ?? 0.0,
                   );
 
                   await ref.read(actualizarMarcapasoProvider((

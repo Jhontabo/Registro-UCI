@@ -8,7 +8,8 @@ const List<String> modosMarcapaso = [
 ];
 
 const List<String> viasMarcapaso = [
-  'Vena yugular interna',
+  'Vena yugular interna izquierda',
+  'Vena yugular interna Derecha',
   'Vena yugular externa izquierda',
   'Vena yugular externa derecha',
   'Vena subclavia derecha',
