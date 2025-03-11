@@ -44,17 +44,27 @@ class ListadoCateteresPage extends ConsumerWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Mostrar la fecha de inserción sin formato
                       Text(
-                          "Fecha de inserción: ${cateter.fechaInsercion.toString() ?? 'No registrada'}"),
-                      Text("Ubicación: ${cateter.sitio ?? 'No especificada'}"),
+                          "Fecha de inserción: ${cateter.fechaInsercion ?? 'No registrada'}"),
+
+                      // Mostrar el sitio de inserción
                       Text(
-                          "Fecha de retiro: ${cateter.fechaRetiro?.toString() ?? 'Aún en uso'}"),
+                          "Sitio de inserción: ${cateter.sitio ?? 'No especificado'}"),
+
+                      // Mostrar el lugar de procedencia
+                      Text(
+                          "Lugar de procedencia: ${cateter.lugarProcedencia ?? 'No especificado'}"),
+
+                      // Mostrar la fecha de retiro (si está disponible)
+                      Text(
+                          "Fecha de retiro: ${cateter.fechaRetiro ?? 'Aún en uso'}"),
                     ],
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Mostrar icono de días en uso
+                      // Mostrar el ícono de reloj junto con los días en uso
                       IconButton(
                         icon:
                             const Icon(Icons.access_time, color: Colors.green),
