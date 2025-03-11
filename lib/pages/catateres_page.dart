@@ -28,6 +28,13 @@ class ListadoCateteresPage extends ConsumerWidget {
             itemCount: cateteres.length,
             itemBuilder: (context, index) {
               final cateter = cateteres[index];
+
+              // Cálculo de los días en uso de cada catéter
+              DateTime fechaActual = DateTime.now();
+              Duration diferencia =
+                  fechaActual.difference(cateter.fechaInsercion);
+              int diasEnUso = diferencia.inDays;
+
               return Card(
                 child: ListTile(
                   title: Text(
@@ -47,6 +54,23 @@ class ListadoCateteresPage extends ConsumerWidget {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // Mostrar icono de días en uso
+                      IconButton(
+                        icon:
+                            const Icon(Icons.access_time, color: Colors.green),
+                        onPressed: () {
+                          // Acción si es necesario (puedes agregar lógica aquí si quieres)
+                        },
+                      ),
+                      Text(
+                        "$diasEnUso días", // Mostrar la cantidad de días en uso
+                        style: TextStyle(
+                          color: diasEnUso > 7 ? Colors.red : Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Icono de editar
                       IconButton(
                         icon: const Icon(Icons.edit, color: Colors.blue),
                         onPressed: () {
@@ -60,22 +84,29 @@ class ListadoCateteresPage extends ConsumerWidget {
                           );
                         },
                       ),
+                      // Icono de eliminar
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () async {
-                          await ref
-                              .read(cateteresRepositoryProvider)
-                              .eliminarCateter(
-                                idIngreso,
-                                cateter.id, // ✅ Asegurar que id existe
-                              );
+                          // Realizamos la eliminación de manera asincrónica
+                          try {
+                            await ref
+                                .read(cateteresRepositoryProvider)
+                                .eliminarCateter(idIngreso, cateter.id);
 
-                          // 🔥 Asegurar actualización en tiempo real
-                          ref.invalidate(cateteresByIngresoProvider);
+                            // 🔥 Asegurar actualización en tiempo real
+                            ref.invalidate(cateteresByIngresoProvider);
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Catéter eliminado")),
-                          );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("Catéter eliminado")),
+                            );
+                          } catch (e) {
+                            // Muestra un mensaje si hay error
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Error: $e")),
+                            );
+                          }
                         },
                       ),
                     ],
@@ -88,9 +119,9 @@ class ListadoCateteresPage extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text("Error: $err")),
       ),
-
-      // 🔥 Asegurar que el botón flotante aparezca correctamente
-      floatingActionButton: CreateCateterFloatingButton(idIngreso: idIngreso),
+      floatingActionButton: CreateCateterFloatingButton(
+          idIngreso:
+              idIngreso), // ✅ Asegurar que el botón flotante aparezca correctamente
     );
   }
 }
