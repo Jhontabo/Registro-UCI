@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/tile.dart';
-import 'package:registro_uci/pages/dia_tratamiento_antibiotico_page.dart';
+import 'package:registro_uci/pages/tratamiento/dia_tratamiento_antibiotico_page.dart';
 
 class DiasTratamientoAntibioticoTile extends StatelessWidget {
   final String idIngreso;

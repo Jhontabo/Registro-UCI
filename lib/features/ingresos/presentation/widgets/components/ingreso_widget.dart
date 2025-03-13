@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 //import 'package:registro_uci/common/components/bed_widget.dart';
 import 'package:registro_uci/common/components/tappable_container.dart';
 import 'package:registro_uci/features/ingresos/domain/models/ingreso.dart';
-import 'package:registro_uci/pages/ingreso_page.dart';
+import 'package:registro_uci/pages/ingreso/ingreso_page.dart';
 
 class IngresoWidget extends StatelessWidget {
   final Ingreso ingreso;

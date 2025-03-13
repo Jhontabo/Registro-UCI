@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:registro_uci/pages/create_ingreso_page.dart';
+import 'package:registro_uci/pages/ingreso/create_ingreso_page.dart';
 
 class CreateIngresoFAB extends StatelessWidget {
   const CreateIngresoFAB({

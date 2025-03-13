@@ -4,7 +4,7 @@ import 'package:registro_uci/common/components/lite_tile.dart';
 import 'package:registro_uci/features/antibioticos/data/providers/dosis_tratamiento_provider.dart';
 import 'package:registro_uci/features/antibioticos/data/providers/tratamiento_antibiotico_provider.dart';
 import 'package:registro_uci/features/antibioticos/domain/models/dia_tratamiento.dart';
-import 'package:registro_uci/pages/dosis_tratamiento_page.dart';
+import 'package:registro_uci/pages/tratamiento/dosis_tratamiento_page.dart';
 
 class DiaTratamientoTile extends StatelessWidget {
   final DiaTratamiento diaTratamiento;

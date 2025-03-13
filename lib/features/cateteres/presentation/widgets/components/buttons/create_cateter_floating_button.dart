@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../../pages/create_cateter_page.dart';
+import '../../../../../../pages/cateteres/create_cateter_page.dart';
 
 class CreateCateterFloatingButton extends StatelessWidget {
   final String idIngreso; // Recibe el ID del ingreso

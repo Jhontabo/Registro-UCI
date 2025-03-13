@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../features/cateteres/presentation/widgets/components/create_cateter_form.dart';
+import '../../features/cateteres/presentation/widgets/components/create_cateter_form.dart';
 
 class CreateCateterPage extends StatelessWidget {
   final String idIngreso;

@@ -49,7 +49,7 @@ class IngresoPage extends ConsumerWidget {
               const SizedBox(height: 10),
               TratamientosAntibioticosTile(idIngreso: data.idIngreso),
               const SizedBox(height: 10),
-              const ProcedimientosEspecialesTile(),
+              ProcedimientosEspecialesTile(idIngreso: data.idIngreso),
               const SizedBox(height: 10),
               MarcapasosTile(
                   idIngreso: data.idIngreso), // ✅ Se obtiene correctamente

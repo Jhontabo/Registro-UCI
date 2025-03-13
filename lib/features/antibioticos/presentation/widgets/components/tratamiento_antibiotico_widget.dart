@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_uci/features/antibioticos/domain/models/tratamiento_antibiotico.dart';
-import 'package:registro_uci/pages/tratamiento_antibiotico_page.dart';
+import 'package:registro_uci/pages/tratamiento/tratamiento_antibiotico_page.dart';
 
 class TratamientoAntibioticoWidget extends StatefulWidget {
   final TratamientoAntibiotico tratamientoAntibiotico;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/tile.dart';
-import 'package:registro_uci/pages/registros_diarios_page.dart';
+import 'package:registro_uci/pages/registro_diario/registros_diarios_page.dart';
 
 class RegistrosDiariosTile extends StatelessWidget {
   const RegistrosDiariosTile({

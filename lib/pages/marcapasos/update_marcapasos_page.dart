@@ -4,7 +4,7 @@ import 'package:registro_uci/features/marcapasos/data/dto/update_marcapaso_dto.d
 import 'package:registro_uci/features/marcapasos/data/providers/marcapasos_provider.dart';
 import 'package:registro_uci/features/marcapasos/domain/models/marcapaso.dart';
 import 'package:intl/intl.dart';
-import '../features/marcapasos/data/constants/constants.dart'; // Importación de las constantes
+import '../../features/marcapasos/data/constants/constants.dart'; // Importación de las constantes
 
 class EditMarcapasoPage extends ConsumerStatefulWidget {
   final String idIngreso;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../features/cateteres/data/repositories/cateteres_repository.dart'; // ✅ Importación correcta
+import '../../features/cateteres/data/repositories/cateteres_repository.dart'; // ✅ Importación correcta
 import 'package:registro_uci/features/cateteres/presentation/widgets/components/buttons/create_cateter_floating_button.dart';
-import '../pages/update_cateteres_page.dart';
+import 'update_cateteres_page.dart';
 
 class ListadoCateteresPage extends ConsumerWidget {
   final String idIngreso;

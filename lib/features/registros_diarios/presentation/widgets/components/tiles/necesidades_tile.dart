@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_tile.dart';
 import 'package:registro_uci/features/firmas/domain/models/firma.dart';
-import 'package:registro_uci/pages/intervenciones_page.dart';
+import 'package:registro_uci/pages/intervenciones/intervenciones_page.dart';
 
 class NecesidadesTile extends StatelessWidget {
   const NecesidadesTile({

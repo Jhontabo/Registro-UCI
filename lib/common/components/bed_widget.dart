@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/features/ingresos/data/providers/ingreso_by_id_provider.dart';
-import 'package:registro_uci/pages/ingreso_details_page.dart';
+import 'package:registro_uci/pages/ingreso/ingreso_details_page.dart';
 
 class BedProviderWidget extends ConsumerWidget {
   const BedProviderWidget({

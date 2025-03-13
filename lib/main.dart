@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/themes/light_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:registro_uci/features/auth/data/providers/is_logged_in_provider.dart';
-import 'package:registro_uci/pages/ingresos_page.dart';
+import 'package:registro_uci/pages/ingreso/ingresos_page.dart';
 import 'package:registro_uci/pages/login_page.dart';
 import 'firebase_options.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       home: Consumer(
         builder: (context, ref, child) {
           final isLoggedIn = ref.watch(isLoggedInProvider);
-          // return const LiquidosAdministradosScreen();
+          ();
           if (isLoggedIn) {
             return const IngresosPage();
           } else {

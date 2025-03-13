@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 /// Valida la fecha de colocación del marcapaso.
 String? fechaColocacionValidator(String? value) {
   if (value == null || value.isEmpty) {

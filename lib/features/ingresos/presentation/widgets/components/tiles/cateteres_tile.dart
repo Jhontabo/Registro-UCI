@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/tile.dart';
-import '../../../../../../pages/catateres_page.dart'; // ✅ Importa la página correcta
+import '../../../../../../pages/cateteres/catateres_page.dart'; // ✅ Importa la página correcta
 
 class CateteresTile extends StatelessWidget {
   final String idIngreso; // 🔥 Se añade el idIngreso como parámetro

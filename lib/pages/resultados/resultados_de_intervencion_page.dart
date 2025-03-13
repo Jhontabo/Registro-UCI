@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:registro_uci/constants/intervenciones.dart';
 import 'package:registro_uci/features/intervenciones/domain/models/intervencion.dart';
 import 'package:registro_uci/features/resultados/domain/models/resultado.dart';
-import 'package:registro_uci/pages/resultado_page.dart';
+import 'package:registro_uci/pages/resultados/resultado_page.dart';
 
 class ResultadosDeIntervencionPage extends StatelessWidget {
   final Intervencion intervencion;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../../pages/create_marcapaso_page.dart';
+import '../../../../../../pages/marcapasos/create_marcapaso_page.dart';
 
 class CreateMarcapasosFloatingButton extends StatelessWidget {
   final String idIngreso; // Recibe el ID del ingreso

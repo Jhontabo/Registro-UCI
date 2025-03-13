@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/icon_buttons/details_icon_button.dart';
 import 'package:registro_uci/features/firmas/domain/models/reporte_params.dart';
 import 'package:registro_uci/features/intervenciones/domain/models/intervencion.dart';
-import 'package:registro_uci/pages/intervencion_page.dart';
+import 'package:registro_uci/pages/intervenciones/intervencion_page.dart';
 
 class IntervencionDetailsIconButton extends StatelessWidget {
   final Intervencion intervencion;

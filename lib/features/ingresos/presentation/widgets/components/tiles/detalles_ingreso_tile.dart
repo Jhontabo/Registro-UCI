@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/tile.dart';
-import 'package:registro_uci/pages/ingreso_details_page.dart';
+import 'package:registro_uci/pages/ingreso/ingreso_details_page.dart';
 
 class DetallesIngresoTile extends StatelessWidget {
   final String idIngreso;
