@@ -29,53 +29,117 @@ class ListadoMarcapasosPage extends ConsumerWidget {
             itemBuilder: (context, index) {
               final marcapaso = marcapasos[index];
               return Card(
-                child: ListTile(
-                  title: Text(
-                    "Modo: ${marcapaso.modo}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Column(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Fecha: ${marcapaso.fechaColocacion}"),
-                      Text("Vía: ${marcapaso.via}"),
-                      Text("Frecuencia: ${marcapaso.frecuencia} BPM"),
-                      Text("Sensibilidad: ${marcapaso.sensibilidad} mV"),
-                      Text("Salida: ${marcapaso.salida} V"),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.blue),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => EditMarcapasoPage(
-                                idIngreso: idIngreso,
-                                marcapaso: marcapaso,
-                              ),
-                            ),
-                          );
-                        },
+                      Text(
+                        "Modo: ${marcapaso.modo}",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () async {
-                          await ref.read(eliminarMarcapasoProvider((
-                            idIngreso: idIngreso,
-                            idMarcapaso: marcapaso.id,
-                          )).future);
+                      const SizedBox(height: 4),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          children: [
+                            const TextSpan(
+                              text: "Fecha: ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(text: marcapaso.fechaColocacion),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          children: [
+                            const TextSpan(
+                              text: "Vía: ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(text: marcapaso.via),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          children: [
+                            const TextSpan(
+                              text: "Frecuencia: ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(text: "${marcapaso.frecuencia} BPM"),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          children: [
+                            const TextSpan(
+                              text: "Sensibilidad: ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(text: "${marcapaso.sensibilidad} mV"),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          children: [
+                            const TextSpan(
+                              text: "Salida: ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(text: "${marcapaso.salida} V"),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => EditMarcapasoPage(
+                                    idIngreso: idIngreso,
+                                    marcapaso: marcapaso,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () async {
+                              await ref.read(eliminarMarcapasoProvider((
+                                idIngreso: idIngreso,
+                                idMarcapaso: marcapaso.id,
+                              )).future);
 
-                          // 🔥 Asegurar actualización en tiempo real
-                          ref.invalidate(marcapasosByIngresoProvider);
+                              // 🔥 Asegurar actualización en tiempo real
+                              ref.invalidate(marcapasosByIngresoProvider);
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Marcapaso eliminado")),
-                          );
-                        },
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("Marcapaso eliminado")),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),

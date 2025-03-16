@@ -30,7 +30,7 @@ class ProcedimientosPage extends ConsumerWidget {
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: ListTile(
                       title: Text(procedimiento.nombreProcedimiento),
-                      subtitle: Text("Estado: ${procedimiento.estado}"),
+                      subtitle: _buildEstadoText(procedimiento.estado),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -47,6 +47,13 @@ class ProcedimientosPage extends ConsumerWidget {
                                   context, ref, procedimiento);
                             },
                           ),
+                          IconButton(
+                            icon:
+                                const Icon(Icons.update, color: Colors.orange),
+                            onPressed: () {
+                              _actualizarEstado(context, ref, procedimiento);
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -60,6 +67,44 @@ class ProcedimientosPage extends ConsumerWidget {
         onPressed: () => _mostrarDialogoAgregar(context, ref),
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  // Función que asigna color al estado
+  // Función que asigna color a las letras del estado y agrega emojis
+  Widget _buildEstadoText(String estado) {
+    Color estadoColor;
+    String emoji;
+
+    switch (estado) {
+      case 'Pendiente':
+        estadoColor = Colors.orange; // Amarillo para pendiente
+        emoji = '⏳'; // Emoji de reloj de arena
+        break;
+      case 'Realizado':
+        estadoColor = Colors.green; // Verde para realizado
+        emoji = '✅'; // Emoji de check
+        break;
+      case 'Reportado':
+        estadoColor = Colors.blue; // Azul para reportado
+        emoji = '📄❗'; // Emoji de documento con exclamación
+        break;
+      default:
+        estadoColor = Colors.grey; // Color predeterminado en caso de error
+        emoji = '❓'; // Emoji de pregunta
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '$emoji $estado',
+          style: TextStyle(
+            color: estadoColor, // Solo el color de las letras
+            fontWeight: FontWeight.bold, // Negrita para las letras
+          ),
+        ),
+      ],
     );
   }
 

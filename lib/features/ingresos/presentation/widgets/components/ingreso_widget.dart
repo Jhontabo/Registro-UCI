@@ -14,6 +14,9 @@ class IngresoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isActive = ingreso.fechaFin == null;
+    final int dias =
+        _calculateDaysPassed(ingreso.fechaIngreso, ingreso.fechaFin);
+    final int folio = dias + 1; // 📌 Folio empieza en 1 cuando los días son 0
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -27,8 +30,7 @@ class IngresoWidget extends StatelessWidget {
           ));
         },
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment
-              .start, // 📌 Alinea todo el contenido a la izquierda
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// **Sección de información del paciente**
             Text(
@@ -74,13 +76,11 @@ class IngresoWidget extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(
-                height: 10), // 📌 Espacio entre la información y los iconos
+            const SizedBox(height: 10),
 
             /// **Sección de iconos alineados a la izquierda**
             Row(
-              mainAxisAlignment: MainAxisAlignment
-                  .start, // 📌 Alinea los iconos a la izquierda
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                   padding:
@@ -90,12 +90,12 @@ class IngresoWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min, // 📌 Ajusta al contenido
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.bed, color: Colors.white, size: 20),
                       const SizedBox(width: 5),
                       Text(
-                        ingreso.cama, // ✅ Eliminamos "UCI"
+                        ingreso.cama,
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -104,7 +104,9 @@ class IngresoWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 10), // 📌 Espacio entre los botones
+                const SizedBox(width: 10),
+
+                /// 📌 Contenedor para los días
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -114,13 +116,39 @@ class IngresoWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min, // 📌 Ajusta al contenido
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.calendar_today,
                           color: Colors.white, size: 20),
                       const SizedBox(width: 5),
                       Text(
-                        "0${_calculateDaysPassed(ingreso.fechaIngreso, ingreso.fechaFin)}",
+                        "Días: $dias",
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(
+                    width: 10), // 📌 Espacio entre los dos contenedores
+
+                /// 📌 Contenedor para el folio
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.purple
+                        .shade400, // Puedes cambiar el color si lo deseas
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.receipt, color: Colors.white, size: 20),
+                      const SizedBox(width: 5),
+                      Text(
+                        "Folio: $folio",
                         style: const TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
@@ -148,6 +176,7 @@ class IngresoWidget extends StatelessWidget {
     return '$age años';
   }
 
+  /// **Días empiezan en 0, pero Folio empieza en 1**
   int _calculateDaysPassed(DateTime fechaIngreso, DateTime? fechaFin) {
     final currentDate = DateTime.now();
     if (fechaFin == null) return currentDate.difference(fechaIngreso).inDays;

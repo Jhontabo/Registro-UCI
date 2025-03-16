@@ -36,88 +36,127 @@ class ListadoCateteresPage extends ConsumerWidget {
               int diasEnUso = diferencia.inDays;
 
               return Card(
-                child: ListTile(
-                  title: Text(
-                    "Tipo: ${cateter.tipo ?? 'Desconocido'}", // ✅ Validación en caso de null
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Column(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Mostrar la fecha de inserción sin formato
                       Text(
-                          "Fecha de inserción: ${cateter.fechaInsercion ?? 'No registrada'}"),
-
-                      // Mostrar el sitio de inserción
-                      Text(
-                          "Sitio de inserción: ${cateter.sitio ?? 'No especificado'}"),
-
-                      // Mostrar el lugar de procedencia
-                      Text(
-                          "Lugar de procedencia: ${cateter.lugarProcedencia ?? 'No especificado'}"),
-
-                      // Mostrar la fecha de retiro (si está disponible)
-                      Text(
-                          "Fecha de retiro: ${cateter.fechaRetiro ?? 'Aún en uso'}"),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Mostrar el ícono de reloj junto con los días en uso
-                      IconButton(
-                        icon:
-                            const Icon(Icons.access_time, color: Colors.green),
-                        onPressed: () {
-                          // Acción si es necesario (puedes agregar lógica aquí si quieres)
-                        },
+                        "Tipo: ${cateter.tipo ?? 'Desconocido'}",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        "$diasEnUso días", // Mostrar la cantidad de días en uso
-                        style: TextStyle(
-                          color: diasEnUso > 7 ? Colors.red : Colors.green,
-                          fontWeight: FontWeight.bold,
+                      const SizedBox(height: 4),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          children: [
+                            const TextSpan(
+                              text: "Fecha de inserción: ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(
+                                text:
+                                    "${cateter.fechaInsercion ?? 'No registrada'}"),
+                          ],
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      // Icono de editar
-                      IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.blue),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => EditCateterPage(
-                                idIngreso: idIngreso,
-                                cateter: cateter,
-                              ),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          children: [
+                            const TextSpan(
+                              text: "Sitio de inserción: ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                          );
-                        },
+                            TextSpan(text: cateter.sitio ?? 'No especificado'),
+                          ],
+                        ),
                       ),
-                      // Icono de eliminar
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () async {
-                          // Realizamos la eliminación de manera asincrónica
-                          try {
-                            await ref
-                                .read(cateteresRepositoryProvider)
-                                .eliminarCateter(idIngreso, cateter.id);
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          children: [
+                            const TextSpan(
+                              text: "Lugar de procedencia: ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(
+                                text: cateter.lugarProcedencia ??
+                                    'No especificado'),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          children: [
+                            const TextSpan(
+                              text: "Fecha de retiro: ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(
+                                text: "${cateter.fechaRetiro ?? 'Aún en uso'}"),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.access_time,
+                                color: Colors.green),
+                            onPressed: () {
+                              // Acción si es necesario
+                            },
+                          ),
+                          Text(
+                            "$diasEnUso días",
+                            style: TextStyle(
+                              color: diasEnUso > 7 ? Colors.red : Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => EditCateterPage(
+                                    idIngreso: idIngreso,
+                                    cateter: cateter,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () async {
+                              try {
+                                await ref
+                                    .read(cateteresRepositoryProvider)
+                                    .eliminarCateter(idIngreso, cateter.id);
+                                ref.invalidate(cateteresByIngresoProvider);
 
-                            // 🔥 Asegurar actualización en tiempo real
-                            ref.invalidate(cateteresByIngresoProvider);
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("Catéter eliminado")),
-                            );
-                          } catch (e) {
-                            // Muestra un mensaje si hay error
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Error: $e")),
-                            );
-                          }
-                        },
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Catéter eliminado")),
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Error: $e")),
+                                );
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -129,9 +168,7 @@ class ListadoCateteresPage extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text("Error: $err")),
       ),
-      floatingActionButton: CreateCateterFloatingButton(
-          idIngreso:
-              idIngreso), // ✅ Asegurar que el botón flotante aparezca correctamente
+      floatingActionButton: CreateCateterFloatingButton(idIngreso: idIngreso),
     );
   }
 }
