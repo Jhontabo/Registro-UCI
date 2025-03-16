@@ -131,6 +131,7 @@ class _CreateTratamientoAntibioticoFormState
                 label: "Dosis",
                 prefixIcon:
                     const Icon(Icons.medical_services_outlined, size: 25),
+                textInputType: TextInputType.number,
                 validator: defaultValidator,
               ),
               const SizedBox(height: 15),
