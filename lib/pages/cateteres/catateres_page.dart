@@ -4,14 +4,20 @@ import '../../features/cateteres/data/repositories/cateteres_repository.dart'; /
 import 'package:registro_uci/features/cateteres/presentation/widgets/components/buttons/create_cateter_floating_button.dart';
 import 'update_cateteres_page.dart';
 
-class ListadoCateteresPage extends ConsumerWidget {
+class ListadoCateteresPage extends ConsumerStatefulWidget {
   final String idIngreso;
 
   const ListadoCateteresPage({super.key, required this.idIngreso});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final cateteresAsync = ref.watch(cateteresByIngresoProvider(idIngreso));
+  _ListadoCateteresPageState createState() => _ListadoCateteresPageState();
+}
+
+class _ListadoCateteresPageState extends ConsumerState<ListadoCateteresPage> {
+  @override
+  Widget build(BuildContext context) {
+    final cateteresAsync =
+        ref.watch(cateteresByIngresoProvider(widget.idIngreso));
 
     return Scaffold(
       appBar: AppBar(title: const Text("Lista de Catéteres")),
@@ -28,12 +34,17 @@ class ListadoCateteresPage extends ConsumerWidget {
             itemCount: cateteres.length,
             itemBuilder: (context, index) {
               final cateter = cateteres[index];
-
-              // Cálculo de los días en uso de cada catéter
               DateTime fechaActual = DateTime.now();
-              Duration diferencia =
-                  fechaActual.difference(cateter.fechaInsercion);
-              int diasEnUso = diferencia.inDays;
+
+              // ✅ Asegurar que fechaInsercion no sea null
+              DateTime fechaInsercion = cateter.fechaInsercion ?? fechaActual;
+              int diasEnUso = fechaActual.difference(fechaInsercion).inDays;
+
+              // ✅ Convertir tipo de catéter a minúsculas y sin espacios extra
+              String tipoCateter = (cateter.tipo ?? '').trim().toLowerCase();
+
+              // 🔍 Depuración: imprimir valores en la consola
+              print("Catéter: ${cateter.tipo} | Días en uso: $diasEnUso");
 
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
@@ -108,13 +119,6 @@ class ListadoCateteresPage extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.access_time,
-                                color: Colors.green),
-                            onPressed: () {
-                              // Acción si es necesario
-                            },
-                          ),
                           Text(
                             "$diasEnUso días",
                             style: TextStyle(
@@ -122,6 +126,15 @@ class ListadoCateteresPage extends ConsumerWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                          // ✅ Agregar icono de alerta si es un catéter periférico con más de 1 día
+                          if (tipoCateter.contains("periférico") &&
+                              diasEnUso >= 5)
+                            const Icon(Icons.warning_sharp,
+                                color: Colors.red, size: 24)
+                          else
+                            const SizedBox
+                                .shrink(), // 🔹 Si no es periférico, no muestra nada
+
                           const SizedBox(width: 12),
                           IconButton(
                             icon: const Icon(Icons.edit, color: Colors.blue),
@@ -129,7 +142,7 @@ class ListadoCateteresPage extends ConsumerWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => EditCateterPage(
-                                    idIngreso: idIngreso,
+                                    idIngreso: widget.idIngreso,
                                     cateter: cateter,
                                   ),
                                 ),
@@ -142,7 +155,8 @@ class ListadoCateteresPage extends ConsumerWidget {
                               try {
                                 await ref
                                     .read(cateteresRepositoryProvider)
-                                    .eliminarCateter(idIngreso, cateter.id);
+                                    .eliminarCateter(
+                                        widget.idIngreso, cateter.id);
                                 ref.invalidate(cateteresByIngresoProvider);
 
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -168,7 +182,8 @@ class ListadoCateteresPage extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text("Error: $err")),
       ),
-      floatingActionButton: CreateCateterFloatingButton(idIngreso: idIngreso),
+      floatingActionButton:
+          CreateCateterFloatingButton(idIngreso: widget.idIngreso),
     );
   }
 }
