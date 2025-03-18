@@ -18,9 +18,11 @@ class FirebaseProcedimientosRepository implements ProcedimientosRepository {
         .collection('procedimientosEspeciales')
         .snapshots() // Escucha los cambios en tiempo real
         .map((querySnapshot) {
-      return querySnapshot.docs
-          .map((doc) => ProcedimientoEspecial.fromJson(doc.data(), id: doc.id))
-          .toList();
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return ProcedimientoEspecial.fromJson(data)
+            .copyWith(idProcedimiento: doc.id);
+      }).toList();
     });
   }
 
@@ -74,6 +76,7 @@ class FirebaseProcedimientosRepository implements ProcedimientosRepository {
   }
 
   // Método para editar el nombre del procedimiento
+  @override
   Future<void> editProcedimientoNombre(
     String idIngreso,
     String idProcedimiento,
@@ -97,6 +100,7 @@ class FirebaseProcedimientosRepository implements ProcedimientosRepository {
   }
 
   // Método para actualizar el estado del procedimiento
+  @override
   Future<void> updateProcedimientoEstado(
     String idIngreso,
     String idProcedimiento,
