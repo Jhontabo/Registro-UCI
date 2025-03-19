@@ -31,20 +31,28 @@ class SondasPage extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final sonda = sondas[index];
 
-                // ✅ Manejo seguro de `fechaColocacion`
-                final fechaColocacion = (sonda.fechaColocacion is DateTime)
-                    ? 'Colocada el: ${(sonda.fechaColocacion).toLocal()}'
-                    : 'Fecha no disponible';
+                // Cálculo de los días en uso
+                final fechaColocacion = sonda.fechaColocacion;
+                final fechaRetiro = sonda.fechaRetiro;
+                final diasEnUso = fechaRetiro == null
+                    ? DateTime.now().difference(fechaColocacion).inDays
+                    : fechaRetiro.difference(fechaColocacion).inDays;
 
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: ListTile(
                     title: Text(sonda.tipo,
                         style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text(fechaColocacion),
+                    subtitle: Text(
+                      'Colocada el: ${fechaColocacion.toLocal()}\nDías en uso: $diasEnUso\n${fechaRetiro == null ? "Aun en uso" : "Retirada el: ${fechaRetiro.toLocal()}"}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        // Editar Sonda
                         IconButton(
                           icon: const Icon(Icons.edit, color: Colors.blue),
                           onPressed: () {
@@ -59,6 +67,8 @@ class SondasPage extends ConsumerWidget {
                             );
                           },
                         ),
+
+                        // Eliminar Sonda
                         IconButton(
                           icon: const Icon(Icons.delete, color: Colors.red),
                           onPressed: () async {
@@ -86,10 +96,12 @@ class SondasPage extends ConsumerWidget {
 
                             if (confirm == true) {
                               try {
+                                // Deshabilitar el botón mientras se elimina
                                 await ref
                                     .read(sondaRepositoryProvider)
                                     .deleteSonda(sonda.id, idIngreso);
-                                ref.invalidate(sondasProvider);
+                                ref.invalidate(
+                                    sondasProvider); // Refrescar la lista de sondas
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text(
@@ -129,7 +141,7 @@ class SondasPage extends ConsumerWidget {
   }
 }
 
-/// ✅ Widget para mostrar cuando no hay sondas registradas
+/// Widget para mostrar cuando no hay sondas registradas
 class _NoSondasWidget extends StatelessWidget {
   const _NoSondasWidget();
 

@@ -6,7 +6,7 @@ final sondaRepositoryProvider = Provider<FirebaseSondaRepository>((ref) {
   return FirebaseSondaRepository();
 });
 
-// ✅ `StreamProvider.family` corregido para recibir `idIngreso`
+// ✅ Usamos `StreamProvider.family` para recibir `idIngreso`
 final sondasProvider =
     StreamProvider.family<List<Sonda>, String>((ref, idIngreso) {
   if (idIngreso.isEmpty) {
@@ -14,6 +14,6 @@ final sondasProvider =
   }
 
   final repository =
-      ref.read(sondaRepositoryProvider); // ✅ Se usa `read` en lugar de `watch`
+      ref.watch(sondaRepositoryProvider); // ✅ Usamos `watch` para suscripción
   return repository.getSondas(idIngreso);
 });

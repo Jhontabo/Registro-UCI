@@ -1,39 +1,27 @@
-import 'dart:collection';
-import '../../domain/models/sonda.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UpdateSondaDto extends MapView<String, dynamic> {
+class UpdateSondaDto {
   final String? tipo;
-  final String? regionAnatomica; // ✅ Se añade regionAnatomica
+  final String? regionAnatomica;
   final DateTime? fechaColocacion;
-  final String? pacienteId;
-  final String? idIngreso; // ✅ Se mantiene idIngreso
+  final DateTime? fechaRetiro; // ✅ Nueva propiedad para la fecha de retiro
 
   UpdateSondaDto({
     this.tipo,
     this.regionAnatomica,
     this.fechaColocacion,
-    this.pacienteId,
-    this.idIngreso,
-  }) : super({
-          if (tipo != null) 'tipo': tipo,
-          if (regionAnatomica != null)
-            'regionAnatomica':
-                regionAnatomica, // ✅ Se incluye en la actualización
-          if (fechaColocacion != null)
-            'fechaColocacion': fechaColocacion.toIso8601String(),
-          if (pacienteId != null) 'pacienteId': pacienteId,
-          if (idIngreso != null)
-            'idIngreso': idIngreso, // ✅ Se mantiene el idIngreso
-        });
+    this.fechaRetiro, // ✅ Aseguramos que la fecha de retiro esté disponible
+  });
 
-  // ✅ Método para aplicar la actualización al modelo Sonda
-  Sonda applyTo(Sonda sonda) {
-    return sonda.copyWith(
-      tipo: tipo ?? sonda.tipo,
-      regionAnatomica:
-          regionAnatomica ?? sonda.regionAnatomica, // ✅ Se mantiene la región
-      fechaColocacion: fechaColocacion ?? sonda.fechaColocacion,
-      idIngreso: idIngreso ?? sonda.idIngreso, // ✅ Se mantiene el idIngreso
-    );
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (tipo != null) data['tipo'] = tipo;
+    if (regionAnatomica != null) data['regionAnatomica'] = regionAnatomica;
+    if (fechaColocacion != null)
+      data['fechaColocacion'] = fechaColocacion?.toIso8601String();
+    if (fechaRetiro != null)
+      data['fechaRetiro'] =
+          fechaRetiro?.toIso8601String(); // ✅ Guardamos la fecha de retiro
+    return data;
   }
 }

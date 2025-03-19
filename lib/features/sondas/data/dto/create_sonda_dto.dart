@@ -22,7 +22,9 @@ class CreateSondaDto extends MapView<String, dynamic> {
   // ✅ Método para convertir DTO en una instancia de `Sonda`
   Sonda toSonda() {
     return Sonda(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: DateTime.now()
+          .millisecondsSinceEpoch
+          .toString(), // ✅ Generación de ID con timestamp
       tipo: tipo,
       regionAnatomica: regionAnatomica,
       fechaColocacion: fechaColocacion,

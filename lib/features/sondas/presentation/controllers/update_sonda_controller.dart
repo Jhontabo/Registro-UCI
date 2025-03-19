@@ -30,6 +30,8 @@ class UpdateSondaController extends StateNotifier<AsyncValue<void>> {
         tipo: dto.tipo ?? sondaSnapshot.tipo,
         regionAnatomica: dto.regionAnatomica ?? sondaSnapshot.regionAnatomica,
         fechaColocacion: dto.fechaColocacion ?? sondaSnapshot.fechaColocacion,
+        fechaRetiro: dto.fechaRetiro ??
+            sondaSnapshot.fechaRetiro, // ✅ Aplicar la fecha de retiro
       );
 
       // ✅ Ahora pasamos `idIngreso` también al actualizar en Firebase
@@ -37,10 +39,9 @@ class UpdateSondaController extends StateNotifier<AsyncValue<void>> {
 
       state = const AsyncValue.data(null);
     } catch (error, stackTrace) {
-      print(
-          "Error en UpdateSondaController: $error"); // ✅ Log de error para depuración
+      print("Error en UpdateSondaController: $error");
       state = AsyncValue.error(error, stackTrace);
-      rethrow; // ✅ Para manejar el error en la vista
+      rethrow;
     }
   }
 }

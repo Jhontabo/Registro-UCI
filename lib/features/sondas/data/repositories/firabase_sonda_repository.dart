@@ -66,7 +66,7 @@ class FirebaseSondaRepository implements SondaRepository {
     });
   }
 
-  /// ✅ Nuevo método para obtener una sonda por su `id` y `idIngreso`
+  /// Nuevo método para obtener una sonda por su `id` y `idIngreso`
   @override
   Future<Sonda?> getSondaById(String id, String idIngreso) async {
     try {
@@ -77,11 +77,12 @@ class FirebaseSondaRepository implements SondaRepository {
           .doc(id)
           .get();
 
-      if (!doc.exists)
-        return null; // ✅ Si el documento no existe, retorna `null`
+      if (!doc.exists) return null; // Si no existe, retorna `null`
 
       final data = doc.data();
-      return data != null ? Sonda.fromJson(data) : null;
+      if (data == null) return null;
+
+      return Sonda.fromJson(data);
     } catch (e) {
       throw Exception('Error al obtener la sonda por ID: $e');
     }

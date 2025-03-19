@@ -23,27 +23,36 @@ class _UpdateSondaFormState extends ConsumerState<UpdateSondaForm> {
   final _formKey = GlobalKey<FormState>();
   late String tipo;
   late String regionAnatomica;
+  late DateTime fechaColocacion;
+  DateTime? fechaRetiro; // ✅ Nueva variable para manejar la fecha de retiro
 
   @override
   void initState() {
     super.initState();
 
-    // ✅ Asegura que la región seleccionada es válida
     regionAnatomica =
         sondasPorRegion.keys.contains(widget.sonda.regionAnatomica)
             ? widget.sonda.regionAnatomica
             : sondasPorRegion.keys.first;
 
-    // ✅ Asegura que el tipo seleccionado es válido
     tipo =
         sondasPorRegion[regionAnatomica]?.contains(widget.sonda.tipo) ?? false
             ? widget.sonda.tipo
             : sondasPorRegion[regionAnatomica]?.first ?? "";
+
+    fechaColocacion = widget.sonda.fechaColocacion;
+    fechaRetiro =
+        widget.sonda.fechaRetiro; // ✅ Se carga la fecha de retiro si existe
   }
 
   @override
   Widget build(BuildContext context) {
     final updateSondaState = ref.watch(updateSondaControllerProvider);
+
+    // ✅ Calcular días en uso
+    int diasEnUso = fechaRetiro == null
+        ? DateTime.now().difference(fechaColocacion).inDays
+        : fechaRetiro!.difference(fechaColocacion).inDays;
 
     return Form(
       key: _formKey,
@@ -53,16 +62,12 @@ class _UpdateSondaFormState extends ConsumerState<UpdateSondaForm> {
           DropdownButtonFormField<String>(
             decoration: const InputDecoration(labelText: "Región Anatómica"),
             value: regionAnatomica.isNotEmpty ? regionAnatomica : null,
-            isExpanded: true, // ✅ Evita que el texto se corte
+            isExpanded: true,
             items: sondasPorRegion.keys.map((region) {
               return DropdownMenuItem(
                 value: region,
-                child: Text(
-                  region,
-                  overflow:
-                      TextOverflow.ellipsis, // ✅ Si es largo, muestra "..."
-                  maxLines: 1, // ✅ Evita desbordamiento
-                ),
+                child:
+                    Text(region, overflow: TextOverflow.ellipsis, maxLines: 1),
               );
             }).toList(),
             onChanged: (value) {
@@ -82,22 +87,56 @@ class _UpdateSondaFormState extends ConsumerState<UpdateSondaForm> {
               decoration: const InputDecoration(labelText: "Tipo de Sonda"),
               value: sondasPorRegion[regionAnatomica]!.contains(tipo)
                   ? tipo
-                  : sondasPorRegion[regionAnatomica]!
-                      .first, // ✅ Asegura un valor válido
-              isExpanded: true, // ✅ Evita desbordamiento
+                  : sondasPorRegion[regionAnatomica]!.first,
+              isExpanded: true,
               items: sondasPorRegion[regionAnatomica]!
                   .map((sonda) => DropdownMenuItem(
                         value: sonda,
-                        child: Text(
-                          sonda,
-                          overflow: TextOverflow
-                              .ellipsis, // ✅ Muestra "..." si es largo
-                          maxLines: 1, // ✅ Mantiene el texto en una sola línea
-                        ),
+                        child: Text(sonda,
+                            overflow: TextOverflow.ellipsis, maxLines: 1),
                       ))
                   .toList(),
               onChanged: (value) => setState(() => tipo = value!),
             ),
+
+          const SizedBox(height: 10),
+
+          // ✅ FECHA DE COLOCACIÓN (Solo lectura)
+          TextFormField(
+            decoration: const InputDecoration(labelText: "Fecha de colocación"),
+            initialValue: "${fechaColocacion.toLocal()}".split(' ')[0],
+            readOnly: true,
+          ),
+
+          const SizedBox(height: 10),
+
+          // ✅ FECHA DE RETIRO (Seleccionable)
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: "Fecha de retiro (Opcional)",
+              suffixIcon: Icon(Icons.calendar_today),
+            ),
+            readOnly: true,
+            controller: TextEditingController(
+                text: fechaRetiro != null
+                    ? "${fechaRetiro!.toLocal()}".split(' ')[0]
+                    : ""),
+            onTap: () async {
+              DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: fechaRetiro ?? DateTime.now(),
+                firstDate:
+                    fechaColocacion, // ✅ No se puede seleccionar antes de la colocación
+                lastDate: DateTime(
+                    2101), // ✅ Permite seleccionar cualquier fecha futura
+              );
+              if (pickedDate != null && pickedDate != fechaRetiro) {
+                setState(() {
+                  fechaRetiro = pickedDate;
+                });
+              }
+            },
+          ),
 
           const SizedBox(height: 16),
 
@@ -110,6 +149,8 @@ class _UpdateSondaFormState extends ConsumerState<UpdateSondaForm> {
                       final dto = UpdateSondaDto(
                         tipo: tipo,
                         regionAnatomica: regionAnatomica,
+                        fechaRetiro:
+                            fechaRetiro, // ✅ Se actualiza la fecha de retiro
                       );
                       try {
                         await ref

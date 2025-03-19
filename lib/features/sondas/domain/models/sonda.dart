@@ -6,6 +6,7 @@ class Sonda {
   final String regionAnatomica;
   final DateTime fechaColocacion;
   final String idIngreso;
+  final DateTime? fechaRetiro; // ✅ Agregar `fechaRetiro` como opcional
 
   Sonda({
     required this.id,
@@ -13,6 +14,7 @@ class Sonda {
     required this.regionAnatomica,
     required this.fechaColocacion,
     required this.idIngreso,
+    this.fechaRetiro, // ✅ Se mantiene como opcional
   });
 
   // ✅ Método `copyWith` para actualizar solo los campos necesarios
@@ -22,6 +24,8 @@ class Sonda {
     String? regionAnatomica,
     DateTime? fechaColocacion,
     String? idIngreso,
+    DateTime?
+        fechaRetiro, // ✅ Se incluye la posibilidad de actualizar la fecha de retiro
   }) {
     return Sonda(
       id: id ?? this.id,
@@ -29,10 +33,12 @@ class Sonda {
       regionAnatomica: regionAnatomica ?? this.regionAnatomica,
       fechaColocacion: fechaColocacion ?? this.fechaColocacion,
       idIngreso: idIngreso ?? this.idIngreso,
+      fechaRetiro: fechaRetiro ??
+          this.fechaRetiro, // ✅ Actualizamos la fecha de retiro si es necesario
     );
   }
 
-  // ✅ Manejo seguro de `fechaColocacion` si es `String` o `Timestamp`
+  // ✅ Manejo seguro de `fechaColocacion` y `fechaRetiro` si son `String` o `Timestamp`
   factory Sonda.fromJson(Map<String, dynamic> json) {
     return Sonda(
       id: json['id'] ?? '',
@@ -40,6 +46,9 @@ class Sonda {
       regionAnatomica: json['regionAnatomica'] ?? 'No especificado',
       fechaColocacion: _parseFecha(json['fechaColocacion']),
       idIngreso: json['idIngreso'] ?? '',
+      fechaRetiro: json.containsKey('fechaRetiro')
+          ? _parseFecha(json['fechaRetiro'])
+          : null, // ✅ Si existe, lo asignamos
     );
   }
 
@@ -60,6 +69,9 @@ class Sonda {
       'fechaColocacion':
           fechaColocacion.toIso8601String(), // ✅ Guardar como `String`
       'idIngreso': idIngreso,
+      if (fechaRetiro != null)
+        'fechaRetiro':
+            fechaRetiro!.toIso8601String(), // ✅ Solo se guarda si existe
     };
   }
 }

@@ -11,7 +11,6 @@ class CreateSondasPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Crear Sonda')),
       body: SafeArea(
-        // ✅ Evita superposición con la barra de estado
         child: SingleChildScrollView(
           physics:
               const BouncingScrollPhysics(), // ✅ Mejora la experiencia de desplazamiento
@@ -25,8 +24,24 @@ class CreateSondasPage extends StatelessWidget {
                   maxWidth:
                       600, // ✅ Evita que el formulario sea demasiado ancho en tablets
                 ),
-                child: CreateSondaForm(
-                    idIngreso: idIngreso), // ✅ Pasamos idIngreso
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // ✅ Titulo y breve descripción si es necesario
+                    const Text(
+                      "Formulario para crear una nueva Sonda",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20), // Espaciado
+
+                    // ✅ Formulario
+                    CreateSondaForm(
+                        idIngreso: idIngreso), // ✅ Pasamos idIngreso
+                  ],
+                ),
               ),
             ),
           ),
