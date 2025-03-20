@@ -2,17 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/data/dto/create_liquido_administrado_dto.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/data/providers/liquidos_administrados_provider.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/data/providers/tratamientos_antibioticos_activos_provider.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/domain/models/liquido_administrado.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/presentation/controllers/create_many_liquidos_administrados_controller.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/presentation/widgets/components/add_liquidos_administrados_from_tratamiento_form.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/presentation/widgets/components/confirm_delete_liquido_administrado_form.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/presentation/widgets/components/create_liquido_administrado_form.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/presentation/widgets/components/liquido_administrado_tile.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/presentation/widgets/components/update_liquido_administrado_form.dart';
-import 'package:registro_uci/features/balance_liquidos/administrados/presentation/widgets/liquido_administrado_details_dialog.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/data/dto/create_liquido_administrado_dto.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/data/providers/liquidos_administrados_provider.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/data/providers/tratamientos_antibioticos_activos_provider.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/domain/models/liquido_administrado.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/presentation/controllers/create_many_liquidos_administrados_controller.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/presentation/widgets/components/add_liquidos_administrados_from_tratamiento_form.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/presentation/widgets/components/confirm_delete_liquido_administrado_form.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/presentation/widgets/components/create_liquido_administrado_form.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/presentation/widgets/components/liquido_administrado_tile.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/presentation/widgets/components/update_liquido_administrado_form.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/presentation/widgets/liquido_administrado_details_dialog.dart';
 
 class LiquidosAdministradosScreen extends ConsumerWidget {
   final LiquidosAdministradosParams params;

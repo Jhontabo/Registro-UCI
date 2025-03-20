@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:registro_uci/common/constants/firebase_collection_names.dart';
-import 'package:registro_uci/features/balance_liquidos/data/dto/create_balace_de_liquidos_dto.dart';
+import 'package:registro_uci/features/registros_diarios/balance_liquidos/data/dto/create_balace_de_liquidos_dto.dart';
 import 'package:registro_uci/features/firmas/data/dto/create_firma_dto.dart';
 import 'package:registro_uci/features/firmas/domain/models/firma.dart';
 import 'package:registro_uci/features/monitorias_hemodinamicas/data/dto/create_monitoria_hemodinamica_dto.dart';
