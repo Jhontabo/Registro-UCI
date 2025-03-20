@@ -20,8 +20,8 @@ class FirebaseProcedimientosRepository implements ProcedimientosRepository {
         .map((querySnapshot) {
       return querySnapshot.docs.map((doc) {
         final data = doc.data();
-        return ProcedimientoEspecial.fromJson(data)
-            .copyWith(idProcedimiento: doc.id);
+        return ProcedimientoEspecial.fromJson(data,
+            id: doc.id); // Pasa el ID del doc
       }).toList();
     });
   }

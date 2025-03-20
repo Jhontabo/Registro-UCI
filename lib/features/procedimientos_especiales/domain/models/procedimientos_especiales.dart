@@ -11,6 +11,15 @@ class ProcedimientoEspecial with _$ProcedimientoEspecial {
     required String estado, // "Pendiente", "Realizado", "Reportado"
   }) = _ProcedimientoEspecial;
 
-  factory ProcedimientoEspecial.fromJson(Map<String, dynamic> json) =>
+  factory ProcedimientoEspecial.fromJson(Map<String, dynamic> json,
+      {required String id}) {
+    return ProcedimientoEspecial(
+      idProcedimiento: id, // Asigna el ID manualmente
+      nombreProcedimiento: json['nombreProcedimiento'] as String,
+      estado: json['estado'] as String,
+    );
+  }
+
+  factory ProcedimientoEspecial.fromJsonGenerated(Map<String, dynamic> json) =>
       _$ProcedimientoEspecialFromJson(json);
 }
