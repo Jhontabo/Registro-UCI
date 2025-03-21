@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'procedimientos_especiales.freezed.dart';
-part 'procedimientos_especiales.g.dart';
 
 @freezed
 class ProcedimientoEspecial with _$ProcedimientoEspecial {
@@ -19,7 +18,4 @@ class ProcedimientoEspecial with _$ProcedimientoEspecial {
       estado: json['estado'] as String,
     );
   }
-
-  factory ProcedimientoEspecial.fromJsonGenerated(Map<String, dynamic> json) =>
-      _$ProcedimientoEspecialFromJson(json);
 }

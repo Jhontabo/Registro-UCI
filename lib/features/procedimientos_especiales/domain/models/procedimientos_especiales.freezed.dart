@@ -14,18 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-ProcedimientoEspecial _$ProcedimientoEspecialFromJson(
-    Map<String, dynamic> json) {
-  return _ProcedimientoEspecial.fromJson(json);
-}
-
 /// @nodoc
 mixin _$ProcedimientoEspecial {
   String get idProcedimiento => throw _privateConstructorUsedError;
   String get nombreProcedimiento => throw _privateConstructorUsedError;
   String get estado => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ProcedimientoEspecialCopyWith<ProcedimientoEspecial> get copyWith =>
       throw _privateConstructorUsedError;
@@ -123,15 +117,12 @@ class __$$ProcedimientoEspecialImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$ProcedimientoEspecialImpl implements _ProcedimientoEspecial {
   const _$ProcedimientoEspecialImpl(
       {required this.idProcedimiento,
       required this.nombreProcedimiento,
       required this.estado});
-
-  factory _$ProcedimientoEspecialImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ProcedimientoEspecialImplFromJson(json);
 
   @override
   final String idProcedimiento;
@@ -157,7 +148,6 @@ class _$ProcedimientoEspecialImpl implements _ProcedimientoEspecial {
             (identical(other.estado, estado) || other.estado == estado));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, idProcedimiento, nombreProcedimiento, estado);
@@ -168,13 +158,6 @@ class _$ProcedimientoEspecialImpl implements _ProcedimientoEspecial {
   _$$ProcedimientoEspecialImplCopyWith<_$ProcedimientoEspecialImpl>
       get copyWith => __$$ProcedimientoEspecialImplCopyWithImpl<
           _$ProcedimientoEspecialImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ProcedimientoEspecialImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _ProcedimientoEspecial implements ProcedimientoEspecial {
@@ -182,9 +165,6 @@ abstract class _ProcedimientoEspecial implements ProcedimientoEspecial {
       {required final String idProcedimiento,
       required final String nombreProcedimiento,
       required final String estado}) = _$ProcedimientoEspecialImpl;
-
-  factory _ProcedimientoEspecial.fromJson(Map<String, dynamic> json) =
-      _$ProcedimientoEspecialImpl.fromJson;
 
   @override
   String get idProcedimiento;

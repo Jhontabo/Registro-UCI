@@ -15,7 +15,8 @@ import 'package:registro_uci/features/registros_diarios/presentation/widgets/com
 
 class RegistroDiarioPage extends ConsumerWidget {
   final String idIngreso;
-  final String idRegistro; // change to id
+  final String idRegistro;
+
   const RegistroDiarioPage({
     super.key,
     required this.idIngreso,
@@ -32,6 +33,7 @@ class RegistroDiarioPage extends ConsumerWidget {
         if (registroDiario == null) {
           return const Text("Sin registro");
         }
+
         return Scaffold(
           appBar: AppBar(
             title: Row(
@@ -55,45 +57,64 @@ class RegistroDiarioPage extends ConsumerWidget {
           body: ListView(
             padding: const EdgeInsets.all(15),
             children: [
+              // Necesidades Tile
               NecesidadesTile(
                   idIngreso: idIngreso,
                   idRegistro: registroDiario.idRegistroDiario,
                   firma: registroDiario.firmaNecesidades),
               const SizedBox(height: 10),
+
+              // Tratamientos Tile
               TratamientosTile(
                 idIngreso: idIngreso,
                 idRegistro: registroDiario.idRegistroDiario,
-                completed: false, // set to true or false accordingly
+                completed:
+                    false, // Cambiar a verdadero o falso según el estado real
               ),
               const SizedBox(height: 10),
+
+              // Control de Riesgos Tile
               ControlDeRiesgosTile(
                 idIngreso: idIngreso,
                 idRegistro: registroDiario.idRegistroDiario,
-                completed: true,
+                completed:
+                    true, // Cambiar a verdadero o falso según el estado real
               ),
               const SizedBox(height: 10),
+
+              // Monitorias Hemodinámicas Tile
               MonitoriasHemodinamicasTile(
                 idIngreso: idIngreso,
                 idRegistro: registroDiario.idRegistroDiario,
-                completed: false,
+                completed:
+                    false, // Cambiar a verdadero o falso según el estado real
               ),
               const SizedBox(height: 10),
+
+              // Control de Líquidos Tile
               ControlDeLiquidosTile(
                 idIngreso: idIngreso,
                 idRegistro: registroDiario.idRegistroDiario,
-                completed: true,
+                completed:
+                    true, // Cambiar a verdadero o falso según el estado real
               ),
               const SizedBox(height: 10),
+
+              // Control de Posición Tile
               ControlDePosicionTile(
                 idIngreso: idIngreso,
                 idRegistro: registroDiario.idRegistroDiario,
-                completed: false,
+                completed:
+                    false, // Cambiar a verdadero o falso según el estado real
               ),
               const SizedBox(height: 10),
+
+              // Control de Sedación Tile
               ControlDeSedacionTile(
                 idIngreso: idIngreso,
                 idRegistro: registroDiario.idRegistroDiario,
-                completed: true,
+                completed:
+                    true, // Cambiar a verdadero o falso según el estado real
               ),
             ],
           ),
