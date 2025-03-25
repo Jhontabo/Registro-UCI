@@ -104,6 +104,29 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
               controlAffinity: ListTileControlAffinity.leading,
             ),
             if (tieneUPP) ...[
+              // Fecha en la que se encontró la UPP (valor predeterminado = fecha actual)
+              const Text('Fecha en la que se encontró la UPP'),
+              TextField(
+                controller: TextEditingController(
+                  text: fechaRegistroUlcera != null
+                      ? DateFormat('dd/MM/yyyy').format(fechaRegistroUlcera!)
+                      : DateFormat('dd/MM/yyyy').format(DateTime
+                          .now()), // Fecha actual si no se ha seleccionado
+                ),
+                decoration: const InputDecoration(
+                  hintText: 'Seleccionar fecha de la UPP',
+                ),
+                onTap: () async {
+                  fechaRegistroUlcera = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                  );
+                  setState(() {});
+                },
+              ),
+              const SizedBox(height: 10),
               const Text('Número de Reporte EA'),
               TextField(
                 controller: numeroReporteEAController,
@@ -120,7 +143,7 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
               const SizedBox(height: 10),
               const Text('Sitio de UPP'),
               DropdownButtonFormField<String>(
-                hint: const Text("Seleccione un sitio anatómico"),
+                hint: const Text("Sitio anatómico"),
                 value: _selectedSitioUPP,
                 onChanged: (String? newValue) {
                   setState(() {
@@ -205,18 +228,20 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
               },
               controlAffinity: ListTileControlAffinity.leading,
             ),
-            const Text('Número de Reporte Caída'),
-            TextField(
-              controller: numeroReporteCaidaController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                hintText: 'Ingrese reporte de caída',
-                enabledBorder: OutlineInputBorder(
-                  // Borde visible cuando el campo no está enfocado
-                  borderSide: BorderSide(color: Colors.black, width: 1.0),
+            if (tieneEventoAdversoCaida) ...[
+              const Text('Número de Reporte Caída'),
+              TextField(
+                controller: numeroReporteCaidaController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  hintText: 'Ingrese reporte de caída',
+                  enabledBorder: OutlineInputBorder(
+                    // Borde visible cuando el campo no está enfocado
+                    borderSide: BorderSide(color: Colors.black, width: 1.0),
+                  ),
                 ),
               ),
-            ),
+            ]
           ],
         ),
       ),
@@ -308,6 +333,9 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 controller: agenteAislamientoController,
                 decoration: const InputDecoration(
                   hintText: 'Ingrese agente de aislamiento',
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 1.0),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -316,10 +344,11 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 controller: TextEditingController(
                   text: fechaInicioAislamiento != null
                       ? DateFormat('dd/MM/yyyy').format(fechaInicioAislamiento!)
-                      : '',
+                      : DateFormat('dd/MM/yyyy')
+                          .format(DateTime.now()), // Fecha actual
                 ),
                 decoration: const InputDecoration(
-                  hintText: 'Seleccionar fecha de inicio de aislamiento',
+                  hintText: 'Inicio de aislamiento',
                 ),
                 onTap: () async {
                   fechaInicioAislamiento = await showDatePicker(
@@ -340,7 +369,7 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                       : '',
                 ),
                 decoration: const InputDecoration(
-                  hintText: 'Seleccionar fecha de fin de aislamiento',
+                  hintText: 'Fin de aislamiento',
                 ),
                 onTap: () async {
                   fechaFinAislamiento = await showDatePicker(
