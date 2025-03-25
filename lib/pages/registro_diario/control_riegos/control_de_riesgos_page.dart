@@ -35,6 +35,9 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
   TextEditingController agenteAislamientoController = TextEditingController();
 
   String? _selectedSitioUPP;
+  int? controlUPPManana;
+  int? controlUPPTarde;
+  int? controlUPPNoche;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +83,6 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
     print('Datos Guardados');
   }
 
-  // Widget para Control UPP y Sitio anatómico de UPP fusionado
   Widget _buildControlUPP() {
     return Card(
       elevation: 5,
@@ -89,6 +91,121 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text(
+              'Control UPP en los tres horarios',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+
+            // Mañana
+            Row(
+              children: [
+                const Text('Mañana'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        controlUPPManana =
+                            value.isNotEmpty ? int.parse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  controlUPPManana != null && controlUPPManana! > 70
+                      ? Icons.check_circle
+                      : Icons.error,
+                  color: controlUPPManana != null && controlUPPManana! > 70
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Tarde
+            Row(
+              children: [
+                const Text('Tarde'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        controlUPPTarde =
+                            value.isNotEmpty ? int.parse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  controlUPPTarde != null && controlUPPTarde! > 70
+                      ? Icons.check_circle
+                      : Icons.error,
+                  color: controlUPPTarde != null && controlUPPTarde! > 70
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Noche
+            Row(
+              children: [
+                const Text('Noche'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        controlUPPNoche =
+                            value.isNotEmpty ? int.parse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  controlUPPNoche != null && controlUPPNoche! > 70
+                      ? Icons.check_circle
+                      : Icons.error,
+                  color: controlUPPNoche != null && controlUPPNoche! > 70
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Control UPP
             const Text(
               'Control UPP',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -135,7 +252,6 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 decoration: const InputDecoration(
                   hintText: 'Ingrese reporte EA',
                   enabledBorder: OutlineInputBorder(
-                    // Borde visible cuando el campo no está enfocado
                     borderSide: BorderSide(color: Colors.black, width: 1.0),
                   ),
                 ),
@@ -204,6 +320,8 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
     );
   }
 
+// Widget para Riesgo de Caídas
+  // Widget para Riesgo de Caídas
   // Widget para Riesgo de Caídas
   Widget _buildRiesgoDeCaidas() {
     return Card(
@@ -214,13 +332,143 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Riesgo de Caída',
+              'Riesgo de Caída en tres horarios:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 10),
+
+            // Mañana
+            Row(
+              children: [
+                const Text('Mañana'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    controller: TextEditingController(),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        // Lógica para cambiar el ícono según el valor
+                        controlUPPManana =
+                            value.isNotEmpty ? int.parse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '', // No mostrar ningún texto por defecto
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Spacer(),
+                Icon(
+                  controlUPPManana != null && controlUPPManana! > 70
+                      ? Icons.check_circle
+                      : Icons.error,
+                  color: controlUPPManana != null && controlUPPManana! > 70
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            // Tarde
+            Row(
+              children: [
+                const Text('Tarde'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    controller: TextEditingController(),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        // Lógica para cambiar el ícono según el valor
+                        controlUPPTarde =
+                            value.isNotEmpty ? int.parse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '', // No mostrar ningún texto por defecto
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Spacer(),
+                Icon(
+                  controlUPPTarde != null && controlUPPTarde! > 70
+                      ? Icons.check_circle
+                      : Icons.error,
+                  color: controlUPPTarde != null && controlUPPTarde! > 70
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            // Noche
+            Row(
+              children: [
+                const Text('Noche'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    controller: TextEditingController(),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        // Lógica para cambiar el ícono según el valor
+                        controlUPPNoche =
+                            value.isNotEmpty ? int.parse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '', // No mostrar ningún texto por defecto
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Spacer(),
+                Icon(
+                  controlUPPNoche != null && controlUPPNoche! > 70
+                      ? Icons.check_circle
+                      : Icons.error,
+                  color: controlUPPNoche != null && controlUPPNoche! > 70
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Pregunta si hay evento adverso relacionado a caídas
             CheckboxListTile(
               title: const Text('¿Evento Adverso relacionado a Caídas?'),
-              value:
-                  tieneEventoAdversoCaida, // Aquí puedes usar una variable de estado si es necesario
+              value: tieneEventoAdversoCaida, // Variable de estado
               onChanged: (value) {
                 setState(() {
                   tieneEventoAdversoCaida = value!;
@@ -228,7 +476,9 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
               },
               controlAffinity: ListTileControlAffinity.leading,
             ),
+
             if (tieneEventoAdversoCaida) ...[
+              const SizedBox(height: 10),
               const Text('Número de Reporte Caída'),
               TextField(
                 controller: numeroReporteCaidaController,
@@ -236,12 +486,11 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 decoration: const InputDecoration(
                   hintText: 'Ingrese reporte de caída',
                   enabledBorder: OutlineInputBorder(
-                    // Borde visible cuando el campo no está enfocado
                     borderSide: BorderSide(color: Colors.black, width: 1.0),
                   ),
                 ),
               ),
-            ]
+            ],
           ],
         ),
       ),
