@@ -1,0 +1,59 @@
+import 'dart:collection';
+
+class CreateControlDeRiesgosDto extends MapView<String, dynamic> {
+  final bool tieneUPP;
+  final DateTime? fechaRegistroUlcera;
+  final String? numeroReporteEA;
+  final String? sitioUPP;
+  final bool uppResuelta;
+  final DateTime? fechaResolucion;
+  final int? diasConUlceras;
+  final String riesgoCaida;
+  final String? numeroReporteCaida;
+  final bool usaAnticoagulantes;
+  final String? anticoagulanteSeleccionado;
+  final bool enAislamiento;
+  final DateTime? fechaInicioAislamiento;
+  final String? tipoAislamiento;
+  final String? agenteAislamiento;
+  final DateTime? fechaFinAislamiento;
+  final int? diasDeAislamiento;
+
+  CreateControlDeRiesgosDto({
+    required this.tieneUPP,
+    this.fechaRegistroUlcera,
+    this.numeroReporteEA,
+    this.sitioUPP,
+    required this.uppResuelta,
+    this.fechaResolucion,
+    this.diasConUlceras,
+    required this.riesgoCaida,
+    this.numeroReporteCaida,
+    required this.usaAnticoagulantes,
+    this.anticoagulanteSeleccionado,
+    required this.enAislamiento,
+    this.fechaInicioAislamiento,
+    this.tipoAislamiento,
+    this.agenteAislamiento,
+    this.fechaFinAislamiento,
+    this.diasDeAislamiento,
+  }) : super({
+          'tieneUPP': tieneUPP,
+          'fechaRegistroUlcera': fechaRegistroUlcera?.toIso8601String(),
+          'numeroReporteEA': numeroReporteEA,
+          'sitioUPP': sitioUPP,
+          'uppResuelta': uppResuelta,
+          'fechaResolucion': fechaResolucion?.toIso8601String(),
+          'diasConUlceras': diasConUlceras,
+          'riesgoCaida': riesgoCaida,
+          'numeroReporteCaida': numeroReporteCaida,
+          'usaAnticoagulantes': usaAnticoagulantes,
+          'anticoagulanteSeleccionado': anticoagulanteSeleccionado,
+          'enAislamiento': enAislamiento,
+          'fechaInicioAislamiento': fechaInicioAislamiento?.toIso8601String(),
+          'tipoAislamiento': tipoAislamiento,
+          'agenteAislamiento': agenteAislamiento,
+          'fechaFinAislamiento': fechaFinAislamiento?.toIso8601String(),
+          'diasDeAislamiento': diasDeAislamiento,
+        });
+}
