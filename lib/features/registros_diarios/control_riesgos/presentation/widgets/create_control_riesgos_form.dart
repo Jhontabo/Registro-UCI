@@ -1,245 +1,707 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '/../../features/registros_diarios/control_riesgos/data/constants/constants.dart';
+import '../../../control_riesgos/data/repositories/firabase_control_de_riesgos.dart';
+import 'package:registro_uci/features/registros_diarios/control_riesgos/domain/models/control_de_riesgos.dart';
+// Importa el repositorio
 
-class ControlDeRiesgosForm extends StatefulWidget {
-  const ControlDeRiesgosForm({super.key});
+class CreateControlRiesgosForm extends StatefulWidget {
+  final String idIngreso;
+  final String idRegistroDiario;
+
+  const CreateControlRiesgosForm({
+    super.key,
+    required this.idIngreso,
+    required this.idRegistroDiario,
+  });
 
   @override
-  _ControlDeRiesgosFormState createState() => _ControlDeRiesgosFormState();
+  _CreateControlRiesgosFormState createState() =>
+      _CreateControlRiesgosFormState();
 }
 
-class _ControlDeRiesgosFormState extends State<ControlDeRiesgosForm> {
-  // Controladores para los campos de texto
-  final TextEditingController _numeroReporteEAController =
-      TextEditingController();
-  final TextEditingController _sitioUPPController = TextEditingController();
-  final TextEditingController _diasConUlcerasController =
-      TextEditingController();
-  final TextEditingController _numeroReporteCaidaController =
-      TextEditingController();
-  final TextEditingController _agenteAislamientoController =
-      TextEditingController();
+class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
+  final FirebaseControlDeRiesgosRepository _repositorio =
+      FirebaseControlDeRiesgosRepository(); // Instancia el repositorio
 
-  // Variables de estado para los switches
-  bool _tieneUPP = false;
-  bool _uppResuelta = false;
-  bool _eventoCaida = false;
-  bool _usaAnticoagulantes = false;
-  bool _enAislamiento = false;
+  bool tieneUPP = false;
+  bool uppResuelta = false;
+  bool enAislamiento = false;
+  bool usaAnticoagulantes = false;
+  bool tieneEventoAdversoCaida = false;
 
-  // Variables de estado para las fechas
-  DateTime? _fechaRegistroUlcera;
-  DateTime? _fechaResolucion;
-  DateTime? _fechaInicioAislamiento;
-  DateTime? _fechaFinAislamiento;
+  DateTime? fechaRegistroUlcera;
+  DateTime? fechaResolucion;
+  DateTime? fechaInicioAislamiento;
+  DateTime? fechaFinAislamiento;
 
-  // Lista de sitios de UPP y anticoagulantes
-  final List<String> _sitiosUPP = ['Brazo', 'Pierna', 'Espalda', 'Glúteo'];
-  final List<String> _anticoagulantes = [
-    'Heparina',
-    'Warfarina',
-    'Dabigatrán',
-    'Rivaroxabán'
-  ];
+  TextEditingController numeroReporteEAController = TextEditingController();
+  TextEditingController numeroReporteCaidaController = TextEditingController();
+  TextEditingController sitioUPPController = TextEditingController();
+  TextEditingController agenteAislamientoController = TextEditingController();
+
+  // Controladores de los tres horarios
+  TextEditingController mananaController = TextEditingController();
+  TextEditingController tardeController = TextEditingController();
+  TextEditingController nocheController = TextEditingController();
+
+  String? _selectedSitioUPP;
+  int? controlUPPManana;
+  int? controlUPPTarde;
+  int? controlUPPNoche;
+
+  int? controlCaidaManana;
+  int? controlCaidaTarde;
+  int? controlCaidaNoche;
+
+  void _guardarDatos() async {
+    // Verificar si los campos están completos
+    if (numeroReporteEAController.text.isEmpty ||
+        fechaRegistroUlcera == null ||
+        mananaController.text.isEmpty ||
+        tardeController.text.isEmpty ||
+        nocheController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, complete todos los campos.')),
+      );
+      return;
+    }
+
+    // Crear el objeto que vas a guardar
+    final controlDeRiesgos = ControlDeRiesgos(
+      idControlDeRiesgos: '', // ID se generará automáticamente en Firestore
+      tieneUPP: tieneUPP,
+      fechaRegistroUlcera: fechaRegistroUlcera,
+      numeroReporteEA: numeroReporteEAController.text,
+      sitioUPP: _selectedSitioUPP,
+      uppResuelta: uppResuelta,
+      fechaResolucion: fechaResolucion,
+      diasConUlceras: int.tryParse(mananaController.text),
+      riesgoCaida: 'Alta', // Esto lo puedes cambiar según tu lógica
+      numeroReporteCaida: numeroReporteCaidaController.text,
+      usaAnticoagulantes: usaAnticoagulantes,
+      anticoagulanteSeleccionado:
+          'Heparina', // Lo mismo aquí, lo puedes cambiar
+      enAislamiento: enAislamiento,
+      fechaInicioAislamiento: fechaInicioAislamiento,
+      tipoAislamiento: 'Aislado Respiratorio', // Lo mismo aquí
+      agenteAislamiento: agenteAislamientoController.text,
+      fechaFinAislamiento: fechaFinAislamiento,
+      diasDeAislamiento: int.tryParse(tardeController.text),
+    );
+
+    try {
+      // Llamamos al repositorio para guardar los datos en Firestore
+      await _repositorio.addControlDeRiesgos(
+        widget.idIngreso, // idIngreso de tu widget
+        widget.idRegistroDiario, // idRegistroDiario de tu widget
+        controlDeRiesgos,
+      );
+
+      // Si todo es correcto, mostramos un mensaje y regresamos a la pantalla anterior
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Datos guardados correctamente.')),
+      );
+      Navigator.pop(context); // Regresa a la pantalla anterior
+    } catch (e) {
+      // Si ocurre un error, muestra un mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al guardar los datos: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Control de Riesgos")),
+      appBar: AppBar(title: const Text('Control de Riesgos')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
+          // Aquí agregas el SingleChildScrollView
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Control de UPP
-              SwitchListTile(
-                title: const Text("¿Tiene UPP?"),
-                value: _tieneUPP,
-                onChanged: (bool value) {
-                  setState(() {
-                    _tieneUPP = value;
-                  });
-                },
-              ),
-              if (_tieneUPP) ...[
-                TextFormField(
-                  controller: _numeroReporteEAController,
-                  decoration:
-                      const InputDecoration(labelText: "Número de Reporte EA"),
-                ),
-                DropdownButtonFormField<String>(
-                  value: _sitioUPPController.text.isEmpty
-                      ? null
-                      : _sitioUPPController.text,
-                  items: _sitiosUPP.map((String sitio) {
-                    return DropdownMenuItem<String>(
-                      value: sitio,
-                      child: Text(sitio),
-                    );
-                  }).toList(),
-                  decoration: const InputDecoration(labelText: "Sitio de UPP"),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _sitioUPPController.text = value ?? '';
-                    });
-                  },
-                ),
-                SwitchListTile(
-                  title: const Text("¿UPP Resuelta?"),
-                  value: _uppResuelta,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _uppResuelta = value;
-                    });
-                  },
-                ),
-                if (_uppResuelta) ...[
-                  TextFormField(
-                    controller: _diasConUlcerasController,
-                    decoration:
-                        const InputDecoration(labelText: "Días con úlceras"),
-                    keyboardType: TextInputType.number,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final DateTime? fecha = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2101),
-                      );
-                      if (fecha != null && fecha != _fechaResolucion) {
-                        setState(() {
-                          _fechaResolucion = fecha;
-                        });
-                      }
-                    },
-                    child: Text(_fechaResolucion == null
-                        ? "Seleccionar fecha de resolución"
-                        : "Fecha de resolución: ${DateFormat('dd/MM/yyyy').format(_fechaResolucion!)}"),
-                  ),
-                ]
-              ],
-
-              // Escala de Caída
-              SwitchListTile(
-                title: const Text("¿Evento adverso relacionado a caídas?"),
-                value: _eventoCaida,
-                onChanged: (bool value) {
-                  setState(() {
-                    _eventoCaida = value;
-                  });
-                },
-              ),
-              if (_eventoCaida) ...[
-                TextFormField(
-                  controller: _numeroReporteCaidaController,
-                  decoration: const InputDecoration(
-                      labelText: "Número de Reporte Caída"),
-                ),
-              ],
-
-              // Anticoagulación
-              SwitchListTile(
-                title: const Text("¿Usa Anticoagulantes?"),
-                value: _usaAnticoagulantes,
-                onChanged: (bool value) {
-                  setState(() {
-                    _usaAnticoagulantes = value;
-                  });
-                },
-              ),
-              if (_usaAnticoagulantes) ...[
-                DropdownButtonFormField<String>(
-                  value: _sitioUPPController.text.isEmpty
-                      ? null
-                      : _sitioUPPController.text,
-                  items: _anticoagulantes.map((String anticoagulante) {
-                    return DropdownMenuItem<String>(
-                      value: anticoagulante,
-                      child: Text(anticoagulante),
-                    );
-                  }).toList(),
-                  decoration: const InputDecoration(
-                      labelText: "Anticoagulante Seleccionado"),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _sitioUPPController.text = value ?? '';
-                    });
-                  },
-                ),
-              ],
-
-              // Aislamiento
-              SwitchListTile(
-                title: const Text("¿Está en Aislamiento?"),
-                value: _enAislamiento,
-                onChanged: (bool value) {
-                  setState(() {
-                    _enAislamiento = value;
-                  });
-                },
-              ),
-              if (_enAislamiento) ...[
-                ElevatedButton(
-                  onPressed: () async {
-                    final DateTime? fecha = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (fecha != null && fecha != _fechaInicioAislamiento) {
-                      setState(() {
-                        _fechaInicioAislamiento = fecha;
-                      });
-                    }
-                  },
-                  child: Text(_fechaInicioAislamiento == null
-                      ? "Seleccionar fecha de inicio de aislamiento"
-                      : "Fecha de inicio: ${DateFormat('dd/MM/yyyy').format(_fechaInicioAislamiento!)}"),
-                ),
-                TextFormField(
-                  controller: _agenteAislamientoController,
-                  decoration:
-                      const InputDecoration(labelText: "Agente de aislamiento"),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final DateTime? fecha = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (fecha != null && fecha != _fechaFinAislamiento) {
-                      setState(() {
-                        _fechaFinAislamiento = fecha;
-                      });
-                    }
-                  },
-                  child: Text(_fechaFinAislamiento == null
-                      ? "Seleccionar fecha de finalización"
-                      : "Fecha de finalización: ${DateFormat('dd/MM/yyyy').format(_fechaFinAislamiento!)}"),
-                ),
-                TextFormField(
-                  controller: TextEditingController(),
-                  decoration: const InputDecoration(
-                      labelText: "Conteo de días de aislamiento"),
-                  keyboardType: TextInputType.number,
-                ),
-              ],
-
-              // Botón de guardar
+              _buildControlUPP(),
+              const SizedBox(height: 20),
+              _buildRiesgoDeCaidas(),
+              const SizedBox(height: 20),
+              _buildAnticoagulantes(),
+              const SizedBox(height: 20),
+              _buildAislamiento(),
+              const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () {
-                  // Lógica para guardar el registro
-                },
-                child: const Text("Guardar Control de Riesgos"),
-              )
+                onPressed: _guardarDatos,
+                child: const Text('Guardar Control de Riesgos'),
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // Aquí van los métodos del formulario como _buildControlUPP, _buildRiesgoDeCaidas, etc.
+  Widget _buildControlUPP() {
+    return Card(
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Control UPP en los tres horarios',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+
+            // Mañana
+            Row(
+              children: [
+                const Text('Mañana'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        controlUPPManana =
+                            value.isNotEmpty ? int.tryParse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Spacer(),
+                Icon(
+                  controlUPPManana != null && controlUPPManana! > 70
+                      ? Icons.check_circle
+                      : (controlUPPManana != null && controlUPPManana! > 40)
+                          ? Icons.access_time
+                          : Icons.error,
+                  color: controlUPPManana != null && controlUPPManana! > 70
+                      ? Colors.green
+                      : (controlUPPManana != null && controlUPPManana! > 40)
+                          ? Colors.yellow
+                          : Colors.red,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Tarde
+            Row(
+              children: [
+                const Text('Tarde'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        controlUPPTarde =
+                            value.isNotEmpty ? int.tryParse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Spacer(),
+                Icon(
+                  controlUPPTarde != null && controlUPPTarde! > 70
+                      ? Icons.check_circle
+                      : (controlUPPTarde != null && controlUPPTarde! > 40)
+                          ? Icons.access_time
+                          : Icons.error,
+                  color: controlUPPTarde != null && controlUPPTarde! > 70
+                      ? Colors.green
+                      : (controlUPPTarde != null && controlUPPTarde! > 40)
+                          ? Colors.yellow
+                          : Colors.red,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Noche
+            Row(
+              children: [
+                const Text('Noche'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        controlUPPNoche =
+                            value.isNotEmpty ? int.tryParse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Spacer(),
+                Icon(
+                  controlUPPNoche != null && controlUPPNoche! > 70
+                      ? Icons.check_circle
+                      : (controlUPPNoche != null && controlUPPNoche! > 40)
+                          ? Icons.access_time
+                          : Icons.error,
+                  color: controlUPPNoche != null && controlUPPNoche! > 70
+                      ? Colors.green
+                      : (controlUPPNoche != null && controlUPPNoche! > 40)
+                          ? Colors.yellow
+                          : Colors.red,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Control UPP
+            const Text(
+              'Control UPP',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            CheckboxListTile(
+              title: const Text('¿Tiene UPP?'),
+              value: tieneUPP,
+              onChanged: (value) {
+                setState(() {
+                  tieneUPP = value!;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            if (tieneUPP) ...[
+              // Fecha en la que se encontró la UPP (valor predeterminado = fecha actual)
+              const Text('Fecha en la que se encontró la UPP'),
+              TextField(
+                controller: TextEditingController(
+                  text: fechaRegistroUlcera != null
+                      ? DateFormat('dd/MM/yyyy').format(fechaRegistroUlcera!)
+                      : DateFormat('dd/MM/yyyy').format(DateTime
+                          .now()), // Fecha actual si no se ha seleccionado
+                ),
+                decoration: const InputDecoration(
+                  hintText: 'Seleccionar fecha de la UPP',
+                ),
+                onTap: () async {
+                  fechaRegistroUlcera = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                  );
+                  setState(() {});
+                },
+              ),
+              const SizedBox(height: 10),
+              const Text('Número de Reporte EA'),
+              TextField(
+                controller: numeroReporteEAController,
+                keyboardType:
+                    TextInputType.number, // Esto restringe la entrada a números
+                decoration: const InputDecoration(
+                  hintText: 'Ingrese reporte EA',
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 1.0),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text('Sitio de UPP'),
+              DropdownButtonFormField<String>(
+                hint: const Text("Sitio anatómico"),
+                value: _selectedSitioUPP ??
+                    SitiosAnatomicosUPP.sitiosCefalicos[0], // Valor por defecto
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedSitioUPP =
+                        newValue; // Actualiza el valor seleccionado
+                  });
+                },
+                isExpanded:
+                    true, // Esto asegurará que el DropdownButton ocupe todo el ancho disponible
+                items: [
+                  ...SitiosAnatomicosUPP.sitiosCefalicos,
+                  ...SitiosAnatomicosUPP.sitiosExtremidadesSuperiores,
+                  ...SitiosAnatomicosUPP.sitiosTronco,
+                  ...SitiosAnatomicosUPP.sitiosExtremidadesInferiores,
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+
+              const SizedBox(height: 10),
+              CheckboxListTile(
+                title: const Text('¿UPP Resuelta?'),
+                value: uppResuelta,
+                onChanged: (value) {
+                  setState(() {
+                    uppResuelta = value!;
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+              if (uppResuelta) ...[
+                const Text('Fecha de Resolución'),
+                TextField(
+                  controller: TextEditingController(
+                    text: fechaResolucion != null
+                        ? DateFormat('dd/MM/yyyy').format(fechaResolucion!)
+                        : '',
+                  ),
+                  decoration: const InputDecoration(
+                    hintText: 'Seleccionar fecha de resolución',
+                  ),
+                  onTap: () async {
+                    fechaResolucion = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2101),
+                    );
+                    setState(() {});
+                  },
+                ),
+              ]
+            ]
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Widget para Riesgo de Caídas
+  Widget _buildRiesgoDeCaidas() {
+    return Card(
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Riesgo de Caída en tres horarios:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+
+            // Mañana
+            Row(
+              children: [
+                const Text('Mañana'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    controller: mananaController,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        controlCaidaManana =
+                            value.isNotEmpty ? int.tryParse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Spacer(),
+                Icon(
+                  controlCaidaManana != null && controlCaidaManana! > 70
+                      ? Icons.check_circle
+                      : Icons.error,
+                  color: controlCaidaManana != null && controlCaidaManana! > 70
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Tarde
+            Row(
+              children: [
+                const Text('Tarde'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    controller: tardeController,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        controlCaidaTarde =
+                            value.isNotEmpty ? int.tryParse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Spacer(),
+                Icon(
+                  controlCaidaTarde != null && controlCaidaTarde! > 70
+                      ? Icons.check_circle
+                      : Icons.error,
+                  color: controlCaidaTarde != null && controlCaidaTarde! > 70
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Noche
+            Row(
+              children: [
+                const Text('Noche'),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    controller: nocheController,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        controlCaidaNoche =
+                            value.isNotEmpty ? int.tryParse(value) : 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Spacer(),
+                Icon(
+                  controlCaidaNoche != null && controlCaidaNoche! > 70
+                      ? Icons.check_circle
+                      : Icons.error,
+                  color: controlCaidaNoche != null && controlCaidaNoche! > 70
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Pregunta si hay evento adverso relacionado a caídas
+            CheckboxListTile(
+              title: const Text('¿Evento Adverso relacionado a Caídas?'),
+              value: tieneEventoAdversoCaida, // Variable de estado
+              onChanged: (value) {
+                setState(() {
+                  tieneEventoAdversoCaida = value!;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+
+            if (tieneEventoAdversoCaida) ...[
+              const SizedBox(height: 10),
+              const Text('Número de Reporte Caída'),
+              TextField(
+                controller: numeroReporteCaidaController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  hintText: 'Ingrese numero reporte de caída',
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 1.0),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Widget para Anticoagulantes
+  Widget _buildAnticoagulantes() {
+    return Card(
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Anticoagulantes',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            CheckboxListTile(
+              title: const Text('¿Usa Anticoagulantes?'),
+              value: usaAnticoagulantes,
+              onChanged: (value) {
+                setState(() {
+                  usaAnticoagulantes = value!;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            if (usaAnticoagulantes) ...[
+              const Text('Anticoagulante Seleccionado'),
+              DropdownButton<String>(
+                value: 'Heparina', // Cambiar según la selección
+                onChanged: (String? newValue) {},
+                items: <String>['Heparina', 'Warfarina', 'Apixabán']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ]
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Widget para Aislamiento
+  Widget _buildAislamiento() {
+    return Card(
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Aislamiento',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            CheckboxListTile(
+              title: const Text('¿Está en Aislamiento?'),
+              value: enAislamiento,
+              onChanged: (value) {
+                setState(() {
+                  enAislamiento = value!;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            if (enAislamiento) ...[
+              const Text('Tipo de Aislamiento'),
+              DropdownButton<String>(
+                value: 'Aislado Respiratorio', // Cambiar según la selección
+                onChanged: (String? newValue) {},
+                items: <String>['Aislado Respiratorio', 'Aislado por Contacto']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 10),
+              const Text('Agente de Aislamiento'),
+              TextField(
+                controller: agenteAislamientoController,
+                decoration: const InputDecoration(
+                  hintText: 'Ingrese agente de aislamiento',
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 1.0),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text('Fecha de Inicio de Aislamiento'),
+              TextField(
+                controller: TextEditingController(
+                  text: fechaInicioAislamiento != null
+                      ? DateFormat('dd/MM/yyyy').format(fechaInicioAislamiento!)
+                      : DateFormat('dd/MM/yyyy')
+                          .format(DateTime.now()), // Fecha actual
+                ),
+                decoration: const InputDecoration(
+                  hintText: 'Inicio de aislamiento',
+                ),
+                onTap: () async {
+                  fechaInicioAislamiento = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                  );
+                  setState(() {});
+                },
+              ),
+              const SizedBox(height: 10),
+              const Text('Fecha de Fin de Aislamiento'),
+              TextField(
+                controller: TextEditingController(
+                  text: fechaFinAislamiento != null
+                      ? DateFormat('dd/MM/yyyy').format(fechaFinAislamiento!)
+                      : '',
+                ),
+                decoration: const InputDecoration(
+                  hintText: 'Fin de aislamiento',
+                ),
+                onTap: () async {
+                  fechaFinAislamiento = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                  );
+                  setState(() {});
+                },
+              ),
+            ]
+          ],
         ),
       ),
     );

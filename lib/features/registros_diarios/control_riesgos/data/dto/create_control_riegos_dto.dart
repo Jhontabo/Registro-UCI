@@ -1,6 +1,4 @@
-import 'dart:collection';
-
-class CreateControlDeRiesgosDto extends MapView<String, dynamic> {
+class CreateControlDeRiesgosDto {
   final bool tieneUPP;
   final DateTime? fechaRegistroUlcera;
   final String? numeroReporteEA;
@@ -37,23 +35,28 @@ class CreateControlDeRiesgosDto extends MapView<String, dynamic> {
     this.agenteAislamiento,
     this.fechaFinAislamiento,
     this.diasDeAislamiento,
-  }) : super({
-          'tieneUPP': tieneUPP,
-          'fechaRegistroUlcera': fechaRegistroUlcera?.toIso8601String(),
-          'numeroReporteEA': numeroReporteEA,
-          'sitioUPP': sitioUPP,
-          'uppResuelta': uppResuelta,
-          'fechaResolucion': fechaResolucion?.toIso8601String(),
-          'diasConUlceras': diasConUlceras,
-          'riesgoCaida': riesgoCaida,
-          'numeroReporteCaida': numeroReporteCaida,
-          'usaAnticoagulantes': usaAnticoagulantes,
-          'anticoagulanteSeleccionado': anticoagulanteSeleccionado,
-          'enAislamiento': enAislamiento,
-          'fechaInicioAislamiento': fechaInicioAislamiento?.toIso8601String(),
-          'tipoAislamiento': tipoAislamiento,
-          'agenteAislamiento': agenteAislamiento,
-          'fechaFinAislamiento': fechaFinAislamiento?.toIso8601String(),
-          'diasDeAislamiento': diasDeAislamiento,
-        });
+  });
+
+  // Método para convertir el DTO a un mapa
+  Map<String, dynamic> toMap() {
+    return {
+      'tieneUPP': tieneUPP,
+      'fechaRegistroUlcera': fechaRegistroUlcera?.toIso8601String(),
+      'numeroReporteEA': numeroReporteEA,
+      'sitioUPP': sitioUPP,
+      'uppResuelta': uppResuelta,
+      'fechaResolucion': fechaResolucion?.toIso8601String(),
+      'diasConUlceras': diasConUlceras,
+      'riesgoCaida': riesgoCaida,
+      'numeroReporteCaida': numeroReporteCaida,
+      'usaAnticoagulantes': usaAnticoagulantes,
+      'anticoagulanteSeleccionado': anticoagulanteSeleccionado,
+      'enAislamiento': enAislamiento,
+      'fechaInicioAislamiento': fechaInicioAislamiento?.toIso8601String(),
+      'tipoAislamiento': tipoAislamiento,
+      'agenteAislamiento': agenteAislamiento,
+      'fechaFinAislamiento': fechaFinAislamiento?.toIso8601String(),
+      'diasDeAislamiento': diasDeAislamiento,
+    };
+  }
 }

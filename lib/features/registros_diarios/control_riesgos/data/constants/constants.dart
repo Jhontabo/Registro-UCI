@@ -4,18 +4,18 @@
 class SitiosAnatomicosUPP {
   static const List<String> sitiosCefalicos = [
     'Región occipital (posterior de la cabeza)',
-    'Región auricular derecha (Región auricular derecha)',
-    'Región auricular izquierda (Región auricular izquierda)',
+    'Región auricular derecha',
+    'Región auricular izquierda',
     'Región malar derecha (cigomática o mejilla derecha)',
     'Región malar izquierda (cigomática o mejilla izquierda)',
     'Región frontal (frente)',
   ];
 
   static const List<String> sitiosExtremidadesSuperiores = [
-    'Región deltoidea derecha',
-    'Región deltoidea izquierda',
-    'Región escapular derecha',
-    'Región escapular izquierda',
+    'Región deltoidea derecha (Extremidades Superiores)',
+    'Región deltoidea izquierda (Extremidades Superiores)',
+    'Región escapular derecha (Extremidades Superiores)',
+    'Región escapular izquierda (Extremidades Superiores)',
     'Región olecraneana derecha (codo derecho)',
     'Región olecraneana izquierda (codo izquierdo)',
     'Región antebraquial posterior derecha',
@@ -68,7 +68,7 @@ class SitiosAnatomicosUPP {
     'Región plantar derecha (planta del pie derecho)',
     'Región plantar izquierda (planta del pie izquierda)',
     'Región metatarsiana derecha (cabezas de los metatarsianos del pie derecho)',
-    'Región metatarsiana izquierda (cabezas de los metatarsianos del pie izquierda)',
+    'Región metatarsiana izquierda (cabezas de los metatarsianos del pie izquierdo)',
   ];
 
   // Puedes agregar más regiones si es necesario, estos son los principales.

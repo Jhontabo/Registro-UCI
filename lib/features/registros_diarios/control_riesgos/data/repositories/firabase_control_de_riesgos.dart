@@ -19,29 +19,11 @@ class FirebaseControlDeRiesgosRepository implements ControlDeRiesgosRepository {
         .doc(idRegistroDiario)
         .collection('controlDeRiesgos');
 
-    // Crear el DTO con los datos necesarios
-    final dto = CreateControlDeRiesgosDto(
-      tieneUPP: controlDeRiesgos.tieneUPP,
-      fechaRegistroUlcera: controlDeRiesgos.fechaRegistroUlcera,
-      numeroReporteEA: controlDeRiesgos.numeroReporteEA,
-      sitioUPP: controlDeRiesgos.sitioUPP,
-      uppResuelta: controlDeRiesgos.uppResuelta,
-      fechaResolucion: controlDeRiesgos.fechaResolucion,
-      diasConUlceras: controlDeRiesgos.diasConUlceras,
-      riesgoCaida: controlDeRiesgos.riesgoCaida,
-      numeroReporteCaida: controlDeRiesgos.numeroReporteCaida,
-      usaAnticoagulantes: controlDeRiesgos.usaAnticoagulantes,
-      anticoagulanteSeleccionado: controlDeRiesgos.anticoagulanteSeleccionado,
-      enAislamiento: controlDeRiesgos.enAislamiento,
-      fechaInicioAislamiento: controlDeRiesgos.fechaInicioAislamiento,
-      tipoAislamiento: controlDeRiesgos.tipoAislamiento,
-      agenteAislamiento: controlDeRiesgos.agenteAislamiento,
-      fechaFinAislamiento: controlDeRiesgos.fechaFinAislamiento,
-      diasDeAislamiento: controlDeRiesgos.diasDeAislamiento,
-    );
+    // Convertir el ControlDeRiesgos a un mapa antes de guardarlo
+    final controlDeRiesgosMap = controlDeRiesgos.toJson();
 
     // Guardar en Firestore
-    await controlDeRiesgosRef.add(dto);
+    await controlDeRiesgosRef.add(controlDeRiesgosMap);
   }
 
   @override
