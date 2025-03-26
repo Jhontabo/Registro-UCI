@@ -34,10 +34,19 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
   TextEditingController sitioUPPController = TextEditingController();
   TextEditingController agenteAislamientoController = TextEditingController();
 
+  // Controladores de los tres horarios
+  TextEditingController mananaController = TextEditingController();
+  TextEditingController tardeController = TextEditingController();
+  TextEditingController nocheController = TextEditingController();
+
   String? _selectedSitioUPP;
   int? controlUPPManana;
   int? controlUPPTarde;
   int? controlUPPNoche;
+
+  int? controlCaidaManana;
+  int? controlCaidaTarde;
+  int? controlCaidaNoche;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +118,7 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                     onChanged: (value) {
                       setState(() {
                         controlUPPManana =
-                            value.isNotEmpty ? int.parse(value) : 0;
+                            value.isNotEmpty ? int.tryParse(value) : 0;
                       });
                     },
                     decoration: const InputDecoration(
@@ -120,14 +129,19 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                     ),
                   ),
                 ),
+                const SizedBox(width: 10),
                 const Spacer(),
                 Icon(
                   controlUPPManana != null && controlUPPManana! > 70
                       ? Icons.check_circle
-                      : Icons.error,
+                      : (controlUPPManana != null && controlUPPManana! > 40)
+                          ? Icons.access_time
+                          : Icons.error,
                   color: controlUPPManana != null && controlUPPManana! > 70
                       ? Colors.green
-                      : Colors.red,
+                      : (controlUPPManana != null && controlUPPManana! > 40)
+                          ? Colors.yellow
+                          : Colors.red,
                 ),
               ],
             ),
@@ -145,7 +159,7 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                     onChanged: (value) {
                       setState(() {
                         controlUPPTarde =
-                            value.isNotEmpty ? int.parse(value) : 0;
+                            value.isNotEmpty ? int.tryParse(value) : 0;
                       });
                     },
                     decoration: const InputDecoration(
@@ -156,14 +170,19 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                     ),
                   ),
                 ),
+                const SizedBox(width: 10),
                 const Spacer(),
                 Icon(
                   controlUPPTarde != null && controlUPPTarde! > 70
                       ? Icons.check_circle
-                      : Icons.error,
+                      : (controlUPPTarde != null && controlUPPTarde! > 40)
+                          ? Icons.access_time
+                          : Icons.error,
                   color: controlUPPTarde != null && controlUPPTarde! > 70
                       ? Colors.green
-                      : Colors.red,
+                      : (controlUPPTarde != null && controlUPPTarde! > 40)
+                          ? Colors.yellow
+                          : Colors.red,
                 ),
               ],
             ),
@@ -181,7 +200,7 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                     onChanged: (value) {
                       setState(() {
                         controlUPPNoche =
-                            value.isNotEmpty ? int.parse(value) : 0;
+                            value.isNotEmpty ? int.tryParse(value) : 0;
                       });
                     },
                     decoration: const InputDecoration(
@@ -192,14 +211,19 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                     ),
                   ),
                 ),
+                const SizedBox(width: 10),
                 const Spacer(),
                 Icon(
                   controlUPPNoche != null && controlUPPNoche! > 70
                       ? Icons.check_circle
-                      : Icons.error,
+                      : (controlUPPNoche != null && controlUPPNoche! > 40)
+                          ? Icons.access_time
+                          : Icons.error,
                   color: controlUPPNoche != null && controlUPPNoche! > 70
                       ? Colors.green
-                      : Colors.red,
+                      : (controlUPPNoche != null && controlUPPNoche! > 40)
+                          ? Colors.yellow
+                          : Colors.red,
                 ),
               ],
             ),
@@ -345,17 +369,16 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 SizedBox(
                   width: 80,
                   child: TextField(
-                    controller: TextEditingController(),
+                    controller: mananaController,
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
-                        // Lógica para cambiar el ícono según el valor
-                        controlUPPManana =
-                            value.isNotEmpty ? int.parse(value) : 0;
+                        controlCaidaManana =
+                            value.isNotEmpty ? int.tryParse(value) : 0;
                       });
                     },
                     decoration: const InputDecoration(
-                      hintText: '', // No mostrar ningún texto por defecto
+                      hintText: '',
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.0),
                       ),
@@ -368,16 +391,15 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 const SizedBox(width: 10),
                 const Spacer(),
                 Icon(
-                  controlUPPManana != null && controlUPPManana! > 70
+                  controlCaidaManana != null && controlCaidaManana! > 70
                       ? Icons.check_circle
                       : Icons.error,
-                  color: controlUPPManana != null && controlUPPManana! > 70
+                  color: controlCaidaManana != null && controlCaidaManana! > 70
                       ? Colors.green
                       : Colors.red,
                 ),
               ],
             ),
-
             const SizedBox(height: 10),
 
             // Tarde
@@ -388,17 +410,16 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 SizedBox(
                   width: 80,
                   child: TextField(
-                    controller: TextEditingController(),
+                    controller: tardeController,
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
-                        // Lógica para cambiar el ícono según el valor
-                        controlUPPTarde =
-                            value.isNotEmpty ? int.parse(value) : 0;
+                        controlCaidaTarde =
+                            value.isNotEmpty ? int.tryParse(value) : 0;
                       });
                     },
                     decoration: const InputDecoration(
-                      hintText: '', // No mostrar ningún texto por defecto
+                      hintText: '',
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.0),
                       ),
@@ -411,16 +432,15 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 const SizedBox(width: 10),
                 const Spacer(),
                 Icon(
-                  controlUPPTarde != null && controlUPPTarde! > 70
+                  controlCaidaTarde != null && controlCaidaTarde! > 70
                       ? Icons.check_circle
                       : Icons.error,
-                  color: controlUPPTarde != null && controlUPPTarde! > 70
+                  color: controlCaidaTarde != null && controlCaidaTarde! > 70
                       ? Colors.green
                       : Colors.red,
                 ),
               ],
             ),
-
             const SizedBox(height: 10),
 
             // Noche
@@ -431,17 +451,16 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 SizedBox(
                   width: 80,
                   child: TextField(
-                    controller: TextEditingController(),
+                    controller: nocheController,
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
-                        // Lógica para cambiar el ícono según el valor
-                        controlUPPNoche =
-                            value.isNotEmpty ? int.parse(value) : 0;
+                        controlCaidaNoche =
+                            value.isNotEmpty ? int.tryParse(value) : 0;
                       });
                     },
                     decoration: const InputDecoration(
-                      hintText: '', // No mostrar ningún texto por defecto
+                      hintText: '',
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.0),
                       ),
@@ -454,16 +473,16 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 const SizedBox(width: 10),
                 const Spacer(),
                 Icon(
-                  controlUPPNoche != null && controlUPPNoche! > 70
+                  controlCaidaNoche != null && controlCaidaNoche! > 70
                       ? Icons.check_circle
                       : Icons.error,
-                  color: controlUPPNoche != null && controlUPPNoche! > 70
+                  color: controlCaidaNoche != null && controlCaidaNoche! > 70
                       ? Colors.green
                       : Colors.red,
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             // Pregunta si hay evento adverso relacionado a caídas
             CheckboxListTile(
@@ -484,7 +503,7 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                 controller: numeroReporteCaidaController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  hintText: 'Ingrese reporte de caída',
+                  hintText: 'Ingrese numero reporte de caída',
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black, width: 1.0),
                   ),
