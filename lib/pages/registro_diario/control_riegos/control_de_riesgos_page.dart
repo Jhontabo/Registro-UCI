@@ -83,6 +83,17 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Aquí puedes definir lo que deseas hacer cuando presionen el botón flotante
+          // En este caso, puede ser que abra un formulario, un nuevo registro, etc.
+          print("Botón flotante presionado");
+          // Si necesitas mostrar una nueva pantalla o modal:
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => NuevaPantalla()));
+        },
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
