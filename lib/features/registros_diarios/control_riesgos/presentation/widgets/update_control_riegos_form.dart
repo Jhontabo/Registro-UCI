@@ -3,24 +3,25 @@ import 'package:intl/intl.dart';
 import '/../../features/registros_diarios/control_riesgos/data/constants/constants.dart';
 import '../../../control_riesgos/data/repositories/firabase_control_de_riesgos.dart';
 import 'package:registro_uci/features/registros_diarios/control_riesgos/domain/models/control_de_riesgos.dart';
-// Importa el repositorio
 
-class CreateControlRiesgosForm extends StatefulWidget {
+class UpdateControlRiesgosForm extends StatefulWidget {
   final String idIngreso;
   final String idRegistroDiario;
+  final ControlDeRiesgos controlDeRiesgos;
 
-  const CreateControlRiesgosForm({
+  const UpdateControlRiesgosForm({
     super.key,
     required this.idIngreso,
     required this.idRegistroDiario,
+    required this.controlDeRiesgos, // Recibimos los datos actuales para mostrar
   });
 
   @override
-  _CreateControlRiesgosFormState createState() =>
-      _CreateControlRiesgosFormState();
+  _UpdateControlRiesgosFormState createState() =>
+      _UpdateControlRiesgosFormState();
 }
 
-class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
+class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
   final FirebaseControlDeRiesgosRepository _repositorio =
       FirebaseControlDeRiesgosRepository(); // Instancia el repositorio
 
@@ -54,7 +55,38 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
   int? controlCaidaTarde;
   int? controlCaidaNoche;
 
-  void _guardarDatos() async {
+  @override
+  void initState() {
+    super.initState();
+
+    // Inicializar valores con los datos actuales
+    tieneUPP = widget.controlDeRiesgos.tieneUPP;
+    uppResuelta = widget.controlDeRiesgos.uppResuelta ?? false;
+    enAislamiento = widget.controlDeRiesgos.enAislamiento ?? false;
+    usaAnticoagulantes = widget.controlDeRiesgos.usaAnticoagulantes ?? false;
+
+    fechaRegistroUlcera = widget.controlDeRiesgos.fechaRegistroUlcera;
+    fechaResolucion = widget.controlDeRiesgos.fechaResolucion;
+    fechaInicioAislamiento = widget.controlDeRiesgos.fechaInicioAislamiento;
+    fechaFinAislamiento = widget.controlDeRiesgos.fechaFinAislamiento;
+
+    numeroReporteEAController.text =
+        widget.controlDeRiesgos.numeroReporteEA ?? '';
+    numeroReporteCaidaController.text =
+        widget.controlDeRiesgos.numeroReporteCaida ?? '';
+    sitioUPPController.text = widget.controlDeRiesgos.sitioUPP ?? '';
+    agenteAislamientoController.text =
+        widget.controlDeRiesgos.agenteAislamiento ?? '';
+
+    mananaController.text =
+        widget.controlDeRiesgos.diasConUlceras?.toString() ?? '';
+    tardeController.text =
+        widget.controlDeRiesgos.diasDeAislamiento?.toString() ?? '';
+    nocheController.text =
+        widget.controlDeRiesgos.diasDeAislamiento?.toString() ?? '';
+  }
+
+  void _actualizarDatos() async {
     // Verificar si los campos están completos
     if (numeroReporteEAController.text.isEmpty ||
         fechaRegistroUlcera == null ||
@@ -67,9 +99,9 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
       return;
     }
 
-    // Crear el objeto que vas a guardar
+    // Crear el objeto con los datos actualizados
     final controlDeRiesgos = ControlDeRiesgos(
-      idControlDeRiesgos: '',
+      idControlDeRiesgos: widget.controlDeRiesgos.idControlDeRiesgos,
       tieneUPP: tieneUPP,
       fechaRegistroUlcera: fechaRegistroUlcera,
       numeroReporteEA: numeroReporteEAController.text,
@@ -91,22 +123,24 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
     );
 
     try {
-      // Llamamos al repositorio para guardar los datos en Firestore
-      await _repositorio.addControlDeRiesgos(
+      // Llamamos al repositorio para actualizar los datos en Firestore
+      await _repositorio.updateControlDeRiesgos(
         widget.idIngreso, // idIngreso de tu widget
         widget.idRegistroDiario, // idRegistroDiario de tu widget
-        controlDeRiesgos,
+        controlDeRiesgos
+            .idControlDeRiesgos, // Debes pasar el idControlDeRiesgos para actualizar el documento específico
+        controlDeRiesgos, // El objeto ControlDeRiesgos con los datos a actualizar
       );
 
       // Si todo es correcto, mostramos un mensaje y regresamos a la pantalla anterior
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Datos guardados correctamente.')),
+        const SnackBar(content: Text('Datos actualizados correctamente.')),
       );
       Navigator.pop(context); // Regresa a la pantalla anterior
     } catch (e) {
       // Si ocurre un error, muestra un mensaje de error
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al guardar los datos: $e')),
+        SnackBar(content: Text('Error al actualizar los datos: $e')),
       );
     }
   }
@@ -114,11 +148,10 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Control de Riesgos')),
+      appBar: AppBar(title: const Text('Actualizar Control de Riesgos')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          // Aquí agregas el SingleChildScrollView
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -131,8 +164,8 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
               _buildAislamiento(),
               const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: _guardarDatos,
-                child: const Text('Guardar Control de Riesgos'),
+                onPressed: _actualizarDatos,
+                child: const Text('Actualizar Control de Riesgos'),
               ),
             ],
           ),
@@ -141,7 +174,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
     );
   }
 
-  // Aquí van los métodos del formulario como _buildControlUPP, _buildRiesgoDeCaidas, etc.
+// Widget para el Control UPP
   Widget _buildControlUPP() {
     return Card(
       elevation: 5,
@@ -164,6 +197,11 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
                 SizedBox(
                   width: 80,
                   child: TextField(
+                    controller: TextEditingController(
+                      text: controlUPPManana != null
+                          ? controlUPPManana.toString()
+                          : '',
+                    ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
@@ -205,6 +243,11 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
                 SizedBox(
                   width: 80,
                   child: TextField(
+                    controller: TextEditingController(
+                      text: controlUPPTarde != null
+                          ? controlUPPTarde.toString()
+                          : '',
+                    ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
@@ -246,6 +289,11 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
                 SizedBox(
                   width: 80,
                   child: TextField(
+                    controller: TextEditingController(
+                      text: controlUPPNoche != null
+                          ? controlUPPNoche.toString()
+                          : '',
+                    ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
@@ -321,8 +369,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
               const Text('Número de Reporte EA'),
               TextField(
                 controller: numeroReporteEAController,
-                keyboardType:
-                    TextInputType.number, // Esto restringe la entrada a números
+                keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   hintText: 'Ingrese reporte EA',
                   enabledBorder: OutlineInputBorder(
@@ -397,7 +444,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
     );
   }
 
-  // Widget para Riesgo de Caídas
+// Widget para Riesgo de Caídas
   Widget _buildRiesgoDeCaidas() {
     return Card(
       elevation: 5,
@@ -420,7 +467,11 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
                 SizedBox(
                   width: 80,
                   child: TextField(
-                    controller: mananaController,
+                    controller: TextEditingController(
+                      text: controlCaidaManana != null
+                          ? controlCaidaManana.toString()
+                          : '',
+                    ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
@@ -461,7 +512,11 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
                 SizedBox(
                   width: 80,
                   child: TextField(
-                    controller: tardeController,
+                    controller: TextEditingController(
+                      text: controlCaidaTarde != null
+                          ? controlCaidaTarde.toString()
+                          : '',
+                    ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
@@ -502,7 +557,11 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
                 SizedBox(
                   width: 80,
                   child: TextField(
-                    controller: nocheController,
+                    controller: TextEditingController(
+                      text: controlCaidaNoche != null
+                          ? controlCaidaNoche.toString()
+                          : '',
+                    ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
@@ -567,7 +626,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
     );
   }
 
-  // Widget para Anticoagulantes
+// Widget para Anticoagulantes
   Widget _buildAnticoagulantes() {
     return Card(
       elevation: 5,
@@ -610,7 +669,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
     );
   }
 
-  // Widget para Aislamiento
+// Widget para Aislamiento
   Widget _buildAislamiento() {
     return Card(
       elevation: 5,
@@ -706,4 +765,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
       ),
     );
   }
+
+  // Aquí van los métodos del formulario como _buildControlUPP, _buildRiesgoDeCaidas, etc.
+  // Son los mismos que en el formulario de creación.
 }

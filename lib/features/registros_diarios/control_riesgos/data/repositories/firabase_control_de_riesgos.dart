@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:registro_uci/features/registros_diarios/control_riesgos/domain/models/control_de_riesgos.dart';
 import 'package:registro_uci/features/registros_diarios/control_riesgos/data/abstract_repositories/control_de_riesgos_repository.dart';
-import '../dto/create_control_riegos_dto.dart';
 
 class FirebaseControlDeRiesgosRepository implements ControlDeRiesgosRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -22,7 +21,7 @@ class FirebaseControlDeRiesgosRepository implements ControlDeRiesgosRepository {
     // Convertir el ControlDeRiesgos a un mapa antes de guardarlo
     final controlDeRiesgosMap = controlDeRiesgos.toJson();
 
-    // Guardar en Firestore
+    // Guardar en Firestore (en este caso estamos usando add para crear un nuevo documento)
     await controlDeRiesgosRef.add(controlDeRiesgosMap);
   }
 
@@ -48,7 +47,8 @@ class FirebaseControlDeRiesgosRepository implements ControlDeRiesgosRepository {
   Future<void> updateControlDeRiesgos(
     String idIngreso,
     String idRegistroDiario,
-    String idControlDeRiesgos,
+    String
+        idControlDeRiesgos, // Este parámetro es necesario para ubicar el documento
     ControlDeRiesgos controlDeRiesgos,
   ) async {
     final controlDeRiesgosRef = _firestore
@@ -57,9 +57,31 @@ class FirebaseControlDeRiesgosRepository implements ControlDeRiesgosRepository {
         .collection('registrosDiarios')
         .doc(idRegistroDiario)
         .collection('controlDeRiesgos')
-        .doc(idControlDeRiesgos);
+        .doc(
+            idControlDeRiesgos); // Se usa el ID aquí para actualizar el documento
 
     await controlDeRiesgosRef.update(controlDeRiesgos.toJson());
+  }
+
+  Future<ControlDeRiesgos> getControlDeRiesgosById(
+    String idIngreso,
+    String idRegistroDiario,
+    String idControlDeRiesgos,
+  ) async {
+    final controlDeRiesgosRef = _firestore
+        .collection('ingresos')
+        .doc(idIngreso)
+        .collection('registrosDiarios')
+        .doc(idRegistroDiario)
+        .collection('controlDeRiesgos')
+        .doc(idControlDeRiesgos); // Usamos el ID para buscar el documento
+
+    final doc = await controlDeRiesgosRef.get();
+    if (doc.exists) {
+      return ControlDeRiesgos.fromJson(doc.data()!, id: doc.id);
+    } else {
+      throw Exception('Control de riesgos no encontrado');
+    }
   }
 
   @override
