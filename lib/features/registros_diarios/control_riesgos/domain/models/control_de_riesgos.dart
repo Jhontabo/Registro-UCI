@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class ControlDeRiesgos {
   final String idControlDeRiesgos;
   final bool tieneUPP;
@@ -19,9 +17,14 @@ class ControlDeRiesgos {
   final String? agenteAislamiento;
   final DateTime? fechaFinAislamiento;
   final int? diasDeAislamiento;
-
-  // **Añadir esta línea para la fecha de creación**
-  final DateTime? fechaRegistro; // Nueva propiedad para la fecha de creación
+  final DateTime? fechaRegistro;
+  // Agrega estos nuevos campos
+  final int? controlUPPManana;
+  final int? controlUPPTarde;
+  final int? controlUPPNoche;
+  final int? controlCaidaManana;
+  final int? controlCaidaTarde;
+  final int? controlCaidaNoche;
 
   ControlDeRiesgos({
     required this.idControlDeRiesgos,
@@ -42,10 +45,47 @@ class ControlDeRiesgos {
     this.agenteAislamiento,
     this.fechaFinAislamiento,
     this.diasDeAislamiento,
-    this.fechaRegistro, // Nueva propiedad en el constructor
+    this.fechaRegistro,
+    // Agrega estos nuevos parámetros al constructor
+    this.controlUPPManana,
+    this.controlUPPTarde,
+    this.controlUPPNoche,
+    this.controlCaidaManana,
+    this.controlCaidaTarde,
+    this.controlCaidaNoche,
   });
 
-  // Método para crear una instancia desde un Map (deserialización)
+  // Asegúrate de actualizar también los métodos toJson y fromJson
+  Map<String, dynamic> toJson() {
+    return {
+      'tieneUPP': tieneUPP,
+      'fechaRegistroUlcera': fechaRegistroUlcera?.toIso8601String(),
+      'numeroReporteEA': numeroReporteEA,
+      'sitioUPP': sitioUPP,
+      'uppResuelta': uppResuelta,
+      'fechaResolucion': fechaResolucion?.toIso8601String(),
+      'diasConUlceras': diasConUlceras,
+      'riesgoCaida': riesgoCaida,
+      'numeroReporteCaida': numeroReporteCaida,
+      'usaAnticoagulantes': usaAnticoagulantes,
+      'anticoagulanteSeleccionado': anticoagulanteSeleccionado,
+      'enAislamiento': enAislamiento,
+      'fechaInicioAislamiento': fechaInicioAislamiento?.toIso8601String(),
+      'tipoAislamiento': tipoAislamiento,
+      'agenteAislamiento': agenteAislamiento,
+      'fechaFinAislamiento': fechaFinAislamiento?.toIso8601String(),
+      'diasDeAislamiento': diasDeAislamiento,
+      'fechaRegistro': fechaRegistro?.toIso8601String(),
+      // Agrega los nuevos campos al JSON
+      'controlUPPManana': controlUPPManana,
+      'controlUPPTarde': controlUPPTarde,
+      'controlUPPNoche': controlUPPNoche,
+      'controlCaidaManana': controlCaidaManana,
+      'controlCaidaTarde': controlCaidaTarde,
+      'controlCaidaNoche': controlCaidaNoche,
+    };
+  }
+
   factory ControlDeRiesgos.fromJson(Map<String, dynamic> json,
       {required String id}) {
     return ControlDeRiesgos(
@@ -75,35 +115,16 @@ class ControlDeRiesgos {
           ? DateTime.parse(json['fechaFinAislamiento'])
           : null,
       diasDeAislamiento: json['diasDeAislamiento'] as int?,
-      // Añadir el parsing de la nueva propiedad fechaRegistro
       fechaRegistro: json['fechaRegistro'] != null
           ? DateTime.parse(json['fechaRegistro'])
           : null,
+      // Agrega los nuevos campos al fromJson
+      controlUPPManana: json['controlUPPManana'] as int?,
+      controlUPPTarde: json['controlUPPTarde'] as int?,
+      controlUPPNoche: json['controlUPPNoche'] as int?,
+      controlCaidaManana: json['controlCaidaManana'] as int?,
+      controlCaidaTarde: json['controlCaidaTarde'] as int?,
+      controlCaidaNoche: json['controlCaidaNoche'] as int?,
     );
-  }
-
-  // Método para convertir la instancia a un Map (serialización)
-  Map<String, dynamic> toJson() {
-    return {
-      'tieneUPP': tieneUPP,
-      'fechaRegistroUlcera': fechaRegistroUlcera?.toIso8601String(),
-      'numeroReporteEA': numeroReporteEA,
-      'sitioUPP': sitioUPP,
-      'uppResuelta': uppResuelta,
-      'fechaResolucion': fechaResolucion?.toIso8601String(),
-      'diasConUlceras': diasConUlceras,
-      'riesgoCaida': riesgoCaida,
-      'numeroReporteCaida': numeroReporteCaida,
-      'usaAnticoagulantes': usaAnticoagulantes,
-      'anticoagulanteSeleccionado': anticoagulanteSeleccionado,
-      'enAislamiento': enAislamiento,
-      'fechaInicioAislamiento': fechaInicioAislamiento?.toIso8601String(),
-      'tipoAislamiento': tipoAislamiento,
-      'agenteAislamiento': agenteAislamiento,
-      'fechaFinAislamiento': fechaFinAislamiento?.toIso8601String(),
-      'diasDeAislamiento': diasDeAislamiento,
-      // Añadir la serialización de la nueva propiedad fechaRegistro
-      'fechaRegistro': fechaRegistro?.toIso8601String(),
-    };
   }
 }

@@ -13,7 +13,7 @@ class UpdateControlRiesgosForm extends StatefulWidget {
     super.key,
     required this.idIngreso,
     required this.idRegistroDiario,
-    required this.controlDeRiesgos, // Recibimos los datos actuales para mostrar
+    required this.controlDeRiesgos,
   });
 
   @override
@@ -23,7 +23,7 @@ class UpdateControlRiesgosForm extends StatefulWidget {
 
 class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
   final FirebaseControlDeRiesgosRepository _repositorio =
-      FirebaseControlDeRiesgosRepository(); // Instancia el repositorio
+      FirebaseControlDeRiesgosRepository();
 
   bool tieneUPP = false;
   bool uppResuelta = false;
@@ -35,66 +35,165 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
   DateTime? fechaResolucion;
   DateTime? fechaInicioAislamiento;
   DateTime? fechaFinAislamiento;
+  DateTime? fechaRegistro;
 
   TextEditingController numeroReporteEAController = TextEditingController();
   TextEditingController numeroReporteCaidaController = TextEditingController();
-  TextEditingController sitioUPPController = TextEditingController();
   TextEditingController agenteAislamientoController = TextEditingController();
+  TextEditingController fechaRegistroController = TextEditingController();
 
-  // Controladores de los tres horarios
-  TextEditingController mananaController = TextEditingController();
-  TextEditingController tardeController = TextEditingController();
-  TextEditingController nocheController = TextEditingController();
+  // Controladores para UPP
+  TextEditingController uppMananaController = TextEditingController();
+  TextEditingController uppTardeController = TextEditingController();
+  TextEditingController uppNocheController = TextEditingController();
+
+  // Controladores para Caídas
+  TextEditingController caidaMananaController = TextEditingController();
+  TextEditingController caidaTardeController = TextEditingController();
+  TextEditingController caidaNocheController = TextEditingController();
 
   String? _selectedSitioUPP;
-  int? controlUPPManana;
-  int? controlUPPTarde;
-  int? controlUPPNoche;
-
-  int? controlCaidaManana;
-  int? controlCaidaTarde;
-  int? controlCaidaNoche;
+  String? _selectedAnticoagulante = 'Heparina';
+  String? _selectedTipoAislamiento = 'Aislado Respiratorio';
 
   @override
   void initState() {
     super.initState();
+
+    // Crear lista completa de sitios para validación
+    final todosSitios = [
+      ...SitiosAnatomicosUPP.sitiosCefalicos,
+      ...SitiosAnatomicosUPP.sitiosExtremidadesSuperiores,
+      ...SitiosAnatomicosUPP.sitiosTronco,
+      ...SitiosAnatomicosUPP.sitiosExtremidadesInferiores,
+    ];
 
     // Inicializar valores con los datos actuales
     tieneUPP = widget.controlDeRiesgos.tieneUPP;
     uppResuelta = widget.controlDeRiesgos.uppResuelta ?? false;
     enAislamiento = widget.controlDeRiesgos.enAislamiento ?? false;
     usaAnticoagulantes = widget.controlDeRiesgos.usaAnticoagulantes ?? false;
+    tieneEventoAdversoCaida =
+        widget.controlDeRiesgos.numeroReporteCaida != null;
 
     fechaRegistroUlcera = widget.controlDeRiesgos.fechaRegistroUlcera;
     fechaResolucion = widget.controlDeRiesgos.fechaResolucion;
     fechaInicioAislamiento = widget.controlDeRiesgos.fechaInicioAislamiento;
     fechaFinAislamiento = widget.controlDeRiesgos.fechaFinAislamiento;
+    fechaRegistro = widget.controlDeRiesgos.fechaRegistro;
 
     numeroReporteEAController.text =
         widget.controlDeRiesgos.numeroReporteEA ?? '';
     numeroReporteCaidaController.text =
         widget.controlDeRiesgos.numeroReporteCaida ?? '';
-    sitioUPPController.text = widget.controlDeRiesgos.sitioUPP ?? '';
     agenteAislamientoController.text =
         widget.controlDeRiesgos.agenteAislamiento ?? '';
 
-    mananaController.text =
-        widget.controlDeRiesgos.diasConUlceras?.toString() ?? '';
-    tardeController.text =
-        widget.controlDeRiesgos.diasDeAislamiento?.toString() ?? '';
-    nocheController.text =
-        widget.controlDeRiesgos.diasDeAislamiento?.toString() ?? '';
+    // Validar que el sitio UPP exista en las opciones
+    _selectedSitioUPP = widget.controlDeRiesgos.sitioUPP != null &&
+            todosSitios.contains(widget.controlDeRiesgos.sitioUPP)
+        ? widget.controlDeRiesgos.sitioUPP
+        : null;
+
+    _selectedAnticoagulante =
+        widget.controlDeRiesgos.anticoagulanteSeleccionado ?? 'Heparina';
+    _selectedTipoAislamiento =
+        widget.controlDeRiesgos.tipoAislamiento ?? 'Aislado Respiratorio';
+
+    // Inicializar controladores numéricos
+    uppMananaController.text =
+        widget.controlDeRiesgos.controlUPPManana?.toString() ?? '0';
+    uppTardeController.text =
+        widget.controlDeRiesgos.controlUPPTarde?.toString() ?? '0';
+    uppNocheController.text =
+        widget.controlDeRiesgos.controlUPPNoche?.toString() ?? '0';
+
+    caidaMananaController.text =
+        widget.controlDeRiesgos.controlCaidaManana?.toString() ?? '0';
+    caidaTardeController.text =
+        widget.controlDeRiesgos.controlCaidaTarde?.toString() ?? '0';
+    caidaNocheController.text =
+        widget.controlDeRiesgos.controlCaidaNoche?.toString() ?? '0';
+
+    if (fechaRegistro != null) {
+      fechaRegistroController.text =
+          DateFormat('dd/MM/yyyy').format(fechaRegistro!);
+    }
+  }
+
+  @override
+  void dispose() {
+    // Liberar todos los controladores
+    uppMananaController.dispose();
+    uppTardeController.dispose();
+    uppNocheController.dispose();
+    caidaMananaController.dispose();
+    caidaTardeController.dispose();
+    caidaNocheController.dispose();
+    numeroReporteEAController.dispose();
+    numeroReporteCaidaController.dispose();
+    agenteAislamientoController.dispose();
+    fechaRegistroController.dispose();
+    super.dispose();
   }
 
   void _actualizarDatos() async {
-    // Verificar si los campos están completos
-    if (numeroReporteEAController.text.isEmpty ||
-        fechaRegistroUlcera == null ||
-        mananaController.text.isEmpty ||
-        tardeController.text.isEmpty ||
-        nocheController.text.isEmpty) {
+    // Validación de campos obligatorios
+    if (fechaRegistro == null ||
+        uppMananaController.text.isEmpty ||
+        uppTardeController.text.isEmpty ||
+        uppNocheController.text.isEmpty ||
+        caidaMananaController.text.isEmpty ||
+        caidaTardeController.text.isEmpty ||
+        caidaNocheController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, complete todos los campos.')),
+        const SnackBar(
+            content:
+                Text('Por favor, complete todos los campos obligatorios.')),
+      );
+      return;
+    }
+
+    // Validación adicional si tiene UPP
+    if (tieneUPP &&
+        (fechaRegistroUlcera == null ||
+            numeroReporteEAController.text.isEmpty ||
+            _selectedSitioUPP == null)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content:
+                Text('Por favor, complete los campos requeridos para UPP.')),
+      );
+      return;
+    }
+
+    // Validación adicional si UPP está resuelta
+    if (tieneUPP && uppResuelta && fechaResolucion == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Por favor, ingrese la fecha de resolución de UPP.')),
+      );
+      return;
+    }
+
+    // Validación adicional si tiene evento adverso de caída
+    if (tieneEventoAdversoCaida && numeroReporteCaidaController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Por favor, ingrese el número de reporte de caída.')),
+      );
+      return;
+    }
+
+    // Validación adicional si está en aislamiento
+    if (enAislamiento &&
+        (fechaInicioAislamiento == null ||
+            _selectedTipoAislamiento == null ||
+            agenteAislamientoController.text.isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'Por favor, complete los campos requeridos para aislamiento.')),
       );
       return;
     }
@@ -103,46 +202,113 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
     final controlDeRiesgos = ControlDeRiesgos(
       idControlDeRiesgos: widget.controlDeRiesgos.idControlDeRiesgos,
       tieneUPP: tieneUPP,
-      fechaRegistroUlcera: fechaRegistroUlcera,
-      numeroReporteEA: numeroReporteEAController.text,
-      sitioUPP: _selectedSitioUPP,
-      uppResuelta: uppResuelta,
-      fechaResolucion: fechaResolucion,
-      diasConUlceras: int.tryParse(mananaController.text),
-      riesgoCaida: 'Alta', // Esto lo puedes cambiar según tu lógica
-      numeroReporteCaida: numeroReporteCaidaController.text,
+      fechaRegistroUlcera: tieneUPP ? fechaRegistroUlcera : null,
+      numeroReporteEA: tieneUPP ? numeroReporteEAController.text : null,
+      sitioUPP: tieneUPP ? _selectedSitioUPP : null,
+      uppResuelta: tieneUPP ? uppResuelta : false,
+      fechaResolucion: (tieneUPP && uppResuelta) ? fechaResolucion : null,
+      diasConUlceras: int.tryParse(uppMananaController.text),
+      riesgoCaida: _calcularRiesgoCaida(),
+      numeroReporteCaida:
+          tieneEventoAdversoCaida ? numeroReporteCaidaController.text : null,
       usaAnticoagulantes: usaAnticoagulantes,
       anticoagulanteSeleccionado:
-          'Heparina', // Lo mismo aquí, lo puedes cambiar
+          usaAnticoagulantes ? _selectedAnticoagulante : null,
       enAislamiento: enAislamiento,
-      fechaInicioAislamiento: fechaInicioAislamiento,
-      tipoAislamiento: 'Aislado Respiratorio', // Lo mismo aquí
-      agenteAislamiento: agenteAislamientoController.text,
-      fechaFinAislamiento: fechaFinAislamiento,
-      diasDeAislamiento: int.tryParse(tardeController.text),
+      fechaInicioAislamiento: enAislamiento ? fechaInicioAislamiento : null,
+      tipoAislamiento: enAislamiento ? _selectedTipoAislamiento : null,
+      agenteAislamiento:
+          enAislamiento ? agenteAislamientoController.text : null,
+      fechaFinAislamiento: enAislamiento ? fechaFinAislamiento : null,
+      diasDeAislamiento: int.tryParse(caidaTardeController.text),
+      fechaRegistro: fechaRegistro,
+      controlUPPManana: int.tryParse(uppMananaController.text),
+      controlUPPTarde: int.tryParse(uppTardeController.text),
+      controlUPPNoche: int.tryParse(uppNocheController.text),
+      controlCaidaManana: int.tryParse(caidaMananaController.text),
+      controlCaidaTarde: int.tryParse(caidaTardeController.text),
+      controlCaidaNoche: int.tryParse(caidaNocheController.text),
     );
 
     try {
-      // Llamamos al repositorio para actualizar los datos en Firestore
       await _repositorio.updateControlDeRiesgos(
-        widget.idIngreso, // idIngreso de tu widget
-        widget.idRegistroDiario, // idRegistroDiario de tu widget
-        controlDeRiesgos
-            .idControlDeRiesgos, // Debes pasar el idControlDeRiesgos para actualizar el documento específico
-        controlDeRiesgos, // El objeto ControlDeRiesgos con los datos a actualizar
+        widget.idIngreso,
+        widget.idRegistroDiario,
+        controlDeRiesgos.idControlDeRiesgos,
+        controlDeRiesgos,
       );
 
-      // Si todo es correcto, mostramos un mensaje y regresamos a la pantalla anterior
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Datos actualizados correctamente.')),
       );
-      Navigator.pop(context); // Regresa a la pantalla anterior
+      Navigator.pop(context);
     } catch (e) {
-      // Si ocurre un error, muestra un mensaje de error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al actualizar los datos: $e')),
       );
     }
+  }
+
+  String _calcularRiesgoCaida() {
+    final manana = int.tryParse(caidaMananaController.text) ?? 0;
+    final tarde = int.tryParse(caidaTardeController.text) ?? 0;
+    final noche = int.tryParse(caidaNocheController.text) ?? 0;
+
+    final promedio = (manana + tarde + noche) / 3;
+
+    if (promedio > 70) return 'Bajo';
+    if (promedio > 40) return 'Moderado';
+    return 'Alto';
+  }
+
+  Widget _buildCampoNumerico({
+    required String label,
+    required TextEditingController controller,
+    required int? valor,
+    bool esUPP = true,
+  }) {
+    return Row(
+      children: [
+        Text(label),
+        const SizedBox(width: 10),
+        SizedBox(
+          width: 80,
+          child: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              setState(() {});
+            },
+            decoration: const InputDecoration(
+              hintText: '',
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 1.0),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        const Spacer(),
+        if (esUPP)
+          Icon(
+            valor != null && valor > 70
+                ? Icons.check_circle
+                : (valor != null && valor > 40)
+                    ? Icons.access_time
+                    : Icons.error,
+            color: valor != null && valor > 70
+                ? Colors.green
+                : (valor != null && valor > 40)
+                    ? Colors.yellow
+                    : Colors.red,
+          )
+        else
+          Icon(
+            valor != null && valor > 70 ? Icons.check_circle : Icons.error,
+            color: valor != null && valor > 70 ? Colors.green : Colors.red,
+          ),
+      ],
+    );
   }
 
   @override
@@ -155,17 +321,68 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Fecha de registro
+              Card(
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Fecha de Registro',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      TextField(
+                        controller: fechaRegistroController,
+                        readOnly: true,
+                        decoration: const InputDecoration(
+                          hintText: 'Seleccione la fecha de registro',
+                          suffixIcon: Icon(Icons.calendar_today),
+                        ),
+                        onTap: () async {
+                          final selectedDate = await showDatePicker(
+                            context: context,
+                            initialDate: fechaRegistro ?? DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2101),
+                          );
+                          if (selectedDate != null) {
+                            setState(() {
+                              fechaRegistro = selectedDate;
+                              fechaRegistroController.text =
+                                  DateFormat('dd/MM/yyyy').format(selectedDate);
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Formulario de UPP
               _buildControlUPP(),
               const SizedBox(height: 20),
+
+              // Formulario de Caídas
               _buildRiesgoDeCaidas(),
               const SizedBox(height: 20),
+
+              // Otras secciones
               _buildAnticoagulantes(),
               const SizedBox(height: 20),
               _buildAislamiento(),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: _actualizarDatos,
-                child: const Text('Actualizar Control de Riesgos'),
+              const SizedBox(height: 20),
+
+              // Botón de actualizar
+              Center(
+                child: ElevatedButton(
+                  onPressed: _actualizarDatos,
+                  child: const Text('Actualizar Control de Riesgos'),
+                ),
               ),
             ],
           ),
@@ -174,8 +391,15 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
     );
   }
 
-// Widget para el Control UPP
   Widget _buildControlUPP() {
+    // Crear lista completa de sitios para validación
+    final todosSitios = [
+      ...SitiosAnatomicosUPP.sitiosCefalicos,
+      ...SitiosAnatomicosUPP.sitiosExtremidadesSuperiores,
+      ...SitiosAnatomicosUPP.sitiosTronco,
+      ...SitiosAnatomicosUPP.sitiosExtremidadesInferiores,
+    ];
+
     return Card(
       elevation: 5,
       child: Padding(
@@ -184,185 +408,77 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Control UPP en los tres horarios',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-
-            // Mañana
-            Row(
-              children: [
-                const Text('Mañana'),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: 80,
-                  child: TextField(
-                    controller: TextEditingController(
-                      text: controlUPPManana != null
-                          ? controlUPPManana.toString()
-                          : '',
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        controlUPPManana =
-                            value.isNotEmpty ? int.tryParse(value) : 0;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      hintText: '',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.0),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Spacer(),
-                Icon(
-                  controlUPPManana != null && controlUPPManana! > 70
-                      ? Icons.check_circle
-                      : (controlUPPManana != null && controlUPPManana! > 40)
-                          ? Icons.access_time
-                          : Icons.error,
-                  color: controlUPPManana != null && controlUPPManana! > 70
-                      ? Colors.green
-                      : (controlUPPManana != null && controlUPPManana! > 40)
-                          ? Colors.yellow
-                          : Colors.red,
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            // Tarde
-            Row(
-              children: [
-                const Text('Tarde'),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: 80,
-                  child: TextField(
-                    controller: TextEditingController(
-                      text: controlUPPTarde != null
-                          ? controlUPPTarde.toString()
-                          : '',
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        controlUPPTarde =
-                            value.isNotEmpty ? int.tryParse(value) : 0;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      hintText: '',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.0),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Spacer(),
-                Icon(
-                  controlUPPTarde != null && controlUPPTarde! > 70
-                      ? Icons.check_circle
-                      : (controlUPPTarde != null && controlUPPTarde! > 40)
-                          ? Icons.access_time
-                          : Icons.error,
-                  color: controlUPPTarde != null && controlUPPTarde! > 70
-                      ? Colors.green
-                      : (controlUPPTarde != null && controlUPPTarde! > 40)
-                          ? Colors.yellow
-                          : Colors.red,
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            // Noche
-            Row(
-              children: [
-                const Text('Noche'),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: 80,
-                  child: TextField(
-                    controller: TextEditingController(
-                      text: controlUPPNoche != null
-                          ? controlUPPNoche.toString()
-                          : '',
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        controlUPPNoche =
-                            value.isNotEmpty ? int.tryParse(value) : 0;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      hintText: '',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.0),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Spacer(),
-                Icon(
-                  controlUPPNoche != null && controlUPPNoche! > 70
-                      ? Icons.check_circle
-                      : (controlUPPNoche != null && controlUPPNoche! > 40)
-                          ? Icons.access_time
-                          : Icons.error,
-                  color: controlUPPNoche != null && controlUPPNoche! > 70
-                      ? Colors.green
-                      : (controlUPPNoche != null && controlUPPNoche! > 40)
-                          ? Colors.yellow
-                          : Colors.red,
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            // Control UPP
-            const Text(
               'Control UPP',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 10),
+
+            // Campos numéricos para UPP
+            const Text(
+              'Valores UPP en tres horarios:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+
+            _buildCampoNumerico(
+              label: 'Mañana',
+              controller: uppMananaController,
+              valor: int.tryParse(uppMananaController.text),
+            ),
+            const SizedBox(height: 10),
+
+            _buildCampoNumerico(
+              label: 'Tarde',
+              controller: uppTardeController,
+              valor: int.tryParse(uppTardeController.text),
+            ),
+            const SizedBox(height: 10),
+
+            _buildCampoNumerico(
+              label: 'Noche',
+              controller: uppNocheController,
+              valor: int.tryParse(uppNocheController.text),
+            ),
+            const SizedBox(height: 20),
+
+            // Resto del formulario UPP
             CheckboxListTile(
               title: const Text('¿Tiene UPP?'),
               value: tieneUPP,
               onChanged: (value) {
                 setState(() {
                   tieneUPP = value!;
+                  if (!tieneUPP) {
+                    _selectedSitioUPP = null;
+                  }
                 });
               },
               controlAffinity: ListTileControlAffinity.leading,
             ),
+
             if (tieneUPP) ...[
-              // Fecha en la que se encontró la UPP (valor predeterminado = fecha actual)
               const Text('Fecha en la que se encontró la UPP'),
               TextField(
                 controller: TextEditingController(
                   text: fechaRegistroUlcera != null
                       ? DateFormat('dd/MM/yyyy').format(fechaRegistroUlcera!)
-                      : DateFormat('dd/MM/yyyy').format(DateTime
-                          .now()), // Fecha actual si no se ha seleccionado
+                      : '',
                 ),
                 decoration: const InputDecoration(
                   hintText: 'Seleccionar fecha de la UPP',
                 ),
                 onTap: () async {
-                  fechaRegistroUlcera = await showDatePicker(
+                  final selectedDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: fechaRegistroUlcera ?? DateTime.now(),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
                   );
-                  setState(() {});
+                  if (selectedDate != null) {
+                    setState(() {
+                      fechaRegistroUlcera = selectedDate;
+                    });
+                  }
                 },
               ),
               const SizedBox(height: 10),
@@ -381,29 +497,31 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
               const Text('Sitio de UPP'),
               DropdownButtonFormField<String>(
                 hint: const Text("Sitio anatómico"),
-                value: _selectedSitioUPP ??
-                    SitiosAnatomicosUPP.sitiosCefalicos[0], // Valor por defecto
+                value: _selectedSitioUPP,
                 onChanged: (String? newValue) {
                   setState(() {
-                    _selectedSitioUPP =
-                        newValue; // Actualiza el valor seleccionado
+                    _selectedSitioUPP = newValue;
                   });
                 },
-                isExpanded:
-                    true, // Esto asegurará que el DropdownButton ocupe todo el ancho disponible
-                items: [
-                  ...SitiosAnatomicosUPP.sitiosCefalicos,
-                  ...SitiosAnatomicosUPP.sitiosExtremidadesSuperiores,
-                  ...SitiosAnatomicosUPP.sitiosTronco,
-                  ...SitiosAnatomicosUPP.sitiosExtremidadesInferiores,
-                ].map<DropdownMenuItem<String>>((String value) {
+                validator: (value) {
+                  if (tieneUPP && value == null) {
+                    return 'Por favor seleccione un sitio';
+                  }
+                  return null;
+                },
+                items:
+                    todosSitios.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(),
+                decoration: InputDecoration(
+                  errorText: tieneUPP && _selectedSitioUPP == null
+                      ? 'Debe seleccionar un sitio'
+                      : null,
+                ),
               ),
-
               const SizedBox(height: 10),
               CheckboxListTile(
                 title: const Text('¿UPP Resuelta?'),
@@ -427,13 +545,17 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
                     hintText: 'Seleccionar fecha de resolución',
                   ),
                   onTap: () async {
-                    fechaResolucion = await showDatePicker(
+                    final selectedDate = await showDatePicker(
                       context: context,
-                      initialDate: DateTime.now(),
+                      initialDate: fechaResolucion ?? DateTime.now(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2101),
                     );
-                    setState(() {});
+                    if (selectedDate != null) {
+                      setState(() {
+                        fechaResolucion = selectedDate;
+                      });
+                    }
                   },
                 ),
               ]
@@ -444,7 +566,6 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
     );
   }
 
-// Widget para Riesgo de Caídas
   Widget _buildRiesgoDeCaidas() {
     return Card(
       elevation: 5,
@@ -454,150 +575,46 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Riesgo de Caída en tres horarios:',
+              'Riesgo de Caída',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
 
-            // Mañana
-            Row(
-              children: [
-                const Text('Mañana'),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: 80,
-                  child: TextField(
-                    controller: TextEditingController(
-                      text: controlCaidaManana != null
-                          ? controlCaidaManana.toString()
-                          : '',
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        controlCaidaManana =
-                            value.isNotEmpty ? int.tryParse(value) : 0;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      hintText: '',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.0),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.0),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Spacer(),
-                Icon(
-                  controlCaidaManana != null && controlCaidaManana! > 70
-                      ? Icons.check_circle
-                      : Icons.error,
-                  color: controlCaidaManana != null && controlCaidaManana! > 70
-                      ? Colors.green
-                      : Colors.red,
-                ),
-              ],
+            // Campos numéricos para Caídas
+            const Text(
+              'Valores de Caída en tres horarios:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
 
-            // Tarde
-            Row(
-              children: [
-                const Text('Tarde'),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: 80,
-                  child: TextField(
-                    controller: TextEditingController(
-                      text: controlCaidaTarde != null
-                          ? controlCaidaTarde.toString()
-                          : '',
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        controlCaidaTarde =
-                            value.isNotEmpty ? int.tryParse(value) : 0;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      hintText: '',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.0),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.0),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Spacer(),
-                Icon(
-                  controlCaidaTarde != null && controlCaidaTarde! > 70
-                      ? Icons.check_circle
-                      : Icons.error,
-                  color: controlCaidaTarde != null && controlCaidaTarde! > 70
-                      ? Colors.green
-                      : Colors.red,
-                ),
-              ],
+            _buildCampoNumerico(
+              label: 'Mañana',
+              controller: caidaMananaController,
+              valor: int.tryParse(caidaMananaController.text),
+              esUPP: false,
             ),
             const SizedBox(height: 10),
 
-            // Noche
-            Row(
-              children: [
-                const Text('Noche'),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: 80,
-                  child: TextField(
-                    controller: TextEditingController(
-                      text: controlCaidaNoche != null
-                          ? controlCaidaNoche.toString()
-                          : '',
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        controlCaidaNoche =
-                            value.isNotEmpty ? int.tryParse(value) : 0;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      hintText: '',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.0),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.0),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Spacer(),
-                Icon(
-                  controlCaidaNoche != null && controlCaidaNoche! > 70
-                      ? Icons.check_circle
-                      : Icons.error,
-                  color: controlCaidaNoche != null && controlCaidaNoche! > 70
-                      ? Colors.green
-                      : Colors.red,
-                ),
-              ],
+            _buildCampoNumerico(
+              label: 'Tarde',
+              controller: caidaTardeController,
+              valor: int.tryParse(caidaTardeController.text),
+              esUPP: false,
             ),
             const SizedBox(height: 10),
 
-            // Pregunta si hay evento adverso relacionado a caídas
+            _buildCampoNumerico(
+              label: 'Noche',
+              controller: caidaNocheController,
+              valor: int.tryParse(caidaNocheController.text),
+              esUPP: false,
+            ),
+            const SizedBox(height: 20),
+
+            // Resto del formulario de Caídas
             CheckboxListTile(
               title: const Text('¿Evento Adverso relacionado a Caídas?'),
-              value: tieneEventoAdversoCaida, // Variable de estado
+              value: tieneEventoAdversoCaida,
               onChanged: (value) {
                 setState(() {
                   tieneEventoAdversoCaida = value!;
@@ -626,7 +643,6 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
     );
   }
 
-// Widget para Anticoagulantes
   Widget _buildAnticoagulantes() {
     return Card(
       elevation: 5,
@@ -650,10 +666,15 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
               controlAffinity: ListTileControlAffinity.leading,
             ),
             if (usaAnticoagulantes) ...[
+              const SizedBox(height: 10),
               const Text('Anticoagulante Seleccionado'),
               DropdownButton<String>(
-                value: 'Heparina', // Cambiar según la selección
-                onChanged: (String? newValue) {},
+                value: _selectedAnticoagulante,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedAnticoagulante = newValue;
+                  });
+                },
                 items: <String>['Heparina', 'Warfarina', 'Apixabán']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
@@ -662,14 +683,13 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
                   );
                 }).toList(),
               ),
-            ]
+            ],
           ],
         ),
       ),
     );
   }
 
-// Widget para Aislamiento
   Widget _buildAislamiento() {
     return Card(
       elevation: 5,
@@ -693,10 +713,15 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
               controlAffinity: ListTileControlAffinity.leading,
             ),
             if (enAislamiento) ...[
+              const SizedBox(height: 10),
               const Text('Tipo de Aislamiento'),
               DropdownButton<String>(
-                value: 'Aislado Respiratorio', // Cambiar según la selección
-                onChanged: (String? newValue) {},
+                value: _selectedTipoAislamiento,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedTipoAislamiento = newValue;
+                  });
+                },
                 items: <String>['Aislado Respiratorio', 'Aislado por Contacto']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
@@ -722,20 +747,23 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
                 controller: TextEditingController(
                   text: fechaInicioAislamiento != null
                       ? DateFormat('dd/MM/yyyy').format(fechaInicioAislamiento!)
-                      : DateFormat('dd/MM/yyyy')
-                          .format(DateTime.now()), // Fecha actual
+                      : '',
                 ),
                 decoration: const InputDecoration(
                   hintText: 'Inicio de aislamiento',
                 ),
                 onTap: () async {
-                  fechaInicioAislamiento = await showDatePicker(
+                  final selectedDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: fechaInicioAislamiento ?? DateTime.now(),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
                   );
-                  setState(() {});
+                  if (selectedDate != null) {
+                    setState(() {
+                      fechaInicioAislamiento = selectedDate;
+                    });
+                  }
                 },
               ),
               const SizedBox(height: 10),
@@ -750,22 +778,23 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
                   hintText: 'Fin de aislamiento',
                 ),
                 onTap: () async {
-                  fechaFinAislamiento = await showDatePicker(
+                  final selectedDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: fechaFinAislamiento ?? DateTime.now(),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
                   );
-                  setState(() {});
+                  if (selectedDate != null) {
+                    setState(() {
+                      fechaFinAislamiento = selectedDate;
+                    });
+                  }
                 },
               ),
-            ]
+            ],
           ],
         ),
       ),
     );
   }
-
-  // Aquí van los métodos del formulario como _buildControlUPP, _buildRiesgoDeCaidas, etc.
-  // Son los mismos que en el formulario de creación.
 }
