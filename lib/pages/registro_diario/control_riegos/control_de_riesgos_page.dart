@@ -30,38 +30,30 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
     _cargarRegistros();
   }
 
-  Future<void> _cargarRegistros() async {
-    try {
-      List<ControlDeRiesgos> controlDeRiesgosList =
-          await _repositorio.getControlDeRiesgos(
-        widget.idIngreso,
-        widget.idRegistroDiario,
-      );
+  void _cargarRegistros() {
+    _repositorio
+        .getControlDeRiesgos(widget.idIngreso, widget.idRegistroDiario)
+        .listen((controlDeRiesgosList) {
       setState(() {
         registros = controlDeRiesgosList.map((registro) {
           return {
-            'numeroReporte': registro.numeroReporteEA ??
-                'Sin reporte', // Asegura que haya un valor
+            'numeroReporte': registro.numeroReporteEA ?? 'Sin reporte',
             'fecha': registro.fechaRegistroUlcera != null
                 ? DateFormat('dd/MM/yyyy').format(registro.fechaRegistroUlcera!)
-                : 'Fecha no disponible', // Asegura que la fecha no sea null
-            'manana': registro.diasConUlceras ??
-                0, // Asegura que haya un valor predeterminado
-            'tarde': registro.diasDeAislamiento ??
-                0, // Asegura que haya un valor predeterminado
-            'noche': registro.diasDeAislamiento ??
-                0, // Asegura que haya un valor predeterminado
-            'id': registro.idControlDeRiesgos ??
-                '', // Si el ID es nulo, asigna un valor vacío
+                : 'Fecha no disponible',
+            'manana': registro.diasConUlceras ?? 0,
+            'tarde': registro.diasDeAislamiento ?? 0,
+            'noche': registro.diasDeAislamiento ?? 0,
+            'id': registro.idControlDeRiesgos ?? '',
           };
         }).toList();
       });
-    } catch (e) {
+    }, onError: (e) {
       print("Error al cargar los registros: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al cargar los registros: $e')),
       );
-    }
+    });
   }
 
   Future<void> _eliminarRegistro(String idControlDeRiesgos) async {

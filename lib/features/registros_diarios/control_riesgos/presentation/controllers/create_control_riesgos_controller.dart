@@ -16,18 +16,18 @@ class CreateControlRiesgosController
   CreateControlRiesgosController(this._repository)
       : super(const AsyncValue.loading());
 
-  // Obtener la lista de controles de riesgos
-  Future<void> fetchControlDeRiesgos(
-      String idIngreso, String idRegistroDiario) async {
-    try {
-      state = const AsyncValue.loading();
-      final result =
-          await _repository.getControlDeRiesgos(idIngreso, idRegistroDiario);
-      state = AsyncValue.data(result);
-    } catch (e, stack) {
-      state = AsyncValue.error('Error al obtener los controles de riesgos',
-          stack); // Añadido stackTrace
-    }
+  void fetchControlDeRiesgos(String idIngreso, String idRegistroDiario) {
+    state = const AsyncValue.loading();
+    _repository.getControlDeRiesgos(idIngreso, idRegistroDiario).listen(
+      (result) {
+        state = AsyncValue.data(
+            result); // Esto se llama cada vez que se emite un nuevo valor
+      },
+      onError: (e, stack) {
+        state = AsyncValue.error(
+            'Error al obtener los controles de riesgos', stack);
+      },
+    );
   }
 
   // Agregar un nuevo control de riesgos

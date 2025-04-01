@@ -2,7 +2,7 @@ import 'package:registro_uci/features/registros_diarios/control_riesgos/domain/m
 
 abstract class ControlDeRiesgosRepository {
   // Método para obtener la lista de controles de riesgos de un ingreso y registro diario
-  Future<List<ControlDeRiesgos>> getControlDeRiesgos(
+  Stream<List<ControlDeRiesgos>> getControlDeRiesgos(
     String idIngreso,
     String idRegistroDiario,
   );

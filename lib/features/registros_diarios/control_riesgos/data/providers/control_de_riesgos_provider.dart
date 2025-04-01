@@ -36,16 +36,20 @@ class ControlDeRiesgosParams {
 
 /// Provider para obtener los controles de riesgos desde Firestore
 final controlDeRiesgosProvider =
-    FutureProvider.family<List<ControlDeRiesgos>, ControlDeRiesgosParams>(
-        (ref, params) async {
-  final repository = ref.watch(controlDeRiesgosRepositoryProvider);
+    StreamProvider.family<List<ControlDeRiesgos>, ControlDeRiesgosParams>(
+  (ref, params) async* {
+    final repository = ref.watch(controlDeRiesgosRepositoryProvider);
 
-  try {
-    return await repository.getControlDeRiesgos(
-      params.idIngreso,
-      params.idRegistroDiario,
-    );
-  } catch (e) {
-    throw Exception('Error al obtener los controles de riesgos: $e');
-  }
-});
+    try {
+      // Usamos yield para devolver los datos a medida que llegan
+      await for (var controlDeRiesgosList in repository.getControlDeRiesgos(
+        params.idIngreso,
+        params.idRegistroDiario,
+      )) {
+        yield controlDeRiesgosList;
+      }
+    } catch (e) {
+      throw Exception('Error al obtener los controles de riesgos: $e');
+    }
+  },
+);

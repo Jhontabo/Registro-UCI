@@ -56,9 +56,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
 
   void _guardarDatos() async {
     // Verificar si los campos están completos
-    if (numeroReporteEAController.text.isEmpty ||
-        fechaRegistroUlcera == null ||
-        mananaController.text.isEmpty ||
+    if (mananaController.text.isEmpty ||
         tardeController.text.isEmpty ||
         nocheController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

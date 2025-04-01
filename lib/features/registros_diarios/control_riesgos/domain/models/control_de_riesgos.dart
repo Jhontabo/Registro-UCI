@@ -20,6 +20,9 @@ class ControlDeRiesgos {
   final DateTime? fechaFinAislamiento;
   final int? diasDeAislamiento;
 
+  // **Añadir esta línea para la fecha de creación**
+  final DateTime? fechaRegistro; // Nueva propiedad para la fecha de creación
+
   ControlDeRiesgos({
     required this.idControlDeRiesgos,
     required this.tieneUPP,
@@ -39,6 +42,7 @@ class ControlDeRiesgos {
     this.agenteAislamiento,
     this.fechaFinAislamiento,
     this.diasDeAislamiento,
+    this.fechaRegistro, // Nueva propiedad en el constructor
   });
 
   // Método para crear una instancia desde un Map (deserialización)
@@ -71,6 +75,10 @@ class ControlDeRiesgos {
           ? DateTime.parse(json['fechaFinAislamiento'])
           : null,
       diasDeAislamiento: json['diasDeAislamiento'] as int?,
+      // Añadir el parsing de la nueva propiedad fechaRegistro
+      fechaRegistro: json['fechaRegistro'] != null
+          ? DateTime.parse(json['fechaRegistro'])
+          : null,
     );
   }
 
@@ -94,6 +102,8 @@ class ControlDeRiesgos {
       'agenteAislamiento': agenteAislamiento,
       'fechaFinAislamiento': fechaFinAislamiento?.toIso8601String(),
       'diasDeAislamiento': diasDeAislamiento,
+      // Añadir la serialización de la nueva propiedad fechaRegistro
+      'fechaRegistro': fechaRegistro?.toIso8601String(),
     };
   }
 }

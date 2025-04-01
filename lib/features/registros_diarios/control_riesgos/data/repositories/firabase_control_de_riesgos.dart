@@ -26,10 +26,10 @@ class FirebaseControlDeRiesgosRepository implements ControlDeRiesgosRepository {
   }
 
   @override
-  Future<List<ControlDeRiesgos>> getControlDeRiesgos(
+  Stream<List<ControlDeRiesgos>> getControlDeRiesgos(
     String idIngreso,
     String idRegistroDiario,
-  ) async {
+  ) {
     final controlDeRiesgosRef = _firestore
         .collection('ingresos')
         .doc(idIngreso)
@@ -37,10 +37,11 @@ class FirebaseControlDeRiesgosRepository implements ControlDeRiesgosRepository {
         .doc(idRegistroDiario)
         .collection('controlDeRiesgos');
 
-    final querySnapshot = await controlDeRiesgosRef.get();
-    return querySnapshot.docs.map((doc) {
-      return ControlDeRiesgos.fromJson(doc.data(), id: doc.id);
-    }).toList();
+    return controlDeRiesgosRef.snapshots().map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return ControlDeRiesgos.fromJson(doc.data(), id: doc.id);
+      }).toList();
+    });
   }
 
   @override

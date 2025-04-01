@@ -17,17 +17,22 @@ class UpdateControlRiesgosController
       : super(const AsyncValue.loading());
 
   // Obtener la lista de controles de riesgos
-  Future<void> fetchControlDeRiesgos(
-      String idIngreso, String idRegistroDiario) async {
-    try {
-      state = const AsyncValue.loading();
-      final result =
-          await _repository.getControlDeRiesgos(idIngreso, idRegistroDiario);
-      state = AsyncValue.data(result);
-    } catch (e, stack) {
-      state = AsyncValue.error('Error al obtener los controles de riesgos',
-          stack); // Añadido stackTrace
-    }
+  void fetchControlDeRiesgos(String idIngreso, String idRegistroDiario) {
+    state = const AsyncValue.loading(); // Mostrar el estado de carga
+
+    _repository.getControlDeRiesgos(idIngreso, idRegistroDiario).listen(
+      (result) {
+        // Cuando se reciben los datos, actualizamos el estado con los resultados
+        state = AsyncValue.data(result);
+      },
+      onError: (e, stack) {
+        // Si ocurre un error, mostramos el error y la traza del stack
+        state = AsyncValue.error(
+          'Error al obtener los controles de riesgos',
+          stack,
+        );
+      },
+    );
   }
 
   // Actualizar un control de riesgos existente
