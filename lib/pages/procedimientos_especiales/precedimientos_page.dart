@@ -17,94 +17,203 @@ class ProcedimientosPage extends ConsumerWidget {
         ref.watch(procedimientoStreamProvider(idIngreso));
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Procedimientos Especiales")),
-      body: procedimientosAsync.when(
-        data: (procedimientos) => procedimientos.isEmpty
-            ? const Center(child: Text("No hay procedimientos disponibles"))
-            : ListView.builder(
-                itemCount: procedimientos.length,
-                itemBuilder: (context, index) {
-                  final procedimiento = procedimientos[index];
-                  return Card(
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: ListTile(
-                      title: Text(procedimiento.nombreProcedimiento),
-                      subtitle: _buildEstadoText(procedimiento.estado),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              _editarNombre(context, ref, procedimiento);
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              _mostrarConfirmacionEliminar(
-                                  context, ref, procedimiento);
-                            },
-                          ),
-                          IconButton(
-                            icon:
-                                const Icon(Icons.update, color: Colors.orange),
-                            onPressed: () {
-                              _actualizarEstado(context, ref, procedimiento);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text("Error: $error")),
+      appBar: AppBar(
+        title: const Text("Procedimientos Especiales"),
+        centerTitle: true,
+        elevation: 1,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.blue.shade800,
+      ),
+      body: Container(
+        padding: const EdgeInsets.only(top: 8),
+        child: procedimientosAsync.when(
+          data: (procedimientos) => procedimientos.isEmpty
+              ? _buildEmptyState()
+              : ListView.builder(
+                  itemCount: procedimientos.length,
+                  itemBuilder: (context, index) {
+                    final procedimiento = procedimientos[index];
+                    return _buildProcedimientoCard(context, ref, procedimiento);
+                  },
+                ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 50, color: Colors.red),
+                const SizedBox(height: 16),
+                Text(
+                  "Error al cargar los procedimientos",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "$error",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey.shade600),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _mostrarDialogoAgregar(context, ref),
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.blue.shade800,
+        foregroundColor: Colors.white,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Icon(Icons.add, size: 28),
       ),
     );
   }
 
-  // Función que asigna color al estado
-  // Función que asigna color a las letras del estado y agrega emojis
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.medical_services_outlined,
+              size: 60, color: Colors.blue.shade300),
+          const SizedBox(height: 16),
+          Text(
+            "No hay procedimientos registrados",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Presiona el botón + para agregar uno",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProcedimientoCard(
+    BuildContext context,
+    WidgetRef ref,
+    ProcedimientoEspecial procedimiento,
+  ) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => _actualizarEstado(context, ref, procedimiento),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      procedimiento.nombreProcedimiento,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: _getEstadoColor(procedimiento.estado)
+                          .withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: _getEstadoColor(procedimiento.estado),
+                        width: 1,
+                      ),
+                    ),
+                    child: _buildEstadoText(procedimiento.estado),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit, size: 22),
+                    color: Colors.blue.shade600,
+                    onPressed: () => _editarNombre(context, ref, procedimiento),
+                    tooltip: 'Editar nombre',
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete, size: 22),
+                    color: Colors.red.shade600,
+                    onPressed: () => _mostrarConfirmacionEliminar(
+                        context, ref, procedimiento),
+                    tooltip: 'Eliminar',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color _getEstadoColor(String estado) {
+    switch (estado) {
+      case 'Pendiente':
+        return Colors.orange;
+      case 'Realizado':
+        return Colors.green;
+      case 'Reportado':
+        return Colors.blue;
+      default:
+        return Colors.grey;
+    }
+  }
+
   Widget _buildEstadoText(String estado) {
-    Color estadoColor;
+    final color = _getEstadoColor(estado);
     String emoji;
 
     switch (estado) {
       case 'Pendiente':
-        estadoColor = Colors.orange; // Amarillo para pendiente
-        emoji = '⏳'; // Emoji de reloj de arena
+        emoji = '⏳';
         break;
       case 'Realizado':
-        estadoColor = Colors.green; // Verde para realizado
-        emoji = '✅'; // Emoji de check
+        emoji = '✅';
         break;
       case 'Reportado':
-        estadoColor = Colors.blue; // Azul para reportado
-        emoji = '📄❗'; // Emoji de documento con exclamación
+        emoji = '📄❗';
         break;
       default:
-        estadoColor = Colors.grey; // Color predeterminado en caso de error
-        emoji = '❓'; // Emoji de pregunta
+        emoji = '❓';
     }
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          '$emoji $estado',
-          style: TextStyle(
-            color: estadoColor, // Solo el color de las letras
-            fontWeight: FontWeight.bold, // Negrita para las letras
-          ),
-        ),
-      ],
+    return Text(
+      '$emoji $estado',
+      style: TextStyle(
+        color: color,
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      ),
     );
   }
 
@@ -116,14 +225,22 @@ class ProcedimientosPage extends ConsumerWidget {
         title: const Text("Agregar Procedimiento"),
         content: TextField(
           controller: controller,
-          decoration:
-              const InputDecoration(labelText: "Nombre del Procedimiento"),
+          decoration: const InputDecoration(
+            labelText: "Nombre del Procedimiento",
+            border: OutlineInputBorder(),
+          ),
+          autofocus: true,
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar")),
-          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue.shade800,
+              foregroundColor: Colors.white,
+            ),
             onPressed: () {
               if (controller.text.isNotEmpty) {
                 ref
@@ -139,23 +256,35 @@ class ProcedimientosPage extends ConsumerWidget {
     );
   }
 
-  void _editarNombre(BuildContext context, WidgetRef ref,
-      ProcedimientoEspecial procedimiento) {
+  void _editarNombre(
+    BuildContext context,
+    WidgetRef ref,
+    ProcedimientoEspecial procedimiento,
+  ) {
     final TextEditingController controller =
         TextEditingController(text: procedimiento.nombreProcedimiento);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Editar Nombre del Procedimiento"),
+        title: const Text("Editar Nombre"),
         content: TextField(
           controller: controller,
-          decoration: const InputDecoration(labelText: "Nuevo Nombre"),
+          decoration: const InputDecoration(
+            labelText: "Nuevo Nombre",
+            border: OutlineInputBorder(),
+          ),
+          autofocus: true,
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar")),
-          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue.shade800,
+              foregroundColor: Colors.white,
+            ),
             onPressed: () {
               if (controller.text.isNotEmpty) {
                 ref.read(procedimientoActionProvider).editProcedimientoNombre(
@@ -173,8 +302,11 @@ class ProcedimientosPage extends ConsumerWidget {
     );
   }
 
-  void _mostrarConfirmacionEliminar(BuildContext context, WidgetRef ref,
-      ProcedimientoEspecial procedimiento) {
+  void _mostrarConfirmacionEliminar(
+    BuildContext context,
+    WidgetRef ref,
+    ProcedimientoEspecial procedimiento,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -186,7 +318,11 @@ class ProcedimientosPage extends ConsumerWidget {
             onPressed: () => Navigator.pop(context),
             child: const Text("Cancelar"),
           ),
-          TextButton(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red.shade600,
+              foregroundColor: Colors.white,
+            ),
             onPressed: () {
               ref.read(procedimientoActionProvider).deleteProcedimiento(
                     idIngreso,
@@ -201,51 +337,90 @@ class ProcedimientosPage extends ConsumerWidget {
     );
   }
 
-  void _actualizarEstado(BuildContext context, WidgetRef ref,
-      ProcedimientoEspecial procedimiento) {
+  void _actualizarEstado(
+    BuildContext context,
+    WidgetRef ref,
+    ProcedimientoEspecial procedimiento,
+  ) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Actualizar Estado del Procedimiento"),
-        content: Column(
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(
-              title: const Text("Pendiente"),
-              onTap: () {
-                ref.read(procedimientoActionProvider).updateProcedimientoEstado(
-                      idIngreso,
-                      procedimiento.idProcedimiento,
-                      "Pendiente",
-                    );
-                Navigator.pop(context);
-              },
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                "Actualizar Estado",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade800,
+                ),
+              ),
             ),
-            ListTile(
-              title: const Text("Realizado"),
-              onTap: () {
-                ref.read(procedimientoActionProvider).updateProcedimientoEstado(
-                      idIngreso,
-                      procedimiento.idProcedimiento,
-                      "Realizado",
-                    );
-                Navigator.pop(context);
-              },
+            _buildEstadoOption(
+              context,
+              ref,
+              procedimiento,
+              "Pendiente",
+              Colors.orange,
+              Icons.access_time,
             ),
-            ListTile(
-              title: const Text("Reportado"),
-              onTap: () {
-                ref.read(procedimientoActionProvider).updateProcedimientoEstado(
-                      idIngreso,
-                      procedimiento.idProcedimiento,
-                      "Reportado",
-                    );
-                Navigator.pop(context);
-              },
+            _buildEstadoOption(
+              context,
+              ref,
+              procedimiento,
+              "Realizado",
+              Colors.green,
+              Icons.check_circle,
+            ),
+            _buildEstadoOption(
+              context,
+              ref,
+              procedimiento,
+              "Reportado",
+              Colors.blue,
+              Icons.description,
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancelar"),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildEstadoOption(
+    BuildContext context,
+    WidgetRef ref,
+    ProcedimientoEspecial procedimiento,
+    String estado,
+    Color color,
+    IconData icon,
+  ) {
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(
+        estado,
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          color: color,
+        ),
+      ),
+      onTap: () {
+        ref.read(procedimientoActionProvider).updateProcedimientoEstado(
+              idIngreso,
+              procedimiento.idProcedimiento,
+              estado,
+            );
+        Navigator.pop(context);
+      },
     );
   }
 }
