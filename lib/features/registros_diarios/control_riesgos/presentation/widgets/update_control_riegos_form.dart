@@ -494,9 +494,16 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
                 ),
               ),
               const SizedBox(height: 10),
-              const Text('Sitio de UPP'),
+              const Text(
+                'Sitio de UPP',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
               DropdownButtonFormField<String>(
-                hint: const Text("Sitio anatómico"),
+                isExpanded: true, // Ocupa todo el ancho disponible
+                hint: const Text(
+                  "Seleccione sitio anatómico",
+                  style: TextStyle(fontSize: 14),
+                ),
                 value: _selectedSitioUPP,
                 onChanged: (String? newValue) {
                   setState(() {
@@ -513,14 +520,59 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
                     todosSitios.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Container(
+                      constraints:
+                          const BoxConstraints(minWidth: double.infinity),
+                      child: Text(
+                        value,
+                        style: const TextStyle(fontSize: 14),
+                        // Se removió overflow: TextOverflow.ellipsis para mostrar texto completo
+                      ),
+                    ),
                   );
                 }).toList(),
                 decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        const BorderSide(color: Colors.grey, width: 1.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        const BorderSide(color: Colors.grey, width: 1.0),
+                  ),
                   errorText: tieneUPP && _selectedSitioUPP == null
                       ? 'Debe seleccionar un sitio'
                       : null,
+                  errorMaxLines: 3,
+                  errorStyle: const TextStyle(fontSize: 12),
                 ),
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.black87,
+                ),
+                dropdownColor: Colors.white,
+                icon: const Icon(Icons.arrow_drop_down),
+                iconSize: 24,
+                menuMaxHeight: 400, // Altura máxima del menú desplegable
+                selectedItemBuilder: (BuildContext context) {
+                  return todosSitios.map<Widget>((String value) {
+                    return Container(
+                      alignment: Alignment.centerLeft,
+                      constraints:
+                          const BoxConstraints(minWidth: double.infinity),
+                      child: Text(
+                        value,
+                        style: const TextStyle(fontSize: 14),
+                        overflow:
+                            TextOverflow.visible, // Texto completamente visible
+                      ),
+                    );
+                  }).toList();
+                },
               ),
               const SizedBox(height: 10),
               CheckboxListTile(
