@@ -1,7 +1,6 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:registro_uci/constants/intervenciones.dart';
+import 'package:registro_uci/constants/intervenciones.dart'; // Asegúrate de que este archivo defina el mapa `mapaIntervenciones`
 import 'package:registro_uci/features/intervenciones/data/abstract_repositories/intervenciones_de_registro_repository.dart';
 import 'package:registro_uci/features/intervenciones/domain/models/intervencion.dart';
 
@@ -27,7 +26,7 @@ class HybridIntervencionesDeRegistroRepository
       for (final idIntervencion in idsIntervenciones) {
         final intervencionInRegistroRef =
             registroRef.collection('intervenciones').doc(idIntervencion);
-
+        // Solo se almacena el campo 'idIntervencion'
         batch.set(intervencionInRegistroRef, {
           'idIntervencion': idIntervencion,
         });
@@ -35,8 +34,8 @@ class HybridIntervencionesDeRegistroRepository
 
       await batch.commit();
     } catch (e) {
-      log('Error al agregar intervenciones al registro: $e');
-      throw Exception('Error al agregar intervenciones al registro');
+      log('Error al agregar intervenciones al registro (Hybrid): $e');
+      throw Exception('Error al agregar intervenciones al registro (Hybrid)');
     }
   }
 
@@ -57,8 +56,9 @@ class HybridIntervencionesDeRegistroRepository
 
       await intervencionInRegistroRef.delete();
     } catch (e) {
-      log('Error al eliminar la intervención del registro: $e');
-      throw Exception('Error al eliminar la intervención del registro');
+      log('Error al eliminar la intervención del registro (Hybrid): $e');
+      throw Exception(
+          'Error al eliminar la intervención del registro (Hybrid)');
     }
   }
 
@@ -76,21 +76,19 @@ class HybridIntervencionesDeRegistroRepository
           .collection('intervenciones')
           .get();
 
-      final intervenciones =
-          await Future.wait(intervencionesSnapshot.docs.map((doc) async {
-        // Extract the DocumentReference from the data
-
+      // Se usa el ID del documento para buscar en el mapa local.
+      final intervenciones = intervencionesSnapshot.docs.map((doc) {
         final intervencionId = doc.id;
-
         final intervencion = mapaIntervenciones[intervencionId] ??
             const Intervencion(idIntervencion: '0', idNIC: '0', nombre: '');
         return intervencion;
-      }).toList());
+      }).toList();
 
       return intervenciones;
     } catch (e) {
-      log('Error al obtener las intervenciones del registro: $e');
-      throw Exception('Error al obtener las intervenciones del registro');
+      log('Error al obtener las intervenciones del registro (Hybrid): $e');
+      throw Exception(
+          'Error al obtener las intervenciones del registro (Hybrid)');
     }
   }
 
@@ -117,11 +115,9 @@ class HybridIntervencionesDeRegistroRepository
           .doc(targetRegistro)
           .collection('intervenciones');
 
-      // Get all interventions from the originRegistro
       final originIntervencionesSnapshot = await originRef.get();
 
       for (var doc in originIntervencionesSnapshot.docs) {
-        // Clone each intervention into the targetRegistro
         final data = doc.data();
         final idIntervencion = doc.id;
         batch.set(targetRef.doc(idIntervencion), data);
@@ -129,8 +125,8 @@ class HybridIntervencionesDeRegistroRepository
 
       await batch.commit();
     } catch (e) {
-      log('Error al importar intervenciones del registro: $e');
-      throw Exception('Error al importar intervenciones del registro');
+      log('Error al importar intervenciones del registro (Hybrid): $e');
+      throw Exception('Error al importar intervenciones del registro (Hybrid)');
     }
   }
 }

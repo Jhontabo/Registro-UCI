@@ -23,9 +23,10 @@ class FirebaseIntervencionesDeRegistroRepository
           .doc(idRegistro);
 
       for (final idIntervencion in idsIntervenciones) {
+        // Se obtiene la referencia al documento maestro de la intervención.
         final intervencionRef =
             _firestore.collection('intervenciones').doc(idIntervencion);
-
+        // Se crea un documento en la subcolección del registro y se almacena la referencia.
         final intervencionInRegistroRef =
             registroRef.collection('intervenciones').doc(idIntervencion);
 
@@ -77,20 +78,14 @@ class FirebaseIntervencionesDeRegistroRepository
           .collection('intervenciones')
           .get();
 
+      // Por cada documento, se extrae la referencia al documento maestro y se recuperan los datos completos.
       final intervenciones =
           await Future.wait(intervencionesSnapshot.docs.map((doc) async {
-        // Extract the DocumentReference from the data
-        final intervencionRef =
-            doc.data()['intervencionRef'] as DocumentReference;
-
-        // Fetch the actual data from the referenced document
+        final data = doc.data();
+        final DocumentReference intervencionRef = data['intervencionRef'];
         final intervencionSnapshot = await intervencionRef.get();
-
-        // Parse the data of the referenced document
         final intervencionData =
             intervencionSnapshot.data() as Map<String, dynamic>;
-
-        // Create and return the Intervencion instance
         return Intervencion.fromJson(intervencionData,
             id: intervencionSnapshot.id);
       }).toList());
@@ -125,11 +120,10 @@ class FirebaseIntervencionesDeRegistroRepository
           .doc(targetRegistro)
           .collection('intervenciones');
 
-      // Get all interventions from the originRegistro
+      // Se obtienen todas las intervenciones del registro origen.
       final originIntervencionesSnapshot = await originRef.get();
 
       for (var doc in originIntervencionesSnapshot.docs) {
-        // Clone each intervention into the targetRegistro
         final data = doc.data();
         final idIntervencion = doc.id;
         batch.set(targetRef.doc(idIntervencion), data);

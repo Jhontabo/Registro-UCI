@@ -47,97 +47,120 @@ class _AddIntervencionesFormState extends ConsumerState<AddIntervencionesForm> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-
-    // Watching the provider to get intervenciones data
     final intervencionesAsync =
         ref.watch(intervencionesDeRegistroProvider(widget.params));
 
     return SizedBox(
-      height:
-          screenHeight * 0.6, // Set the form height to 60% of the screen height
+      height: screenHeight * 0.6,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Title
+            // Título
             Text(
               "Agregar Intervenciones",
-              style: Theme.of(context).textTheme.headlineLarge,
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
 
-            // Handle different provider states (loading, error, data)
+            // Manejo de estados del provider
             intervencionesAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) => Text('Error: $error'),
+              loading: () => const Expanded(
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              error: (error, stackTrace) => Expanded(
+                child: Center(child: Text('Error: ${error.toString()}')),
+              ),
               data: (intervenciones) {
-                // Filter the dynamically generated interventions
-                final filteredIntervenciones = mapaIntervenciones.values.where(
-                  (intervencion) {
-                    // Only show the items that are not already in the provider's intervenciones list
-                    return !intervenciones
-                        .any((i) => i.idNIC == intervencion.idNIC);
-                  },
-                ).toList();
+                final filteredIntervenciones = mapaIntervenciones.values
+                    .where(
+                      (intervencion) => !intervenciones
+                          .any((i) => i.idNIC == intervencion.idNIC),
+                    )
+                    .toList();
+
+                if (filteredIntervenciones.isEmpty) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(
+                        'No hay intervenciones disponibles para agregar',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ),
+                  );
+                }
 
                 return Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: filteredIntervenciones.map((intervencion) {
-                        return CheckboxListTile(
-                          title: RichText(
-                            text: TextSpan(
-                              text: '${intervencion.idNIC}  ', // idNIC in bold
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: intervencion
-                                      .nombre, // nombre in regular style
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.normal,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children:
+                                filteredIntervenciones.map((intervencion) {
+                              return CheckboxListTile(
+                                key: ValueKey(intervencion.idNIC),
+                                title: RichText(
+                                  text: TextSpan(
+                                    text: '${intervencion.idNIC}  ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                    children: [
+                                      TextSpan(
+                                        text: intervencion.nombre,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
+                                value:
+                                    _selectedItems[intervencion.idNIC] ?? false,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    _selectedItems[intervencion.idNIC] =
+                                        value ?? false;
+                                  });
+                                },
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                              );
+                            }).toList(),
                           ),
-                          value: _selectedItems[intervencion.idNIC],
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _selectedItems[intervencion.idNIC] =
-                                  value ?? false;
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Botones de acción
+                      AddIntervencionesToRegistroFormButton(
+                        enabled: _isAnyItemSelected(),
+                        intervencionesIds: _getIntervencionesIds(),
+                        params: widget.params,
+                      ),
+                      const SizedBox(height: 10),
+                      SecondaryButton(
+                        child: const Text("Cancelar"),
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                    ],
                   ),
                 );
-              },
-            ),
-
-            const SizedBox(height: 20),
-
-            // Add Intervenciones Button
-            AddIntervencionesToRegistroFormButton(
-              enabled: _isAnyItemSelected(),
-              intervencionesIds: _getIntervencionesIds(),
-              params: widget.params,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SecondaryButton(
-              child: const Text(
-                "Cancelar",
-                textAlign: TextAlign.center,
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
               },
             ),
           ],
