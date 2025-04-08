@@ -8,6 +8,7 @@ class ControlDeRiesgos {
   final DateTime? fechaResolucion;
   final int? diasConUlceras;
   final String riesgoCaida;
+  final String riesgoUPP;
   final String? numeroReporteCaida;
   final bool usaAnticoagulantes;
   final String? anticoagulanteSeleccionado;
@@ -36,6 +37,7 @@ class ControlDeRiesgos {
     this.fechaResolucion,
     this.diasConUlceras,
     required this.riesgoCaida,
+    required this.riesgoUPP,
     this.numeroReporteCaida,
     required this.usaAnticoagulantes,
     this.anticoagulanteSeleccionado,
@@ -66,6 +68,7 @@ class ControlDeRiesgos {
       'fechaResolucion': fechaResolucion?.toIso8601String(),
       'diasConUlceras': diasConUlceras,
       'riesgoCaida': riesgoCaida,
+      'riesgoUPP': riesgoUPP,
       'numeroReporteCaida': numeroReporteCaida,
       'usaAnticoagulantes': usaAnticoagulantes,
       'anticoagulanteSeleccionado': anticoagulanteSeleccionado,
@@ -102,6 +105,7 @@ class ControlDeRiesgos {
           : null,
       diasConUlceras: json['diasConUlceras'] as int?,
       riesgoCaida: json['riesgoCaida'] as String,
+      riesgoUPP: json['riesgoUPP'] as String,
       numeroReporteCaida: json['numeroReporteCaida'] as String?,
       usaAnticoagulantes: json['usaAnticoagulantes'] as bool,
       anticoagulanteSeleccionado: json['anticoagulanteSeleccionado'] as String?,

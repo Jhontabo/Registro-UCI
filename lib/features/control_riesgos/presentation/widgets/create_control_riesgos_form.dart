@@ -86,13 +86,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
   }
 
   void _guardarDatos() async {
-    if (fechaRegistro == null ||
-        uppMananaController.text.isEmpty ||
-        uppTardeController.text.isEmpty ||
-        uppNocheController.text.isEmpty ||
-        caidaMananaController.text.isEmpty ||
-        caidaTardeController.text.isEmpty ||
-        caidaNocheController.text.isEmpty) {
+    if (fechaRegistro == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Complete todos los campos obligatorios'),
@@ -114,6 +108,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
       fechaResolucion: (tieneUPP && uppResuelta) ? fechaResolucion : null,
       diasConUlceras: int.tryParse(uppMananaController.text),
       riesgoCaida: _calcularRiesgoCaida(),
+      riesgoUPP: _calcularRiesgoCaida(),
       numeroReporteCaida: tieneEventoAdversoCaida &&
               numeroReporteCaidaController.text.isNotEmpty
           ? numeroReporteCaidaController.text
@@ -167,6 +162,23 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
     }
   }
 
+  String _calcularRiesgoUPP() {
+    final manana = int.tryParse(uppMananaController.text) ?? 0;
+    final tarde = int.tryParse(uppTardeController.text) ?? 0;
+    final noche = int.tryParse(uppNocheController.text) ?? 0;
+
+    final promedio = (manana + tarde + noche) / 3;
+
+    // Comprobamos el promedio según los rangos definidos
+    if (promedio < 12) {
+      return 'Alto'; // Riesgo alto
+    } else if (promedio >= 13 && promedio <= 14) {
+      return 'Medio'; // Riesgo medio
+    } else {
+      return 'Bajo'; // Riesgo bajo
+    }
+  }
+
   String _calcularRiesgoCaida() {
     final manana = int.tryParse(caidaMananaController.text) ?? 0;
     final tarde = int.tryParse(caidaTardeController.text) ?? 0;
@@ -174,8 +186,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
 
     final promedio = (manana + tarde + noche) / 3;
 
-    if (promedio > 70) return 'Bajo';
-    if (promedio > 40) return 'Moderado';
+    if (promedio <= 2) return 'Bajo';
     return 'Alto';
   }
 
@@ -207,19 +218,6 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
           ),
         ),
         const SizedBox(width: 10),
-        const Spacer(),
-        Icon(
-          valor != null && valor > 70
-              ? Icons.check_circle
-              : (valor != null && valor > 40)
-                  ? Icons.access_time
-                  : Icons.error,
-          color: valor != null && valor > 70
-              ? Colors.green
-              : (valor != null && valor > 40)
-                  ? Colors.yellow
-                  : Colors.red,
-        ),
       ],
     );
   }

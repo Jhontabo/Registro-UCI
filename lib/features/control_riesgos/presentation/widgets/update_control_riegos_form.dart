@@ -209,6 +209,7 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
       fechaResolucion: (tieneUPP && uppResuelta) ? fechaResolucion : null,
       diasConUlceras: int.tryParse(uppMananaController.text),
       riesgoCaida: _calcularRiesgoCaida(),
+      riesgoUPP: _calcularRiesgoUPP(),
       numeroReporteCaida:
           tieneEventoAdversoCaida ? numeroReporteCaidaController.text : null,
       usaAnticoagulantes: usaAnticoagulantes,
@@ -249,6 +250,23 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
     }
   }
 
+  String _calcularRiesgoUPP() {
+    final manana = int.tryParse(uppMananaController.text) ?? 0;
+    final tarde = int.tryParse(uppTardeController.text) ?? 0;
+    final noche = int.tryParse(uppNocheController.text) ?? 0;
+
+    final promedio = (manana + tarde + noche) / 3;
+
+    // Comprobamos el promedio según los rangos definidos
+    if (promedio < 12) {
+      return 'Alto'; // Riesgo alto
+    } else if (promedio >= 13 && promedio <= 14) {
+      return 'Medio'; // Riesgo medio
+    } else {
+      return 'Bajo'; // Riesgo bajo
+    }
+  }
+
   String _calcularRiesgoCaida() {
     final manana = int.tryParse(caidaMananaController.text) ?? 0;
     final tarde = int.tryParse(caidaTardeController.text) ?? 0;
@@ -256,8 +274,7 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
 
     final promedio = (manana + tarde + noche) / 3;
 
-    if (promedio > 70) return 'Bajo';
-    if (promedio > 40) return 'Moderado';
+    if (promedio <= 2) return 'Bajo';
     return 'Alto';
   }
 

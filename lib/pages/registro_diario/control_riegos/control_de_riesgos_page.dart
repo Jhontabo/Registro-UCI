@@ -340,10 +340,14 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
 
                   // Estado UPP
                   Text(
-                    'UPP: ${registro.tieneUPP ? 'Sí' : 'No'}',
+                    'UPP: ${registro.riesgoUPP}',
                     style: TextStyle(
                       fontSize: 14,
-                      color: registro.tieneUPP ? Colors.red : Colors.green,
+                      color: registro.riesgoUPP == 'Alto'
+                          ? Colors.red
+                          : registro.riesgoUPP == 'Medio'
+                              ? Colors.orange
+                              : Colors.green,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
