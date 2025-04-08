@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../features/control_riesgos/presentation/widgets/create_control_riesgos_form.dart'; // Importamos el formulario
+import '../../features/control_riesgos/presentation/widgets/create_control_riesgos_form.dart'; // Importamos el formulario
 
 class CreateControlRiesgosPage extends StatelessWidget {
   final String idIngreso;

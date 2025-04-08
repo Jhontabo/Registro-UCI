@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../features/control_riesgos/presentation/widgets/update_control_riegos_form.dart';
+import '../../features/control_riesgos/presentation/widgets/update_control_riegos_form.dart';
 import 'package:registro_uci/features/control_riesgos/domain/models/control_de_riesgos.dart';
 import 'package:registro_uci/features/control_riesgos/data/repositories/firabase_control_de_riesgos.dart'; // Asegúrate de importar el modelo correcto
 

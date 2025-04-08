@@ -3,8 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_uci/features/sondas/presentation/widgets/components/create_sonda_floating_button.dart';
 import '../../features/sondas/data/providers/sonda_provider.dart';
-import '../../features/sondas/domain/models/sonda.dart';
-import '../sondas/create_sondas_page.dart';
+
 import '../sondas/update_sondas_page.dart';
 
 class SondasPage extends ConsumerWidget {

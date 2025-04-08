@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/procedimientos_especiales/data/providers/procedimiento_provider.dart';
-import '../../features/procedimientos_especiales/domain/models/procedimientos_especiales.dart';
 
 class EditarProcedimientoPage extends ConsumerWidget {
   final String idIngreso;

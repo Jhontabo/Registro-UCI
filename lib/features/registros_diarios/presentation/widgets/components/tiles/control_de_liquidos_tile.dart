@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_tile.dart';
-import 'package:registro_uci/pages/registro_diario/balance_liquidos/balances_de_liquidos_page.dart';
+import 'package:registro_uci/pages/balance_liquidos/balances_de_liquidos_page.dart';
 
 class ControlDeLiquidosTile extends StatelessWidget {
   const ControlDeLiquidosTile({

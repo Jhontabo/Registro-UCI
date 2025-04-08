@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_tile.dart';
-import 'package:registro_uci/pages/registro_diario/control_riegos/control_de_riesgos_page.dart';
+import 'package:registro_uci/pages/control_riegos/control_de_riesgos_page.dart';
 
 class ControlDeRiesgosTile extends StatelessWidget {
   const ControlDeRiesgosTile({
