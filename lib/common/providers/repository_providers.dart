@@ -9,10 +9,10 @@ import 'package:registro_uci/features/auth/data/abstract_repositories/auth_repos
 import 'package:registro_uci/features/auth/data/abstract_repositories/users_repository.dart';
 import 'package:registro_uci/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:registro_uci/features/auth/data/repositories/firebase_users_repository.dart';
-import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/data/abstract_repositories/liquidos_administrados_repository.dart';
-import 'package:registro_uci/features/registros_diarios/balance_liquidos/administrados/data/repositories/firebase_liquidos_administrados_repository.dart';
-import 'package:registro_uci/features/registros_diarios/balance_liquidos/data/abstract_repositories/balances_de_liquidos_repository.dart';
-import 'package:registro_uci/features/registros_diarios/balance_liquidos/data/repositories/firebase_balances_de_liquidos_repository.dart';
+import 'package:registro_uci/features/balance_liquidos/administrados/data/abstract_repositories/liquidos_administrados_repository.dart';
+import 'package:registro_uci/features/balance_liquidos/administrados/data/repositories/firebase_liquidos_administrados_repository.dart';
+import 'package:registro_uci/features/balance_liquidos/data/abstract_repositories/balances_de_liquidos_repository.dart';
+import 'package:registro_uci/features/balance_liquidos/data/repositories/firebase_balances_de_liquidos_repository.dart';
 import 'package:registro_uci/features/ingresos/data/abstract_repositories/ingresos_repository.dart';
 import 'package:registro_uci/features/ingresos/data/repositories/firebase_ingresos_repository.dart';
 import 'package:registro_uci/features/intervenciones/data/abstract_repositories/intervenciones_de_registro_repository.dart';

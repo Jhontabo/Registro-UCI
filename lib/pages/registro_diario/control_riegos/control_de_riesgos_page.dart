@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'create_control_riegos_page.dart';
 import 'update_control_riegos_page.dart';
-import 'package:registro_uci/features/registros_diarios/control_riesgos/data/repositories/firabase_control_de_riesgos.dart';
-import 'package:registro_uci/features/registros_diarios/control_riesgos/domain/models/control_de_riesgos.dart';
+import 'package:registro_uci/features/control_riesgos/data/repositories/firabase_control_de_riesgos.dart';
+import 'package:registro_uci/features/control_riesgos/domain/models/control_de_riesgos.dart';
 
 class ControlDeRiesgosPage extends StatefulWidget {
   final String idIngreso;
@@ -358,9 +358,9 @@ class _ControlDeRiesgosPageState extends State<ControlDeRiesgosPage> {
                     ),
                   ),
 
-                  // Estado Aislamiento
+                  // Estado Aislamiento con días
                   Text(
-                    'Aislamiento: ${registro.enAislamiento ? 'Sí' : 'No'}',
+                    'Aislamiento: ${registro.enAislamiento ? 'Sí (${registro.diasDeAislamiento ?? 0} días)' : 'No'}',
                     style: TextStyle(
                       fontSize: 14,
                       color:
