@@ -306,24 +306,6 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
         ),
         const SizedBox(width: 10),
         const Spacer(),
-        if (esUPP)
-          Icon(
-            valor != null && valor > 70
-                ? Icons.check_circle
-                : (valor != null && valor > 40)
-                    ? Icons.access_time
-                    : Icons.error,
-            color: valor != null && valor > 70
-                ? Colors.green
-                : (valor != null && valor > 40)
-                    ? Colors.yellow
-                    : Colors.red,
-          )
-        else
-          Icon(
-            valor != null && valor > 70 ? Icons.check_circle : Icons.error,
-            color: valor != null && valor > 70 ? Colors.green : Colors.red,
-          ),
       ],
     );
   }
@@ -791,8 +773,11 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
                     _selectedTipoAislamiento = newValue;
                   });
                 },
-                items: <String>['Aislado Respiratorio', 'Aislado por Contacto']
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: <String>[
+                  'Aislado Respiratorio',
+                  'Aislado por Contacto',
+                  'Asilamiento por gotas'
+                ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),

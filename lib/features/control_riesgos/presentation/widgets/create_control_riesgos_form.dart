@@ -612,8 +612,11 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
                     _selectedTipoAislamiento = newValue;
                   });
                 },
-                items: <String>['Aislado Respiratorio', 'Aislado por Contacto']
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: <String>[
+                  'Aislado Respiratorio',
+                  'Aislado por Contacto',
+                  'Asilamiento por gotas'
+                ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
