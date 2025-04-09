@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/tile.dart';
-import 'package:registro_uci/pages/tratamiento/tratamientos_antibioticos_page.dart';
+import 'package:registro_uci/pages/tratamiento_antibioticos/tratamientos_antibioticos_page.dart';
 
 class TratamientosAntibioticosTile extends StatelessWidget {
   const TratamientosAntibioticosTile({
