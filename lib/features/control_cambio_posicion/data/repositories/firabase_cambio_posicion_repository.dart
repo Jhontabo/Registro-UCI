@@ -1,74 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:registro_uci/features/control_cambio_posicion/data/dto/create_cambio_posicion_dto.dart';
 import 'package:registro_uci/features/control_cambio_posicion/domain/models/cambio_posicion.dart';
 import 'package:registro_uci/features/control_cambio_posicion/data/abstract_repositories/cambio_posicion_repository.dart';
 
 class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  @override
-  Future<void> createCambioPosicion(
+  CollectionReference _getCollectionRef(
     String idIngreso,
     String idRegistroDiario,
-    String idCambioPosicion,
-    CreateCambioPosicionDto dto,
-  ) async {
-    try {
-      final cambiosRef = _firestore
-          .collection('ingresos')
-          .doc(idIngreso)
-          .collection('registrosDiarios')
-          .doc(idRegistroDiario)
-          .collection('cambiosPosicion')
-          .doc(idCambioPosicion);
-
-      await cambiosRef.set(dto.toFirestore());
-    } catch (e) {
-      throw Exception('Error al crear cambio de posición: $e');
-    }
-  }
-
-  @override
-  Future<void> updateCambioPosicion(
-    String idIngreso,
-    String idRegistroDiario,
-    String idCambioPosicion,
-    CreateCambioPosicionDto dto,
-  ) async {
-    try {
-      final cambioRef = _firestore
-          .collection('ingresos')
-          .doc(idIngreso)
-          .collection('registrosDiarios')
-          .doc(idRegistroDiario)
-          .collection('cambiosPosicion')
-          .doc(idCambioPosicion);
-
-      await cambioRef.update(dto.toFirestore());
-    } catch (e) {
-      throw Exception('Error al actualizar cambio de posición: $e');
-    }
-  }
-
-  @override
-  Future<void> deleteCambioPosicion(
-    String idIngreso,
-    String idRegistroDiario,
-    String idCambioPosicion,
-  ) async {
-    try {
-      final cambioRef = _firestore
-          .collection('ingresos')
-          .doc(idIngreso)
-          .collection('registrosDiarios')
-          .doc(idRegistroDiario)
-          .collection('cambiosPosicion')
-          .doc(idCambioPosicion);
-
-      await cambioRef.delete();
-    } catch (e) {
-      throw Exception('Error al eliminar cambio de posición: $e');
-    }
+  ) {
+    return _firestore
+        .collection('ingresos')
+        .doc(idIngreso)
+        .collection('registrosDiarios')
+        .doc(idRegistroDiario)
+        .collection('cambiosPosicion');
   }
 
   @override
@@ -76,48 +22,50 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
     String idIngreso,
     String idRegistroDiario,
   ) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection('ingresos')
-          .doc(idIngreso)
-          .collection('registrosDiarios')
-          .doc(idRegistroDiario)
-          .collection('cambiosPosicion')
-          .orderBy('hora')
-          .get();
+    final cambiosPosicionRef = _firestore
+        .collection('ingresos')
+        .doc(idIngreso)
+        .collection('registrosDiarios')
+        .doc(idRegistroDiario)
+        .collection('cambiosPosicion');
 
-      return querySnapshot.docs
-          .map((doc) => CambioDePosicion.fromFirestore(doc, null))
-          .toList();
-    } catch (e) {
-      throw Exception('Error al obtener cambios de posición: $e');
-    }
+    final querySnapshot =
+        await cambiosPosicionRef.orderBy('hora', descending: false).get();
+
+    final cambiosPosicion = querySnapshot.docs.map((doc) {
+      return CambioDePosicion.fromJson({
+        ...doc.data(),
+        'id': doc.id, // Asegúrate de incluir el ID en los datos
+      });
+    }).toList();
+
+    return cambiosPosicion;
   }
 
   @override
-  Future<List<CambioDePosicion>> getCambiosDePosicionFromPreviousHour(
+  Future<CambioDePosicion?> getCambioPosicionById(
     String idIngreso,
     String idRegistroDiario,
+    String idCambioPosicion,
   ) async {
     try {
-      final previousHour =
-          DateTime.now().subtract(const Duration(hours: 1)).hour;
-
-      final querySnapshot = await _firestore
+      final doc = await _firestore
           .collection('ingresos')
           .doc(idIngreso)
           .collection('registrosDiarios')
           .doc(idRegistroDiario)
           .collection('cambiosPosicion')
-          .where('hora', isEqualTo: previousHour)
+          .doc(idCambioPosicion)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => CambioDePosicion.fromFirestore(doc, null))
-          .toList();
+      if (!doc.exists) return null;
+
+      return CambioDePosicion.fromJson({
+        ...doc.data() as Map<String, dynamic>,
+        'id': doc.id,
+      });
     } catch (e) {
-      throw Exception(
-          'Error al obtener cambios de posición de la hora anterior: $e');
+      throw Exception('Error al obtener cambio de posición por ID: $e');
     }
   }
 
@@ -138,32 +86,71 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
           .get();
 
       if (querySnapshot.docs.isEmpty) return null;
-      return CambioDePosicion.fromFirestore(querySnapshot.docs.first, null);
+
+      final doc = querySnapshot.docs.first;
+      return CambioDePosicion.fromJson({
+        ...doc.data(),
+        'id': doc.id,
+      });
     } catch (e) {
       throw Exception('Error al obtener último cambio de posición: $e');
     }
   }
 
   @override
-  Future<CambioDePosicion?> getCambioPosicionById(
+  Future<void> guardarCambioPosicion(
+    String idIngreso,
+    String idRegistroDiario,
+    int hora,
+    String posicion,
+  ) async {
+    try {
+      final nuevoDoc = _getCollectionRef(idIngreso, idRegistroDiario).doc();
+
+      await nuevoDoc.set({
+        'id': nuevoDoc.id,
+        'hora': hora,
+        'posicion': posicion,
+        'fechaRegistro': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Error al crear cambio de posición: $e');
+    }
+  }
+
+  @override
+  Future<void> actualizarCambioPosicion(
+    String idIngreso,
+    String idRegistroDiario,
+    String idCambioPosicion,
+    int hora,
+    String posicion,
+  ) async {
+    try {
+      await _getCollectionRef(idIngreso, idRegistroDiario)
+          .doc(idCambioPosicion)
+          .update({
+        'hora': hora,
+        'posicion': posicion,
+        'fechaActualizacion': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Error al actualizar cambio de posición: $e');
+    }
+  }
+
+  @override
+  Future<void> eliminarCambioPosicion(
     String idIngreso,
     String idRegistroDiario,
     String idCambioPosicion,
   ) async {
     try {
-      final doc = await _firestore
-          .collection('ingresos')
-          .doc(idIngreso)
-          .collection('registrosDiarios')
-          .doc(idRegistroDiario)
-          .collection('cambiosPosicion')
+      await _getCollectionRef(idIngreso, idRegistroDiario)
           .doc(idCambioPosicion)
-          .get();
-
-      if (!doc.exists) return null;
-      return CambioDePosicion.fromFirestore(doc, null);
+          .delete();
     } catch (e) {
-      throw Exception('Error al obtener cambio de posición por ID: $e');
+      throw Exception('Error al eliminar cambio de posición: $e');
     }
   }
 
@@ -173,13 +160,8 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
     String idRegistroDiario,
   ) async {
     try {
-      final querySnapshot = await _firestore
-          .collection('ingresos')
-          .doc(idIngreso)
-          .collection('registrosDiarios')
-          .doc(idRegistroDiario)
-          .collection('cambiosPosicion')
-          .get();
+      final querySnapshot =
+          await _getCollectionRef(idIngreso, idRegistroDiario).get();
 
       final resumen = <String, int>{};
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/bed_widget.dart';
 import 'package:registro_uci/features/control_cambio_posicion/presentation/widgets/cambio_posicion_list.dart';
+import 'package:registro_uci/pages/cambio_posicion/CambiosCard.dart';
 
 class CambioPosicionPage extends StatelessWidget {
   final String idIngreso;
@@ -31,6 +32,10 @@ class CambioPosicionPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          CambioPosicionCard(
+            idIngreso: idIngreso,
+            idRegistroDiario: idRegistroDiario,
+          ),
           CambioPosicionList(
             idIngreso: idIngreso,
             idRegistroDiario: idRegistroDiario,

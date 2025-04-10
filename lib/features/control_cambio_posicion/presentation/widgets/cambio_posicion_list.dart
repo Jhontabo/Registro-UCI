@@ -24,6 +24,10 @@ class CambioPosicionList extends ConsumerWidget {
 
     return cambios.when(
       data: (data) {
+        if (data.isEmpty) {
+          return const Center(child: Text('No hay horarios disponibles'));
+        }
+
         return ListView.separated(
           itemCount: data.length,
           shrinkWrap: true,
@@ -32,14 +36,13 @@ class CambioPosicionList extends ConsumerWidget {
             cambio: data[index],
             params: params,
           ),
-          separatorBuilder: (context, index) => const SizedBox(height: 10),
-          padding: const EdgeInsets.all(15),
+          separatorBuilder: (context, index) => const Divider(height: 1),
+          padding: const EdgeInsets.symmetric(vertical: 8),
         );
       },
-      error: (error, stackTrace) => Text(error.toString()),
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      error: (error, stackTrace) =>
+          Center(child: Text('Error: ${error.toString()}')),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 }

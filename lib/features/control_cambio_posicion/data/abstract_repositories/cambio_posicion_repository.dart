@@ -2,42 +2,15 @@ import 'package:registro_uci/features/control_cambio_posicion/data/dto/create_ca
 import 'package:registro_uci/features/control_cambio_posicion/domain/models/cambio_posicion.dart';
 
 abstract class CambioPosicionRepository {
-  // Métodos CRUD básicos
-  Future<void> createCambioPosicion(
-    String idIngreso,
-    String idRegistroDiario,
-    String idCambioPosicion,
-    CreateCambioPosicionDto dto,
-  );
-
-  Future<void> updateCambioPosicion(
-    String idIngreso,
-    String idRegistroDiario,
-    String idCambioPosicion,
-    CreateCambioPosicionDto dto,
-  );
-
-  Future<void> deleteCambioPosicion(
-    String idIngreso,
-    String idRegistroDiario,
-    String idCambioPosicion,
-  );
-
-  // Métodos de consulta
-  Future<CambioDePosicion?> getCambioPosicionById(
-    String idIngreso,
-    String idRegistroDiario,
-    String idCambioPosicion,
-  );
-
   Future<List<CambioDePosicion>> getCambiosDePosicion(
     String idIngreso,
     String idRegistroDiario,
   );
 
-  Future<List<CambioDePosicion>> getCambiosDePosicionFromPreviousHour(
+  Future<CambioDePosicion?> getCambioPosicionById(
     String idIngreso,
     String idRegistroDiario,
+    String idCambioPosicion,
   );
 
   Future<CambioDePosicion?> getUltimoCambioPosicion(
@@ -45,9 +18,24 @@ abstract class CambioPosicionRepository {
     String idRegistroDiario,
   );
 
-  // Métodos adicionales útiles
-  Future<Map<String, int>> getResumenPosiciones(
+  Future<void> guardarCambioPosicion(
     String idIngreso,
     String idRegistroDiario,
+    int hora,
+    String posicion,
+  );
+
+  Future<void> actualizarCambioPosicion(
+    String idIngreso,
+    String idRegistroDiario,
+    String idCambioPosicion,
+    int hora,
+    String posicion,
+  );
+
+  Future<void> eliminarCambioPosicion(
+    String idIngreso,
+    String idRegistroDiario,
+    String idCambioPosicion,
   );
 }

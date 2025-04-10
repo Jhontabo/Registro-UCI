@@ -7,7 +7,7 @@ import 'package:registro_uci/features/control_cambio_posicion/domain/models/camb
 class CambioPosicionParams {
   final String idIngreso;
   final String idRegistroDiario;
-  final String? idCambioPosicion; // Hacerlo opcional para consultas generales
+  final String? idCambioPosicion;
 
   const CambioPosicionParams({
     required this.idIngreso,
@@ -30,6 +30,24 @@ class CambioPosicionParams {
       Object.hash(idIngreso, idRegistroDiario, idCambioPosicion);
 }
 
+@immutable
+class GuardarCambioPosicionParams {
+  final String idIngreso;
+  final String idRegistroDiario;
+  final int hora;
+  final String posicion;
+  final String? idCambioPosicion; // Para actualizaciones
+
+  const GuardarCambioPosicionParams({
+    required this.idIngreso,
+    required this.idRegistroDiario,
+    required this.hora,
+    required this.posicion,
+    this.idCambioPosicion,
+  });
+}
+
+// Provider para obtener cambios de posición
 final cambioPosicionProvider =
     FutureProvider.family<List<CambioDePosicion>, CambioPosicionParams>(
         (ref, params) async {
@@ -37,7 +55,6 @@ final cambioPosicionProvider =
 
   try {
     if (params.idCambioPosicion != null) {
-      // Obtener un cambio específico
       final cambio = await repository.getCambioPosicionById(
         params.idIngreso,
         params.idRegistroDiario,
@@ -45,7 +62,6 @@ final cambioPosicionProvider =
       );
       return cambio != null ? [cambio] : [];
     } else {
-      // Obtener todos los cambios
       return await repository.getCambiosDePosicion(
         params.idIngreso,
         params.idRegistroDiario,
@@ -57,7 +73,39 @@ final cambioPosicionProvider =
   }
 });
 
-// Provider adicional para el último cambio
+// Provider para guardar/actualizar cambios de posición
+final guardarCambioPosicionProvider =
+    FutureProvider.family<void, GuardarCambioPosicionParams>(
+  (ref, params) async {
+    final repository = ref.watch(cambioPosicionRepositoryProvider);
+
+    try {
+      if (params.idCambioPosicion != null) {
+        // Actualización
+        await repository.actualizarCambioPosicion(
+          params.idIngreso,
+          params.idRegistroDiario,
+          params.idCambioPosicion!,
+          params.hora,
+          params.posicion,
+        );
+      } else {
+        // Creación
+        await repository.guardarCambioPosicion(
+          params.idIngreso,
+          params.idRegistroDiario,
+          params.hora,
+          params.posicion,
+        );
+      }
+    } catch (e, stackTrace) {
+      debugPrintStack(stackTrace: stackTrace);
+      throw Exception('Error al guardar cambio de posición: $e');
+    }
+  },
+);
+
+// Provider para el último cambio
 final ultimoCambioPosicionProvider =
     FutureProvider.family<CambioDePosicion?, CambioPosicionParams>(
         (ref, params) async {
@@ -73,3 +121,24 @@ final ultimoCambioPosicionProvider =
     throw Exception('Error al obtener último cambio de posición: $e');
   }
 });
+
+// Provider para eliminar un cambio
+final eliminarCambioPosicionProvider =
+    FutureProvider.family<void, CambioPosicionParams>(
+  (ref, params) async {
+    final repository = ref.watch(cambioPosicionRepositoryProvider);
+
+    try {
+      if (params.idCambioPosicion != null) {
+        await repository.eliminarCambioPosicion(
+          params.idIngreso,
+          params.idRegistroDiario,
+          params.idCambioPosicion!,
+        );
+      }
+    } catch (e, stackTrace) {
+      debugPrintStack(stackTrace: stackTrace);
+      throw Exception('Error al eliminar cambio de posición: $e');
+    }
+  },
+);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/lite_tile.dart';
 import 'package:registro_uci/features/control_cambio_posicion/domain/models/cambio_posicion.dart';
-import 'package:registro_uci/pages/cambio_posicion/choose_cambio_posicion_page.dart';
+import 'package:registro_uci/pages/cambio_posicion/seleccionar_posicion_page.dart';
 import 'package:registro_uci/features/control_cambio_posicion/data/providers/cambio_posicion_provider.dart';
 
 class CambioPosicionTile extends StatelessWidget {
@@ -19,14 +19,14 @@ class CambioPosicionTile extends StatelessWidget {
     return LiteTile(
       title: "Hora: ${cambio.hora}:00:00",
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) {
-            return ChooseCambioPosicionPage(
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => SeleccionarPosicionPage(
               params: params,
-              cambio: cambio,
-            );
-          },
-        ));
+              horaSeleccionada: cambio.hora,
+            ),
+          ),
+        );
       },
     );
   }
