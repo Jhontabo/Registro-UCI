@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/components/buttons/primary_button.dart';
 import 'package:registro_uci/common/extensions/async_value_ui.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/data/dto/create_liquido_administrado_dto.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/data/providers/tratamientos_antibioticos_activos_provider.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/presentation/controllers/create_many_liquidos_administrados_controller.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/data/dto/create_liquido_administrado_dto.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/data/providers/tratamientos_antibioticos_activos_provider.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/presentation/controllers/create_many_liquidos_administrados_controller.dart';
 
 class AddLiquidosAdministradosFromTratamientoForm extends StatefulWidget {
   final String idIngreso;

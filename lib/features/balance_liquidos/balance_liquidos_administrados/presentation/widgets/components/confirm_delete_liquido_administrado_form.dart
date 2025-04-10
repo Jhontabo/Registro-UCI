@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/data/providers/liquidos_administrados_provider.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/presentation/widgets/components/buttons/confirm_delete_liquido_administrado_form_button.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/data/providers/liquidos_administrados_provider.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/presentation/widgets/components/buttons/confirm_delete_liquido_administrado_form_button.dart';
 
 class ConfirmDeleteLiquidoAdministrado extends StatelessWidget {
   const ConfirmDeleteLiquidoAdministrado({

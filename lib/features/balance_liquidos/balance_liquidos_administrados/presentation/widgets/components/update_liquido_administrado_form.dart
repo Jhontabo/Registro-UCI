@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_fields/dropdown_button_form_field.dart';
 import 'package:registro_uci/common/components/form_fields/text_form_field.dart';
 import 'package:registro_uci/common/validators/default_validator.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/data/providers/liquidos_administrados_provider.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/presentation/widgets/components/buttons/create_liquido_administrado_form_button.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/data/providers/liquidos_administrados_provider.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/domain/models/liquido_administrado.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/presentation/widgets/components/buttons/update_liquido_administrado_form_button.dart';
 
 const medicamentos = [
   'Paracetamol',
@@ -13,18 +14,23 @@ const medicamentos = [
   'Other'
 ];
 
-class CreateLiquidoAdministradoForm extends StatefulWidget {
+class UpdateLiquidoAdministradoForm extends StatefulWidget {
   final LiquidosAdministradosParams params;
+  final LiquidoAdministrado liquidoAdministrado;
 
-  const CreateLiquidoAdministradoForm({super.key, required this.params});
+  const UpdateLiquidoAdministradoForm({
+    super.key,
+    required this.params,
+    required this.liquidoAdministrado,
+  });
 
   @override
-  State<CreateLiquidoAdministradoForm> createState() =>
-      _CreateLiquidoAdministradoFormState();
+  State<UpdateLiquidoAdministradoForm> createState() =>
+      _UpdateLiquidoAdministradoFormState();
 }
 
-class _CreateLiquidoAdministradoFormState
-    extends State<CreateLiquidoAdministradoForm> {
+class _UpdateLiquidoAdministradoFormState
+    extends State<UpdateLiquidoAdministradoForm> {
   late TextEditingController _cantidadController;
   late TextEditingController _comentarioController;
   late TextEditingController _dosisController;
@@ -35,10 +41,23 @@ class _CreateLiquidoAdministradoFormState
   @override
   void initState() {
     super.initState();
-    _cantidadController = TextEditingController();
-    _comentarioController = TextEditingController();
-    _dosisController = TextEditingController();
-    _otherMedicamentoController = TextEditingController();
+
+    _cantidadController = TextEditingController(
+        text: widget.liquidoAdministrado.cantidad.toString());
+    _comentarioController = TextEditingController(
+        text: widget.liquidoAdministrado.comentario ?? '');
+    _dosisController =
+        TextEditingController(text: widget.liquidoAdministrado.dosis ?? '');
+    _otherMedicamentoController = TextEditingController(
+        text: widget.liquidoAdministrado.medicamento == 'Other'
+            ? widget.liquidoAdministrado.medicamento
+            : '');
+
+    // Pre-select the medicamento if it exists in the list or set it to 'Other'
+    _selectedMedicamento =
+        medicamentos.contains(widget.liquidoAdministrado.medicamento)
+            ? widget.liquidoAdministrado.medicamento
+            : 'Other';
   }
 
   @override
@@ -52,15 +71,7 @@ class _CreateLiquidoAdministradoFormState
 
   @override
   Widget build(BuildContext context) {
-    final dateString = widget.params.idRegistroDiario;
-    final hourString = widget.params.idBalanceLiquidos;
-
-    final dateParts = dateString.split('-');
-    final year = int.parse(dateParts[0]);
-    final month = int.parse(dateParts[1]);
-    final day = int.parse(dateParts[2]);
-    final hour = int.parse(hourString);
-    final dateTime = DateTime(year, month, day, hour);
+    final dateTime = widget.liquidoAdministrado.hora;
 
     return Form(
       key: _formKey,
@@ -128,8 +139,8 @@ class _CreateLiquidoAdministradoFormState
           ),
           const SizedBox(height: 30),
 
-          // Create button
-          CreateLiquidoAdministradoFormButton(
+          // Update button
+          UpdateLiquidoAdministradoFormbutton(
             formKey: _formKey,
             selectedMedicamento: _selectedMedicamento,
             otherMedicamentoController: _otherMedicamentoController,
@@ -138,6 +149,8 @@ class _CreateLiquidoAdministradoFormState
             dosisController: _dosisController,
             params: widget.params,
             hora: dateTime,
+            idLiquidoAdministrado:
+                widget.liquidoAdministrado.idLiquidoAdministrado,
           ),
         ],
       ),

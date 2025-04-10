@@ -1,5 +1,5 @@
-import 'package:registro_uci/features/balance_liquidos_administrados/data/dto/create_liquido_administrado_dto.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/domain/models/liquido_administrado.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/data/dto/create_liquido_administrado_dto.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/domain/models/liquido_administrado.dart';
 
 abstract class LiquidosAdministradosRepository {
   Future<void> createLiquidoAdministrado(

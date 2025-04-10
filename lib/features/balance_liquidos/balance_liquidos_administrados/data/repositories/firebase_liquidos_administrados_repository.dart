@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:registro_uci/features/antibioticos/data/dto/create_dosis_tratamiento_dto.dart';
 import 'package:registro_uci/features/antibioticos/domain/models/tratamiento_antibiotico.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/data/abstract_repositories/liquidos_administrados_repository.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/data/dto/create_liquido_administrado_dto.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/domain/models/liquido_administrado.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/data/abstract_repositories/liquidos_administrados_repository.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/data/dto/create_liquido_administrado_dto.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/domain/models/liquido_administrado.dart';
 
 class FirebaseLiquidosAdministradosRepository
     implements LiquidosAdministradosRepository {

@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart'; // For formatting the date
-import 'package:registro_uci/features/calculo_administrados/providers.dart';
+import 'package:registro_uci/pages/balance_liquidos/providers.dart';
 
 class BalanceCard extends ConsumerWidget {
   final String idIngreso;

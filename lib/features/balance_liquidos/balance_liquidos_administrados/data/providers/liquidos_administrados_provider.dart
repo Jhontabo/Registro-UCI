@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/providers/repository_providers.dart';
 
-import 'package:registro_uci/features/balance_liquidos_administrados/domain/models/liquido_administrado.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/domain/models/liquido_administrado.dart';
 
 final liquidosAdministradosProvider = FutureProvider.family<
     List<LiquidoAdministrado>,

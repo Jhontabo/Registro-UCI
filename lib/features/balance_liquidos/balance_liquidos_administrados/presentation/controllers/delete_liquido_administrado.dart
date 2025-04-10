@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/providers/repository_providers.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/data/abstract_repositories/liquidos_administrados_repository.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/data/providers/liquidos_administrados_provider.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/data/abstract_repositories/liquidos_administrados_repository.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/data/providers/liquidos_administrados_provider.dart';
 
 class DeleteLiquidoAdministradoController extends AsyncNotifier<void> {
   late final LiquidosAdministradosRepository _repository =

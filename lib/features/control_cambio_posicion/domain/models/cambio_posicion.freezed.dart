@@ -20,12 +20,9 @@ CambioDePosicion _$CambioDePosicionFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CambioDePosicion {
-  String get idCambioDePosicion =>
-      throw _privateConstructorUsedError; // Identificador único para cada cambio de posición
-  int get hora =>
-      throw _privateConstructorUsedError; // Hora del cambio (de 8 AM a 7 AM)
-  String get posicion =>
-      throw _privateConstructorUsedError; // La posición del paciente
+  String get idCambioDePosicion => throw _privateConstructorUsedError;
+  int get hora => throw _privateConstructorUsedError;
+  String get posicion => throw _privateConstructorUsedError;
   int get orden => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -144,13 +141,10 @@ class _$CambioDePosicionImpl implements _CambioDePosicion {
 
   @override
   final String idCambioDePosicion;
-// Identificador único para cada cambio de posición
   @override
   final int hora;
-// Hora del cambio (de 8 AM a 7 AM)
   @override
   final String posicion;
-// La posición del paciente
   @override
   final int orden;
 
@@ -204,11 +198,11 @@ abstract class _CambioDePosicion implements CambioDePosicion {
 
   @override
   String get idCambioDePosicion;
-  @override // Identificador único para cada cambio de posición
+  @override
   int get hora;
-  @override // Hora del cambio (de 8 AM a 7 AM)
+  @override
   String get posicion;
-  @override // La posición del paciente
+  @override
   int get orden;
   @override
   @JsonKey(ignore: true)

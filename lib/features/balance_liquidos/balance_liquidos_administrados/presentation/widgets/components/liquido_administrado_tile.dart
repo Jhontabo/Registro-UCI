@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:registro_uci/features/balance_liquidos_administrados/domain/models/liquido_administrado.dart';
+import 'package:registro_uci/features/balance_liquidos/balance_liquidos_administrados/domain/models/liquido_administrado.dart';
 
 class LiquidoAdministradoTile extends StatelessWidget {
   final LiquidoAdministrado liquido;

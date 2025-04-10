@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_tile.dart';
+import 'package:registro_uci/pages/cambio_posicion/cambio_posicion_page.dart';
 
 class ControlDePosicionTile extends StatelessWidget {
   const ControlDePosicionTile({
@@ -20,7 +21,12 @@ class ControlDePosicionTile extends StatelessWidget {
       title: "Control de Posición",
       subtitle: "Registro de cambios posturales y manejo de posición",
       onTap: () {
-        // Add navigation logic here
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) {
+            return CambioPosicionPage(
+                idIngreso: idIngreso, idRegistroDiario: idRegistro);
+          },
+        ));
       },
     );
   }
