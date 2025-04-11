@@ -50,28 +50,32 @@ class GuardarCambioPosicionParams {
 // Provider para obtener cambios de posición
 final cambioPosicionProvider =
     FutureProvider.family<List<CambioDePosicion>, CambioPosicionParams>(
-        (ref, params) async {
-  final repository = ref.watch(cambioPosicionRepositoryProvider);
+  (ref, params) async {
+    final repository = ref.watch(cambioPosicionRepositoryProvider);
 
-  try {
-    if (params.idCambioPosicion != null) {
-      final cambio = await repository.getCambioPosicionById(
-        params.idIngreso,
-        params.idRegistroDiario,
-        params.idCambioPosicion!,
-      );
-      return cambio != null ? [cambio] : [];
-    } else {
-      return await repository.getCambiosDePosicion(
-        params.idIngreso,
-        params.idRegistroDiario,
-      );
+    try {
+      List<CambioDePosicion> cambios;
+
+      if (params.idCambioPosicion != null) {
+        final cambio = await repository.getCambioPosicionById(
+          params.idIngreso,
+          params.idRegistroDiario,
+          params.idCambioPosicion!,
+        );
+        cambios = cambio != null ? [cambio] : [];
+      } else {
+        cambios = await repository.getCambiosDePosicion(
+          params.idIngreso,
+          params.idRegistroDiario,
+        );
+      }
+
+      return cambios;
+    } catch (e) {
+      throw Exception('Error al obtener cambios de posición: $e');
     }
-  } catch (e, stackTrace) {
-    debugPrintStack(stackTrace: stackTrace);
-    throw Exception('Error al obtener cambios de posición: $e');
-  }
-});
+  },
+);
 
 // Provider para guardar/actualizar cambios de posición
 final guardarCambioPosicionProvider =

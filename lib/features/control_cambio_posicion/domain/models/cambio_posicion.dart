@@ -1,4 +1,3 @@
-// cambio_posicion.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -14,19 +13,14 @@ class CambioDePosicion with _$CambioDePosicion {
     required int orden,
   }) = _CambioDePosicion;
 
-  factory CambioDePosicion.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    final data = snapshot.data()!;
+  // Método personalizado para incluir el ID
+  factory CambioDePosicion.fromJson(Map<String, dynamic> json,
+      {required String id}) {
     return CambioDePosicion(
-      idCambioDePosicion: snapshot.id,
-      hora: data['hora'] as int,
-      posicion: data['posicion'] as String,
-      orden: data['orden'] as int,
+      idCambioDePosicion: id, // Asignamos el ID recibido
+      hora: json['hora'] as int,
+      posicion: json['posicion'] as String,
+      orden: json['orden'] as int,
     );
   }
-
-  factory CambioDePosicion.fromJson(Map<String, dynamic> json) =>
-      _$CambioDePosicionFromJson(json);
 }

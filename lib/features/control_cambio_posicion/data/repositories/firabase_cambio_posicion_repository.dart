@@ -5,7 +5,7 @@ import 'package:registro_uci/features/control_cambio_posicion/data/abstract_repo
 class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  CollectionReference _getCollectionRef(
+  CollectionReference<Map<String, dynamic>> _getCollectionRef(
     String idIngreso,
     String idRegistroDiario,
   ) {
@@ -30,13 +30,11 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
         .collection('cambiosPosicion');
 
     final querySnapshot =
-        await cambiosPosicionRef.orderBy('hora', descending: false).get();
+        await cambiosPosicionRef.orderBy('orden', descending: false).get();
 
     final cambiosPosicion = querySnapshot.docs.map((doc) {
-      return CambioDePosicion.fromJson({
-        ...doc.data(),
-        'id': doc.id, // Asegúrate de incluir el ID en los datos
-      });
+      return CambioDePosicion.fromJson(doc.data(),
+          id: doc.id); // Pasamos el ID aquí
     }).toList();
 
     return cambiosPosicion;
@@ -60,10 +58,10 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
 
       if (!doc.exists) return null;
 
-      return CambioDePosicion.fromJson({
-        ...doc.data() as Map<String, dynamic>,
-        'id': doc.id,
-      });
+      return CambioDePosicion.fromJson(
+        doc.data() as Map<String, dynamic>, // Usamos los datos del documento
+        id: doc.id, // Le pasamos el ID del documento
+      );
     } catch (e) {
       throw Exception('Error al obtener cambio de posición por ID: $e');
     }
@@ -88,10 +86,12 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
       if (querySnapshot.docs.isEmpty) return null;
 
       final doc = querySnapshot.docs.first;
-      return CambioDePosicion.fromJson({
-        ...doc.data(),
-        'id': doc.id,
-      });
+
+      // Aquí se pasa el id correctamente al constructor desde doc.id
+      return CambioDePosicion.fromJson(
+        doc.data(), // Asegúrate de que los datos sean un Map
+        id: doc.id, // Pasamos el ID de Firestore aquí
+      );
     } catch (e) {
       throw Exception('Error al obtener último cambio de posición: $e');
     }
@@ -111,7 +111,6 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
         'id': nuevoDoc.id,
         'hora': hora,
         'posicion': posicion,
-        'fechaRegistro': FieldValue.serverTimestamp(),
       });
     } catch (e) {
       throw Exception('Error al crear cambio de posición: $e');
@@ -132,7 +131,6 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
           .update({
         'hora': hora,
         'posicion': posicion,
-        'fechaActualizacion': FieldValue.serverTimestamp(),
       });
     } catch (e) {
       throw Exception('Error al actualizar cambio de posición: $e');
