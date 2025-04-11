@@ -71,7 +71,7 @@ class CambioPosicionCard extends ConsumerWidget {
 
   List<Widget> _buildListaHoras(
       List<CambioDePosicion> cambios, BuildContext context) {
-    return List.generate(9, (index) {
+    return List.generate(16, (index) {
       final hora = 8 + index;
       final cambio = cambios.firstWhere(
         (c) => c.hora == hora,
@@ -102,7 +102,7 @@ class CambioPosicionCard extends ConsumerWidget {
             ),
             const SizedBox(width: 8.0),
             IconButton(
-              icon: const Icon(Icons.chevron_right),
+              icon: const Icon(Icons.edit_sharp),
               onPressed: () => _editarPosicion(context, hora),
             ),
           ],
