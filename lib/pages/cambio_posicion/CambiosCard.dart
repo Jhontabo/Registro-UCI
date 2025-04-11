@@ -51,12 +51,7 @@ class CambioPosicionCard extends ConsumerWidget {
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 16.0),
-                    ElevatedButton(
-                      onPressed: () => _mostrarSelectorPosicion(context, ref),
-                      child: const Text('Registrar Cambio'),
-                    ),
-                    const SizedBox(height: 16.0),
-                    ..._buildListaHoras(data, context),
+                    ..._buildListaHoras(data, context, ref),
                   ],
                 );
               },
@@ -70,7 +65,10 @@ class CambioPosicionCard extends ConsumerWidget {
   }
 
   List<Widget> _buildListaHoras(
-      List<CambioDePosicion> cambios, BuildContext context) {
+    List<CambioDePosicion> cambios,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     return List.generate(16, (index) {
       final hora = 8 + index;
       final cambio = cambios.firstWhere(
@@ -80,54 +78,136 @@ class CambioPosicionCard extends ConsumerWidget {
           hora: 0,
           posicion: '',
           orden: 0,
-        ), // Objeto vacío como valor por defecto
+        ),
       );
 
       final tieneRegistro = cambio.posicion.isNotEmpty;
 
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Row(
-          children: [
-            Text(
-              'Hora: $hora:00',
-              style: const TextStyle(fontSize: 16),
+      return Card(
+        margin: const EdgeInsets.symmetric(vertical: 4.0),
+        elevation: 2,
+        child: InkWell(
+          onTap: () => _mostrarOpcionesHora(context, ref, hora, tieneRegistro),
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                Icon(
+                  tieneRegistro ? Icons.check_circle : Icons.access_time,
+                  color: tieneRegistro ? Colors.green : Colors.grey,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  '$hora:00',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: tieneRegistro ? Colors.green : Colors.grey[700],
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  tieneRegistro ? cambio.posicion : 'Sin registro',
+                  style: TextStyle(
+                    color: tieneRegistro ? Colors.green : Colors.grey,
+                    fontStyle:
+                        tieneRegistro ? FontStyle.normal : FontStyle.italic,
+                  ),
+                ),
+              ],
             ),
-            const Spacer(),
-            Text(
-              tieneRegistro ? cambio.posicion : 'Sin registro',
-              style: TextStyle(
-                color: tieneRegistro ? Colors.green : Colors.grey,
-              ),
-            ),
-            const SizedBox(width: 8.0),
-            IconButton(
-              icon: const Icon(Icons.edit_sharp),
-              onPressed: () => _editarPosicion(context, hora),
-            ),
-          ],
+          ),
         ),
       );
     });
   }
 
-  void _mostrarSelectorPosicion(BuildContext context, WidgetRef ref) {
+  void _mostrarOpcionesHora(
+    BuildContext context,
+    WidgetRef ref,
+    int hora,
+    bool tieneRegistro,
+  ) {
     showDialog(
       context: context,
-      builder: (context) => _SelectorPosicionDialog(
-        idIngreso: idIngreso,
-        idRegistroDiario: idRegistroDiario,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Opciones para las $hora:00',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.add_circle_outline),
+                  label: const Text('Registrar Cambio'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _mostrarSelectorPosicion(context, ref, horaInicial: hora);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.edit_outlined),
+                  label: const Text('Editar Posición'),
+                  onPressed: tieneRegistro
+                      ? () {
+                          Navigator.pop(context);
+                          _mostrarSelectorPosicion(context, ref,
+                              horaInicial: hora);
+                        }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: tieneRegistro ? null : Colors.grey[300],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Divider(color: Colors.grey[300]),
+              const SizedBox(height: 10),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancelar',
+                    style: TextStyle(color: Colors.grey)),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  void _editarPosicion(BuildContext context, int hora) {
+  void _mostrarSelectorPosicion(
+    BuildContext context,
+    WidgetRef ref, {
+    int? horaInicial,
+  }) {
     showDialog(
       context: context,
       builder: (context) => _SelectorPosicionDialog(
+        key: UniqueKey(),
         idIngreso: idIngreso,
         idRegistroDiario: idRegistroDiario,
-        horaInicial: hora,
+        horaInicial: horaInicial,
       ),
     );
   }
@@ -139,6 +219,7 @@ class _SelectorPosicionDialog extends ConsumerStatefulWidget {
   final int? horaInicial;
 
   const _SelectorPosicionDialog({
+    super.key,
     required this.idIngreso,
     required this.idRegistroDiario,
     this.horaInicial,
@@ -151,80 +232,141 @@ class _SelectorPosicionDialog extends ConsumerStatefulWidget {
 class _SelectorPosicionDialogState
     extends ConsumerState<_SelectorPosicionDialog> {
   late int selectedHora;
-  String selectedPosicion = 'Decúbito dorsal';
+  late String selectedPosicion;
 
   @override
   void initState() {
     super.initState();
-    selectedHora = widget.horaInicial ?? DateTime.now().hour;
+
+    selectedHora = widget.horaInicial?.clamp(8, 23) ?? 8;
+
+    if (widget.horaInicial != null) {
+      final cambios = ref.read(cambioPosicionProvider(CambioPosicionParams(
+        idIngreso: widget.idIngreso,
+        idRegistroDiario: widget.idRegistroDiario,
+      )));
+
+      final data = cambios.asData?.value ?? [];
+      final cambioExistente = data.firstWhere(
+        (c) => c.hora == widget.horaInicial,
+        orElse: () => const CambioDePosicion(
+          idCambioDePosicion: '',
+          hora: 0,
+          posicion: '',
+          orden: 0,
+        ),
+      );
+
+      selectedPosicion = cambioExistente.posicion.isNotEmpty
+          ? cambioExistente.posicion
+          : 'Decúbito dorsal';
+    } else {
+      selectedPosicion = 'Decúbito dorsal';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(widget.horaInicial != null
-          ? 'Editar posición para las ${widget.horaInicial}:00'
-          : 'Seleccionar posición'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (widget.horaInicial == null) ...[
-            DropdownButtonFormField<int>(
-              value: selectedHora,
-              decoration: const InputDecoration(
-                labelText: 'Hora',
-                border: OutlineInputBorder(),
-              ),
-              items: List.generate(16, (i) => i + 8) // Horas de 8 a 23
-                  .map((hora) => DropdownMenuItem(
-                        value: hora,
-                        child: Text('$hora:00'),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => selectedHora = value);
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
-          DropdownButtonFormField<String>(
-            value: selectedPosicion,
-            decoration: const InputDecoration(
-              labelText: 'Posición',
-              border: OutlineInputBorder(),
-            ),
-            items: [
-              'Decúbito dorsal',
-              'Decúbito lateral',
-              'Prono',
-              'Sentado',
-              'Fowler',
-            ]
-                .map((pos) => DropdownMenuItem(
-                      value: pos,
-                      child: Text(pos),
-                    ))
-                .toList(),
-            onChanged: (value) {
-              if (value != null) {
-                setState(() => selectedPosicion = value);
-              }
-            },
-          ),
-        ],
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancelar'),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.horaInicial != null
+                  ? 'Editando posición de las ${widget.horaInicial}:00'
+                  : 'Nuevo registro de posición',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            if (widget.horaInicial == null) ...[
+              _buildHoraSelector(),
+              const SizedBox(height: 20),
+            ],
+            _buildPosicionSelector(),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancelar'),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () => _guardarCambio(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                  ),
+                  child: const Text('Guardar',
+                      style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          ],
         ),
-        ElevatedButton(
-          onPressed: () => _guardarCambio(context),
-          child: const Text('Guardar'),
-        ),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildHoraSelector() {
+    final horasDisponibles = List.generate(16, (i) => i + 8);
+
+    return DropdownButtonFormField<int>(
+      value: horasDisponibles.contains(selectedHora) ? selectedHora : 8,
+      decoration: InputDecoration(
+        labelText: 'Hora',
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        prefixIcon: const Icon(Icons.access_time),
+      ),
+      items: horasDisponibles
+          .map((hora) => DropdownMenuItem(
+                value: hora,
+                child: Text('$hora:00'),
+              ))
+          .toList(),
+      onChanged: (value) {
+        if (value != null) {
+          setState(() => selectedHora = value);
+        }
+      },
+    );
+  }
+
+  Widget _buildPosicionSelector() {
+    return DropdownButtonFormField<String>(
+      value: selectedPosicion,
+      decoration: InputDecoration(
+        labelText: 'Posición',
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        prefixIcon: const Icon(Icons.airline_seat_recline_normal),
+      ),
+      items: [
+        'Decúbito dorsal',
+        'Decúbito lateral',
+        'Prono',
+        'Sentado',
+        'Fowler',
+      ]
+          .map((pos) => DropdownMenuItem(
+                value: pos,
+                child: Text(pos),
+              ))
+          .toList(),
+      onChanged: (value) {
+        if (value != null) {
+          setState(() => selectedPosicion = value);
+        }
+      },
     );
   }
 
