@@ -36,7 +36,8 @@ class GuardarCambioPosicionParams {
   final String idRegistroDiario;
   final int hora;
   final String posicion;
-  final String? idCambioPosicion; // Para actualizaciones
+  final String? idCambioPosicion;
+  final int? orden; // Nuevo campo para el orden
 
   const GuardarCambioPosicionParams({
     required this.idIngreso,
@@ -44,6 +45,7 @@ class GuardarCambioPosicionParams {
     required this.hora,
     required this.posicion,
     this.idCambioPosicion,
+    this.orden,
   });
 }
 
@@ -92,6 +94,7 @@ final guardarCambioPosicionProvider =
           params.idCambioPosicion!,
           params.hora,
           params.posicion,
+          orden: params.orden,
         );
       } else {
         // Creación
@@ -112,19 +115,20 @@ final guardarCambioPosicionProvider =
 // Provider para el último cambio
 final ultimoCambioPosicionProvider =
     FutureProvider.family<CambioDePosicion?, CambioPosicionParams>(
-        (ref, params) async {
-  final repository = ref.watch(cambioPosicionRepositoryProvider);
+  (ref, params) async {
+    final repository = ref.watch(cambioPosicionRepositoryProvider);
 
-  try {
-    return await repository.getUltimoCambioPosicion(
-      params.idIngreso,
-      params.idRegistroDiario,
-    );
-  } catch (e, stackTrace) {
-    debugPrintStack(stackTrace: stackTrace);
-    throw Exception('Error al obtener último cambio de posición: $e');
-  }
-});
+    try {
+      return await repository.getUltimoCambioPosicion(
+        params.idIngreso,
+        params.idRegistroDiario,
+      );
+    } catch (e, stackTrace) {
+      debugPrintStack(stackTrace: stackTrace);
+      throw Exception('Error al obtener último cambio de posición: $e');
+    }
+  },
+);
 
 // Provider para eliminar un cambio
 final eliminarCambioPosicionProvider =
@@ -143,6 +147,43 @@ final eliminarCambioPosicionProvider =
     } catch (e, stackTrace) {
       debugPrintStack(stackTrace: stackTrace);
       throw Exception('Error al eliminar cambio de posición: $e');
+    }
+  },
+);
+
+// Provider para obtener el resumen de posiciones
+final resumenPosicionesProvider =
+    FutureProvider.family<Map<String, int>, CambioPosicionParams>(
+  (ref, params) async {
+    final repository = ref.watch(cambioPosicionRepositoryProvider);
+
+    try {
+      return await repository.getResumenPosiciones(
+        params.idIngreso,
+        params.idRegistroDiario,
+      );
+    } catch (e, stackTrace) {
+      debugPrintStack(stackTrace: stackTrace);
+      throw Exception('Error al obtener resumen de posiciones: $e');
+    }
+  },
+);
+
+// Provider para reordenar cambios de posición
+final reordenarCambiosPosicionProvider = FutureProvider.family<void,
+    ({String idIngreso, String idRegistroDiario, List<String> idsEnOrden})>(
+  (ref, params) async {
+    final repository = ref.watch(cambioPosicionRepositoryProvider);
+
+    try {
+      await repository.reordenarCambiosPosicion(
+        params.idIngreso,
+        params.idRegistroDiario,
+        params.idsEnOrden,
+      );
+    } catch (e, stackTrace) {
+      debugPrintStack(stackTrace: stackTrace);
+      throw Exception('Error al reordenar cambios de posición: $e');
     }
   },
 );

@@ -137,13 +137,14 @@ class CambioPosicionCard extends ConsumerWidget {
                       icon: Icon(
                         Icons.edit_outlined,
                         size: 20,
-                        color: !tieneRegistro ? Colors.blue : Colors.grey,
+                        color: tieneRegistro ? Colors.blue : Colors.grey,
                       ),
-                      onPressed: !tieneRegistro
+                      onPressed: tieneRegistro
                           ? () => _mostrarSelectorPosicion(
                                 context,
                                 ref,
                                 horaInicial: hora,
+                                idCambioExistente: cambio.idCambioDePosicion,
                               )
                           : null,
                     ),
@@ -192,6 +193,12 @@ class CambioPosicionCard extends ConsumerWidget {
                 subtitle: Text(
                     'Posición: ${tieneRegistro ? cambio.posicion : 'Sin registro'}'),
               ),
+              const SizedBox(height: 10),
+              ListTile(
+                leading: const Icon(Icons.sort),
+                title: const Text('Orden'),
+                subtitle: Text('${cambio.orden}'),
+              ),
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Cerrar'),
@@ -207,6 +214,7 @@ class CambioPosicionCard extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref, {
     int? horaInicial,
+    String? idCambioExistente,
   }) {
     showDialog(
       context: context,
@@ -215,6 +223,7 @@ class CambioPosicionCard extends ConsumerWidget {
         idIngreso: idIngreso,
         idRegistroDiario: idRegistroDiario,
         horaInicial: horaInicial,
+        idCambioExistente: idCambioExistente,
       ),
     );
   }
@@ -224,12 +233,14 @@ class _SelectorPosicionDialog extends ConsumerStatefulWidget {
   final String idIngreso;
   final String idRegistroDiario;
   final int? horaInicial;
+  final String? idCambioExistente;
 
   const _SelectorPosicionDialog({
     super.key,
     required this.idIngreso,
     required this.idRegistroDiario,
     this.horaInicial,
+    this.idCambioExistente,
   });
 
   @override
@@ -240,39 +251,42 @@ class _SelectorPosicionDialogState
     extends ConsumerState<_SelectorPosicionDialog> {
   late int selectedHora;
   late String selectedPosicion;
-  String? idCambioExistente;
+  late int? selectedOrden;
 
   @override
   void initState() {
     super.initState();
     selectedHora = widget.horaInicial?.clamp(8, 23) ?? 8;
+    selectedPosicion = 'Decúbito dorsal';
+    selectedOrden = null;
 
-    if (widget.horaInicial != null) {
-      final cambios = ref.read(cambioPosicionProvider(CambioPosicionParams(
-        idIngreso: widget.idIngreso,
-        idRegistroDiario: widget.idRegistroDiario,
-      )));
+    if (widget.horaInicial != null && widget.idCambioExistente != null) {
+      _cargarDatosExistente();
+    }
+  }
 
-      final data = cambios.asData?.value ?? [];
-      final cambioExistente = data.firstWhere(
-        (c) => c.hora == widget.horaInicial && c.idCambioDePosicion.isNotEmpty,
-        orElse: () => const CambioDePosicion(
-          idCambioDePosicion: '',
-          hora: 0,
-          posicion: '',
-          orden: 0,
-        ),
-      );
+  Future<void> _cargarDatosExistente() async {
+    final cambios = ref.read(cambioPosicionProvider(CambioPosicionParams(
+      idIngreso: widget.idIngreso,
+      idRegistroDiario: widget.idRegistroDiario,
+    )));
 
-      idCambioExistente = cambioExistente.idCambioDePosicion.isNotEmpty
-          ? cambioExistente.idCambioDePosicion
-          : null;
-      selectedPosicion = cambioExistente.posicion.isNotEmpty
-          ? cambioExistente.posicion
-          : 'Decúbito dorsal';
-    } else {
-      selectedPosicion = 'Decúbito dorsal';
-      idCambioExistente = null;
+    final data = cambios.asData?.value ?? [];
+    final cambioExistente = data.firstWhere(
+      (c) => c.idCambioDePosicion == widget.idCambioExistente,
+      orElse: () => const CambioDePosicion(
+        idCambioDePosicion: '',
+        hora: 0,
+        posicion: '',
+        orden: 0,
+      ),
+    );
+
+    if (cambioExistente.idCambioDePosicion.isNotEmpty) {
+      setState(() {
+        selectedPosicion = cambioExistente.posicion;
+        selectedOrden = cambioExistente.orden;
+      });
     }
   }
 
@@ -380,7 +394,8 @@ class _SelectorPosicionDialogState
           idRegistroDiario: widget.idRegistroDiario,
           hora: selectedHora,
           posicion: selectedPosicion,
-          idCambioPosicion: idCambioExistente,
+          idCambioPosicion: widget.idCambioExistente,
+          orden: selectedOrden,
         ),
       ).future);
 
@@ -392,7 +407,7 @@ class _SelectorPosicionDialogState
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(idCambioExistente != null
+          content: Text(widget.idCambioExistente != null
               ? 'Cambio actualizado correctamente'
               : 'Nuevo registro creado'),
         ),

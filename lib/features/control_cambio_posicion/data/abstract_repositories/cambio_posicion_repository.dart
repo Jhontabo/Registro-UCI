@@ -30,12 +30,24 @@ abstract class CambioPosicionRepository {
     String idRegistroDiario,
     String idCambioPosicion,
     int hora,
-    String posicion,
-  );
+    String posicion, {
+    int? orden,
+  });
 
   Future<void> eliminarCambioPosicion(
     String idIngreso,
     String idRegistroDiario,
     String idCambioPosicion,
+  );
+
+  Future<Map<String, int>> getResumenPosiciones(
+    String idIngreso,
+    String idRegistroDiario,
+  );
+
+  Future<void> reordenarCambiosPosicion(
+    String idIngreso,
+    String idRegistroDiario,
+    List<String> idsEnOrden,
   );
 }

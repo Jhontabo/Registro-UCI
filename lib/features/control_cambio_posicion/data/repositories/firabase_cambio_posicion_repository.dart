@@ -22,22 +22,13 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
     String idIngreso,
     String idRegistroDiario,
   ) async {
-    final cambiosPosicionRef = _firestore
-        .collection('ingresos')
-        .doc(idIngreso)
-        .collection('registrosDiarios')
-        .doc(idRegistroDiario)
-        .collection('cambiosPosicion');
+    final querySnapshot = await _getCollectionRef(idIngreso, idRegistroDiario)
+        .orderBy('orden', descending: false)
+        .get();
 
-    final querySnapshot =
-        await cambiosPosicionRef.orderBy('orden', descending: false).get();
-
-    final cambiosPosicion = querySnapshot.docs.map((doc) {
-      return CambioDePosicion.fromJson(doc.data(),
-          id: doc.id); // Pasamos el ID aquí
+    return querySnapshot.docs.map((doc) {
+      return CambioDePosicion.fromJson(doc.data(), id: doc.id);
     }).toList();
-
-    return cambiosPosicion;
   }
 
   @override
@@ -47,20 +38,15 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
     String idCambioPosicion,
   ) async {
     try {
-      final doc = await _firestore
-          .collection('ingresos')
-          .doc(idIngreso)
-          .collection('registrosDiarios')
-          .doc(idRegistroDiario)
-          .collection('cambiosPosicion')
+      final doc = await _getCollectionRef(idIngreso, idRegistroDiario)
           .doc(idCambioPosicion)
           .get();
 
       if (!doc.exists) return null;
 
       return CambioDePosicion.fromJson(
-        doc.data() as Map<String, dynamic>, // Usamos los datos del documento
-        id: doc.id, // Le pasamos el ID del documento
+        doc.data()!,
+        id: doc.id,
       );
     } catch (e) {
       throw Exception('Error al obtener cambio de posición por ID: $e');
@@ -73,12 +59,7 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
     String idRegistroDiario,
   ) async {
     try {
-      final querySnapshot = await _firestore
-          .collection('ingresos')
-          .doc(idIngreso)
-          .collection('registrosDiarios')
-          .doc(idRegistroDiario)
-          .collection('cambiosPosicion')
+      final querySnapshot = await _getCollectionRef(idIngreso, idRegistroDiario)
           .orderBy('hora', descending: true)
           .limit(1)
           .get();
@@ -86,12 +67,7 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
       if (querySnapshot.docs.isEmpty) return null;
 
       final doc = querySnapshot.docs.first;
-
-      // Aquí se pasa el id correctamente al constructor desde doc.id
-      return CambioDePosicion.fromJson(
-        doc.data(), // Asegúrate de que los datos sean un Map
-        id: doc.id, // Pasamos el ID de Firestore aquí
-      );
+      return CambioDePosicion.fromJson(doc.data(), id: doc.id);
     } catch (e) {
       throw Exception('Error al obtener último cambio de posición: $e');
     }
@@ -105,12 +81,24 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
     String posicion,
   ) async {
     try {
-      final nuevoDoc = _getCollectionRef(idIngreso, idRegistroDiario).doc();
+      final collectionRef = _getCollectionRef(idIngreso, idRegistroDiario);
+      final nuevoDoc = collectionRef.doc();
+
+      // Obtener el máximo orden actual
+      final querySnapshot =
+          await collectionRef.orderBy('orden', descending: true).limit(1).get();
+
+      int nuevoOrden = 0;
+      if (querySnapshot.docs.isNotEmpty) {
+        nuevoOrden = querySnapshot.docs.first.data()['orden'] as int;
+        nuevoOrden++;
+      }
 
       await nuevoDoc.set({
-        'id': nuevoDoc.id,
+        'idCambioDePosicion': nuevoDoc.id,
         'hora': hora,
         'posicion': posicion,
+        'orden': nuevoOrden,
       });
     } catch (e) {
       throw Exception('Error al crear cambio de posición: $e');
@@ -123,15 +111,22 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
     String idRegistroDiario,
     String idCambioPosicion,
     int hora,
-    String posicion,
-  ) async {
+    String posicion, {
+    int? orden,
+  }) async {
     try {
-      await _getCollectionRef(idIngreso, idRegistroDiario)
-          .doc(idCambioPosicion)
-          .update({
+      final updateData = {
         'hora': hora,
         'posicion': posicion,
-      });
+      };
+
+      if (orden != null) {
+        updateData['orden'] = orden;
+      }
+
+      await _getCollectionRef(idIngreso, idRegistroDiario)
+          .doc(idCambioPosicion)
+          .update(updateData);
     } catch (e) {
       throw Exception('Error al actualizar cambio de posición: $e');
     }
@@ -158,8 +153,9 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
     String idRegistroDiario,
   ) async {
     try {
-      final querySnapshot =
-          await _getCollectionRef(idIngreso, idRegistroDiario).get();
+      final querySnapshot = await _getCollectionRef(idIngreso, idRegistroDiario)
+          .orderBy('orden')
+          .get();
 
       final resumen = <String, int>{};
 
@@ -171,6 +167,27 @@ class FirebaseCambioPosicionRepository implements CambioPosicionRepository {
       return resumen;
     } catch (e) {
       throw Exception('Error al obtener resumen de posiciones: $e');
+    }
+  }
+
+  @override
+  Future<void> reordenarCambiosPosicion(
+    String idIngreso,
+    String idRegistroDiario,
+    List<String> idsEnOrden,
+  ) async {
+    try {
+      final batch = _firestore.batch();
+      final collectionRef = _getCollectionRef(idIngreso, idRegistroDiario);
+
+      for (int i = 0; i < idsEnOrden.length; i++) {
+        final docRef = collectionRef.doc(idsEnOrden[i]);
+        batch.update(docRef, {'orden': i});
+      }
+
+      await batch.commit();
+    } catch (e) {
+      throw Exception('Error al reordenar cambios de posición: $e');
     }
   }
 }
