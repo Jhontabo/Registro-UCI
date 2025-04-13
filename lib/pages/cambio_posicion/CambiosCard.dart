@@ -87,7 +87,7 @@ class CambioPosicionCard extends ConsumerWidget {
         margin: const EdgeInsets.symmetric(vertical: 4.0),
         elevation: 2,
         child: InkWell(
-          onTap: () => _mostrarOpcionesHora(context, ref, hora, tieneRegistro),
+          onTap: () => _mostrarDetalleCambio(context, cambio, ref),
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -107,13 +107,47 @@ class CambioPosicionCard extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  tieneRegistro ? cambio.posicion : 'Sin registro',
-                  style: TextStyle(
-                    color: tieneRegistro ? Colors.green : Colors.grey,
-                    fontStyle:
-                        tieneRegistro ? FontStyle.normal : FontStyle.italic,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      tieneRegistro ? cambio.posicion : 'Sin registro',
+                      style: TextStyle(
+                        color: tieneRegistro ? Colors.green : Colors.grey,
+                        fontStyle:
+                            tieneRegistro ? FontStyle.normal : FontStyle.italic,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      icon: Icon(
+                        Icons.add_circle_outline,
+                        size: 20,
+                        color: !tieneRegistro ? Colors.green : Colors.grey,
+                      ),
+                      onPressed: !tieneRegistro
+                          ? () => _mostrarSelectorPosicion(
+                                context,
+                                ref,
+                                horaInicial: hora,
+                              )
+                          : null,
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      icon: Icon(
+                        Icons.edit_outlined,
+                        size: 20,
+                        color: !tieneRegistro ? Colors.blue : Colors.grey,
+                      ),
+                      onPressed: !tieneRegistro
+                          ? () => _mostrarSelectorPosicion(
+                                context,
+                                ref,
+                                horaInicial: hora,
+                              )
+                          : null,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -123,12 +157,13 @@ class CambioPosicionCard extends ConsumerWidget {
     });
   }
 
-  void _mostrarOpcionesHora(
+  void _mostrarDetalleCambio(
     BuildContext context,
+    CambioDePosicion cambio,
     WidgetRef ref,
-    int hora,
-    bool tieneRegistro,
   ) {
+    final tieneRegistro = cambio.posicion.isNotEmpty;
+
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -140,54 +175,26 @@ class CambioPosicionCard extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'Opciones para las $hora:00',
-                style: const TextStyle(
-                  fontSize: 18,
+              const Text(
+                'Detalle de posición',
+                style: TextStyle(
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.add_circle_outline),
-                  label: const Text('Registrar Cambio'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _mostrarSelectorPosicion(context, ref, horaInicial: hora);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
+              ListTile(
+                leading: Icon(
+                  tieneRegistro ? Icons.check_circle : Icons.info_outline,
+                  color: tieneRegistro ? Colors.green : Colors.blue,
                 ),
+                title: Text('Hora: ${cambio.hora}:00'),
+                subtitle: Text(
+                    'Posición: ${tieneRegistro ? cambio.posicion : 'Sin registro'}'),
               ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.edit_outlined),
-                  label: const Text('Editar Posición'),
-                  onPressed: tieneRegistro
-                      ? () {
-                          Navigator.pop(context);
-                          _mostrarSelectorPosicion(context, ref,
-                              horaInicial: hora);
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: tieneRegistro ? null : Colors.grey[300],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Divider(color: Colors.grey[300]),
-              const SizedBox(height: 10),
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancelar',
-                    style: TextStyle(color: Colors.grey)),
+                child: const Text('Cerrar'),
               ),
             ],
           ),
@@ -233,11 +240,11 @@ class _SelectorPosicionDialogState
     extends ConsumerState<_SelectorPosicionDialog> {
   late int selectedHora;
   late String selectedPosicion;
+  String? idCambioExistente;
 
   @override
   void initState() {
     super.initState();
-
     selectedHora = widget.horaInicial?.clamp(8, 23) ?? 8;
 
     if (widget.horaInicial != null) {
@@ -248,7 +255,7 @@ class _SelectorPosicionDialogState
 
       final data = cambios.asData?.value ?? [];
       final cambioExistente = data.firstWhere(
-        (c) => c.hora == widget.horaInicial,
+        (c) => c.hora == widget.horaInicial && c.idCambioDePosicion.isNotEmpty,
         orElse: () => const CambioDePosicion(
           idCambioDePosicion: '',
           hora: 0,
@@ -257,11 +264,15 @@ class _SelectorPosicionDialogState
         ),
       );
 
+      idCambioExistente = cambioExistente.idCambioDePosicion.isNotEmpty
+          ? cambioExistente.idCambioDePosicion
+          : null;
       selectedPosicion = cambioExistente.posicion.isNotEmpty
           ? cambioExistente.posicion
           : 'Decúbito dorsal';
     } else {
       selectedPosicion = 'Decúbito dorsal';
+      idCambioExistente = null;
     }
   }
 
@@ -335,9 +346,7 @@ class _SelectorPosicionDialogState
               ))
           .toList(),
       onChanged: (value) {
-        if (value != null) {
-          setState(() => selectedHora = value);
-        }
+        if (value != null) setState(() => selectedHora = value);
       },
     );
   }
@@ -356,16 +365,9 @@ class _SelectorPosicionDialogState
         'Prono',
         'Sentado',
         'Fowler',
-      ]
-          .map((pos) => DropdownMenuItem(
-                value: pos,
-                child: Text(pos),
-              ))
-          .toList(),
+      ].map((pos) => DropdownMenuItem(value: pos, child: Text(pos))).toList(),
       onChanged: (value) {
-        if (value != null) {
-          setState(() => selectedPosicion = value);
-        }
+        if (value != null) setState(() => selectedPosicion = value);
       },
     );
   }
@@ -378,16 +380,26 @@ class _SelectorPosicionDialogState
           idRegistroDiario: widget.idRegistroDiario,
           hora: selectedHora,
           posicion: selectedPosicion,
+          idCambioPosicion: idCambioExistente,
         ),
       ).future);
 
+      ref.invalidate(cambioPosicionProvider(CambioPosicionParams(
+        idIngreso: widget.idIngreso,
+        idRegistroDiario: widget.idRegistroDiario,
+      )));
+
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cambio de posición registrado')),
+        SnackBar(
+          content: Text(idCambioExistente != null
+              ? 'Cambio actualizado correctamente'
+              : 'Nuevo registro creado'),
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text('Error: ${e.toString()}')),
       );
     }
   }
