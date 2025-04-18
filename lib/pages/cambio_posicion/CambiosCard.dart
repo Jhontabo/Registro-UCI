@@ -89,73 +89,140 @@ class CambioPosicionCard extends ConsumerWidget {
         child: InkWell(
           onTap: () => _mostrarDetalleCambio(context, cambio, ref),
           borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              children: [
-                Icon(
-                  tieneRegistro ? Icons.check_circle : Icons.access_time,
-                  color: tieneRegistro ? Colors.green : Colors.grey,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  '$hora:00',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: tieneRegistro ? Colors.green : Colors.grey[700],
-                  ),
-                ),
-                const Spacer(),
-                Row(
-                  children: [
-                    Text(
-                      tieneRegistro ? cambio.posicion : 'Sin registro',
-                      style: TextStyle(
-                        color: tieneRegistro ? Colors.green : Colors.grey,
-                        fontStyle:
-                            tieneRegistro ? FontStyle.normal : FontStyle.italic,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: Icon(
-                        Icons.add_circle_outline,
-                        size: 20,
-                        color: !tieneRegistro ? Colors.green : Colors.grey,
-                      ),
-                      onPressed: !tieneRegistro
-                          ? () => _mostrarSelectorPosicion(
-                                context,
-                                ref,
-                                horaInicial: hora,
-                              )
-                          : null,
-                    ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: Icon(
-                        Icons.edit_outlined,
-                        size: 20,
-                        color: tieneRegistro ? Colors.blue : Colors.grey,
-                      ),
-                      onPressed: tieneRegistro
-                          ? () => _mostrarSelectorPosicion(
-                                context,
-                                ref,
-                                horaInicial: hora,
-                                idCambioExistente: cambio.idCambioDePosicion,
-                              )
-                          : null,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final useVerticalLayout = constraints.maxWidth < 300;
+
+              return Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: useVerticalLayout
+                    ? _buildVerticalLayout(
+                        hora, tieneRegistro, cambio, context, ref)
+                    : _buildHorizontalLayout(
+                        hora, tieneRegistro, cambio, context, ref),
+              );
+            },
           ),
         ),
       );
     });
+  }
+
+  Widget _buildHorizontalLayout(
+    int hora,
+    bool tieneRegistro,
+    CambioDePosicion cambio,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    return Row(
+      children: [
+        Icon(
+          tieneRegistro ? Icons.check_circle : Icons.access_time,
+          color: tieneRegistro ? Colors.green : Colors.grey,
+        ),
+        const SizedBox(width: 12),
+        Text(
+          '$hora:00',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: tieneRegistro ? Colors.green : Colors.grey[700],
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            tieneRegistro ? cambio.posicion : 'Sin registro',
+            style: TextStyle(
+              color: tieneRegistro ? Colors.green : Colors.grey,
+              fontStyle: tieneRegistro ? FontStyle.normal : FontStyle.italic,
+            ),
+          ),
+        ),
+        _buildActionButtons(tieneRegistro, hora, cambio, context, ref),
+      ],
+    );
+  }
+
+  Widget _buildVerticalLayout(
+    int hora,
+    bool tieneRegistro,
+    CambioDePosicion cambio,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              tieneRegistro ? Icons.check_circle : Icons.access_time,
+              color: tieneRegistro ? Colors.green : Colors.grey,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              '$hora:00',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: tieneRegistro ? Colors.green : Colors.grey[700],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          tieneRegistro ? cambio.posicion : 'Sin registro',
+          style: TextStyle(
+            color: tieneRegistro ? Colors.green : Colors.grey,
+            fontStyle: tieneRegistro ? FontStyle.normal : FontStyle.italic,
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildActionButtons(tieneRegistro, hora, cambio, context, ref),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons(
+    bool tieneRegistro,
+    int hora,
+    CambioDePosicion cambio,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          icon: Icon(
+            Icons.add_circle_outline,
+            color: !tieneRegistro ? Colors.green : Colors.grey,
+          ),
+          onPressed: !tieneRegistro
+              ? () => _mostrarSelectorPosicion(
+                    context,
+                    ref,
+                    horaInicial: hora,
+                  )
+              : null,
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.edit_outlined,
+            color: tieneRegistro ? Colors.blue : Colors.grey,
+          ),
+          onPressed: tieneRegistro
+              ? () => _mostrarSelectorPosicion(
+                    context,
+                    ref,
+                    horaInicial: hora,
+                    idCambioExistente: cambio.idCambioDePosicion,
+                  )
+              : null,
+        ),
+      ],
+    );
   }
 
   void _mostrarDetalleCambio(
