@@ -375,10 +375,9 @@ class _SelectorPosicionDialogState
       ),
       items: [
         'Decúbito dorsal',
-        'Decúbito lateral',
+        'Decúbito lateral izquierdo',
+        'Decúbito lateral derecho',
         'Prono',
-        'Sentado',
-        'Fowler',
       ].map((pos) => DropdownMenuItem(value: pos, child: Text(pos))).toList(),
       onChanged: (value) {
         if (value != null) setState(() => selectedPosicion = value);

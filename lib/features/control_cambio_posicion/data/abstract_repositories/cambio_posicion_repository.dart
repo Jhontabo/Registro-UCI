@@ -1,4 +1,3 @@
-import 'package:registro_uci/features/control_cambio_posicion/data/dto/create_cambio_posicion_dto.dart';
 import 'package:registro_uci/features/control_cambio_posicion/domain/models/cambio_posicion.dart';
 
 abstract class CambioPosicionRepository {
