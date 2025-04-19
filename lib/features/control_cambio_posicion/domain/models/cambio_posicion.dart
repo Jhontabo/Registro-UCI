@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'cambio_posicion.freezed.dart';
-part 'cambio_posicion.g.dart';
 
 @freezed
 class CambioDePosicion with _$CambioDePosicion {

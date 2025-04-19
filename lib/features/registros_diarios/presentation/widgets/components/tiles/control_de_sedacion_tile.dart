@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_tile.dart';
+import 'package:registro_uci/pages/control_sedacion/control_sedacion_page.dart';
 
 class ControlDeSedacionTile extends StatelessWidget {
   const ControlDeSedacionTile({
@@ -20,7 +21,12 @@ class ControlDeSedacionTile extends StatelessWidget {
       title: "Control de Sedación",
       subtitle: "Evaluación y manejo de la sedación",
       onTap: () {
-        // Add navigation logic here
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) {
+            return CambioPosicionPage(
+                idIngreso: idIngreso, idRegistroDiario: idRegistro);
+          },
+        ));
       },
     );
   }

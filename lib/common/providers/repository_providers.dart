@@ -31,6 +31,8 @@ import 'package:registro_uci/features/resultados/data/repositories/firebase_resu
 
 import 'package:registro_uci/features/control_cambio_posicion/data/abstract_repositories/cambio_posicion_repository.dart';
 import 'package:registro_uci/features/control_cambio_posicion/data/repositories/firabase_cambio_posicion_repository.dart';
+import 'package:registro_uci/features/control_sedacion/data/abstract_repositories/control_sedacion_repository.dart';
+import 'package:registro_uci/features/control_sedacion/data/repositories/firebase_control_sedacion_repository.dart';
 
 final authRepositoryProvider = Provider<IAuthRepository>((ref) {
   return const FirebaseAuthRepository();
@@ -100,4 +102,9 @@ final liquidosAdministradosRepositoryProvider =
 final cambioPosicionRepositoryProvider =
     Provider<CambioPosicionRepository>((ref) {
   return FirebaseCambioPosicionRepository();
+});
+
+final controlSedacionRepositoryProvider =
+    Provider<ControlSedacionRepository>((ref) {
+  return FirebaseControlSedacionRepository();
 });

@@ -14,10 +14,6 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-CambioDePosicion _$CambioDePosicionFromJson(Map<String, dynamic> json) {
-  return _CambioDePosicion.fromJson(json);
-}
-
 /// @nodoc
 mixin _$CambioDePosicion {
   String get idCambioDePosicion => throw _privateConstructorUsedError;
@@ -25,7 +21,6 @@ mixin _$CambioDePosicion {
   String get posicion => throw _privateConstructorUsedError;
   int get orden => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $CambioDePosicionCopyWith<CambioDePosicion> get copyWith =>
       throw _privateConstructorUsedError;
@@ -128,16 +123,13 @@ class __$$CambioDePosicionImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$CambioDePosicionImpl implements _CambioDePosicion {
   const _$CambioDePosicionImpl(
       {required this.idCambioDePosicion,
       required this.hora,
       required this.posicion,
       required this.orden});
-
-  factory _$CambioDePosicionImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CambioDePosicionImplFromJson(json);
 
   @override
   final String idCambioDePosicion;
@@ -166,7 +158,6 @@ class _$CambioDePosicionImpl implements _CambioDePosicion {
             (identical(other.orden, orden) || other.orden == orden));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, idCambioDePosicion, hora, posicion, orden);
@@ -177,13 +168,6 @@ class _$CambioDePosicionImpl implements _CambioDePosicion {
   _$$CambioDePosicionImplCopyWith<_$CambioDePosicionImpl> get copyWith =>
       __$$CambioDePosicionImplCopyWithImpl<_$CambioDePosicionImpl>(
           this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CambioDePosicionImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _CambioDePosicion implements CambioDePosicion {
@@ -192,9 +176,6 @@ abstract class _CambioDePosicion implements CambioDePosicion {
       required final int hora,
       required final String posicion,
       required final int orden}) = _$CambioDePosicionImpl;
-
-  factory _CambioDePosicion.fromJson(Map<String, dynamic> json) =
-      _$CambioDePosicionImpl.fromJson;
 
   @override
   String get idCambioDePosicion;

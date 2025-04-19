@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/bed_widget.dart';
 
-import 'package:registro_uci/pages/cambio_posicion/CambiosCard.dart';
+import 'package:registro_uci/pages/cambio_posicion/cambios_card.dart';
 
 class CambioPosicionPage extends StatelessWidget {
   final String idIngreso;
