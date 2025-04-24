@@ -37,6 +37,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
   DateTime? fechaFinAislamiento;
   DateTime? fechaRegistro;
 
+  int? _diasAislamientoCalculados;
   // Controladores para campos compartidos
   TextEditingController numeroReporteEAController = TextEditingController();
   TextEditingController numeroReporteCaidaController = TextEditingController();
@@ -124,7 +125,9 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
               ? agenteAislamientoController.text
               : null,
       fechaFinAislamiento: enAislamiento ? fechaFinAislamiento : null,
-      diasDeAislamiento: int.tryParse(caidaTardeController.text),
+      diasDeAislamiento: enAislamiento && fechaInicioAislamiento != null
+          ? _diasAislamientoCalculados
+          : null,
       fechaRegistro: fechaRegistro,
       controlUPPManana: int.tryParse(uppMananaController.text),
       controlUPPTarde: int.tryParse(uppTardeController.text),
@@ -190,6 +193,16 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
     return 'Alto';
   }
 
+  void _calcularDiasAislamiento() {
+    if (fechaInicioAislamiento != null) {
+      final fechaReferencia = fechaFinAislamiento ?? DateTime.now();
+      setState(() {
+        _diasAislamientoCalculados =
+            fechaReferencia.difference(fechaInicioAislamiento!).inDays + 1;
+      });
+    }
+  }
+
   Widget _buildCampoNumerico({
     required String label,
     required TextEditingController controller,
@@ -225,7 +238,6 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Control de Riesgos')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -598,6 +610,11 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
               onChanged: (value) {
                 setState(() {
                   enAislamiento = value!;
+                  if (!enAislamiento) {
+                    fechaInicioAislamiento = null;
+                    fechaFinAislamiento = null;
+                    _diasAislamientoCalculados = null;
+                  }
                 });
               },
               controlAffinity: ListTileControlAffinity.leading,
@@ -646,13 +663,19 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
                   hintText: 'Inicio de aislamiento',
                 ),
                 onTap: () async {
-                  fechaInicioAislamiento = await showDatePicker(
+                  final DateTime? picked = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: fechaInicioAislamiento ?? DateTime.now(),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
                   );
-                  setState(() {});
+                  if (picked != null) {
+                    setState(() {
+                      fechaInicioAislamiento =
+                          picked; // CORRECCIÓN: Asignar a fechaInicio
+                      _calcularDiasAislamiento();
+                    });
+                  }
                 },
               ),
               const SizedBox(height: 10),
@@ -667,15 +690,33 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
                   hintText: 'Fin de aislamiento',
                 ),
                 onTap: () async {
-                  fechaFinAislamiento = await showDatePicker(
+                  final DateTime? picked = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2000),
+                    initialDate: fechaFinAislamiento ??
+                        (fechaInicioAislamiento ?? DateTime.now()),
+                    firstDate: fechaInicioAislamiento ?? DateTime.now(),
                     lastDate: DateTime(2101),
                   );
-                  setState(() {});
+                  if (picked != null) {
+                    setState(() {
+                      fechaFinAislamiento = picked;
+                      _calcularDiasAislamiento();
+                    });
+                  }
                 },
               ),
+              // MOSTRAR DÍAS CALCULADOS - AÑADIR ESTE BLOQUE
+              if (fechaInicioAislamiento != null) ...[
+                const SizedBox(height: 10),
+                Text(
+                  'Días de aislamiento: ${_diasAislamientoCalculados ?? "Calculando..."}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
             ],
           ],
         ),

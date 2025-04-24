@@ -37,6 +37,8 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
   DateTime? fechaFinAislamiento;
   DateTime? fechaRegistro;
 
+  int? _diasAislamientoCalculados;
+
   TextEditingController numeroReporteEAController = TextEditingController();
   TextEditingController numeroReporteCaidaController = TextEditingController();
   TextEditingController agenteAislamientoController = TextEditingController();
@@ -118,6 +120,13 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
     if (fechaRegistro != null) {
       fechaRegistroController.text =
           DateFormat('dd/MM/yyyy').format(fechaRegistro!);
+    }
+
+    if (enAislamiento && fechaInicioAislamiento != null) {
+      _diasAislamientoCalculados = (fechaFinAislamiento ?? DateTime.now())
+              .difference(fechaInicioAislamiento!)
+              .inDays +
+          1;
     }
   }
 
@@ -215,13 +224,15 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
       usaAnticoagulantes: usaAnticoagulantes,
       anticoagulanteSeleccionado:
           usaAnticoagulantes ? _selectedAnticoagulante : null,
+      diasDeAislamiento: enAislamiento && fechaInicioAislamiento != null
+          ? _diasAislamientoCalculados
+          : null,
       enAislamiento: enAislamiento,
       fechaInicioAislamiento: enAislamiento ? fechaInicioAislamiento : null,
       tipoAislamiento: enAislamiento ? _selectedTipoAislamiento : null,
       agenteAislamiento:
           enAislamiento ? agenteAislamientoController.text : null,
       fechaFinAislamiento: enAislamiento ? fechaFinAislamiento : null,
-      diasDeAislamiento: int.tryParse(caidaTardeController.text),
       fechaRegistro: fechaRegistro,
       controlUPPManana: int.tryParse(uppMananaController.text),
       controlUPPTarde: int.tryParse(uppTardeController.text),
@@ -276,6 +287,16 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
 
     if (promedio <= 2) return 'Bajo';
     return 'Alto';
+  }
+
+  void _calcularDiasAislamiento() {
+    if (fechaInicioAislamiento != null) {
+      final fechaReferencia = fechaFinAislamiento ?? DateTime.now();
+      setState(() {
+        _diasAislamientoCalculados =
+            fechaReferencia.difference(fechaInicioAislamiento!).inDays + 1;
+      });
+    }
   }
 
   Widget _buildCampoNumerico({
@@ -759,6 +780,11 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
               onChanged: (value) {
                 setState(() {
                   enAislamiento = value!;
+                  if (!enAislamiento) {
+                    fechaInicioAislamiento = null;
+                    fechaFinAislamiento = null;
+                    _diasAislamientoCalculados = null;
+                  }
                 });
               },
               controlAffinity: ListTileControlAffinity.leading,
@@ -816,6 +842,7 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
                   if (selectedDate != null) {
                     setState(() {
                       fechaInicioAislamiento = selectedDate;
+                      _calcularDiasAislamiento();
                     });
                   }
                 },
@@ -834,17 +861,30 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
                 onTap: () async {
                   final selectedDate = await showDatePicker(
                     context: context,
-                    initialDate: fechaFinAislamiento ?? DateTime.now(),
-                    firstDate: DateTime(2000),
+                    initialDate: fechaFinAislamiento ??
+                        (fechaInicioAislamiento ?? DateTime.now()),
+                    firstDate: fechaInicioAislamiento ?? DateTime.now(),
                     lastDate: DateTime(2101),
                   );
                   if (selectedDate != null) {
                     setState(() {
                       fechaFinAislamiento = selectedDate;
+                      _calcularDiasAislamiento();
                     });
                   }
                 },
               ),
+              if (fechaInicioAislamiento != null) ...[
+                const SizedBox(height: 10),
+                Text(
+                  'Días de aislamiento: ${_diasAislamientoCalculados ?? "Calculando..."}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
             ],
           ],
         ),
