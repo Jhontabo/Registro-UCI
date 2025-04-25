@@ -52,7 +52,7 @@ final registrosDiariosRepositoryProvider =
 });
 
 final monitoriasHemodinamicasRepositoryProvider =
-    Provider<IMonitoriasHemodinamicasRepository>((ref) {
+    Provider<MonitoriasHemodinamicasRepository>((ref) {
   return FirebaseMonitoriasHemodinamicasRepository();
 });
 

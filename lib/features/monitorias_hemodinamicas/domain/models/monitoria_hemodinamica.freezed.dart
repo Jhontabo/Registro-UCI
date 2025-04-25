@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$MonitoriaHemodinamica {
   String get idMonitoria => throw _privateConstructorUsedError;
   int get hora => throw _privateConstructorUsedError;
+  int get orden => throw _privateConstructorUsedError;
   double? get pas =>
       throw _privateConstructorUsedError; // Presión arterial sistólica
   double? get pad =>
@@ -29,6 +30,10 @@ mixin _$MonitoriaHemodinamica {
   int? get fr =>
       throw _privateConstructorUsedError; // Frecuencia respiratoria (rpm)
   double? get t => throw _privateConstructorUsedError; // Temperatura (°C)
+  double? get pvc =>
+      throw _privateConstructorUsedError; // presion venosa central
+  double? get rvc =>
+      throw _privateConstructorUsedError; // Resistencia vascular sistemica
   int? get fio2 =>
       throw _privateConstructorUsedError; // Fracción de Oxígeno Inspirado (%)
   int? get pia =>
@@ -62,12 +67,15 @@ abstract class $MonitoriaHemodinamicaCopyWith<$Res> {
   $Res call(
       {String idMonitoria,
       int hora,
+      int orden,
       double? pas,
       double? pad,
       double? pam,
       int? fc,
       int? fr,
       double? t,
+      double? pvc,
+      double? rvc,
       int? fio2,
       int? pia,
       int? ppa,
@@ -96,12 +104,15 @@ class _$MonitoriaHemodinamicaCopyWithImpl<$Res,
   $Res call({
     Object? idMonitoria = null,
     Object? hora = null,
+    Object? orden = null,
     Object? pas = freezed,
     Object? pad = freezed,
     Object? pam = freezed,
     Object? fc = freezed,
     Object? fr = freezed,
     Object? t = freezed,
+    Object? pvc = freezed,
+    Object? rvc = freezed,
     Object? fio2 = freezed,
     Object? pia = freezed,
     Object? ppa = freezed,
@@ -121,6 +132,10 @@ class _$MonitoriaHemodinamicaCopyWithImpl<$Res,
       hora: null == hora
           ? _value.hora
           : hora // ignore: cast_nullable_to_non_nullable
+              as int,
+      orden: null == orden
+          ? _value.orden
+          : orden // ignore: cast_nullable_to_non_nullable
               as int,
       pas: freezed == pas
           ? _value.pas
@@ -145,6 +160,14 @@ class _$MonitoriaHemodinamicaCopyWithImpl<$Res,
       t: freezed == t
           ? _value.t
           : t // ignore: cast_nullable_to_non_nullable
+              as double?,
+      pvc: freezed == pvc
+          ? _value.pvc
+          : pvc // ignore: cast_nullable_to_non_nullable
+              as double?,
+      rvc: freezed == rvc
+          ? _value.rvc
+          : rvc // ignore: cast_nullable_to_non_nullable
               as double?,
       fio2: freezed == fio2
           ? _value.fio2
@@ -202,12 +225,15 @@ abstract class _$$MonitoriaHemodinamicaImplCopyWith<$Res>
   $Res call(
       {String idMonitoria,
       int hora,
+      int orden,
       double? pas,
       double? pad,
       double? pam,
       int? fc,
       int? fr,
       double? t,
+      double? pvc,
+      double? rvc,
       int? fio2,
       int? pia,
       int? ppa,
@@ -234,12 +260,15 @@ class __$$MonitoriaHemodinamicaImplCopyWithImpl<$Res>
   $Res call({
     Object? idMonitoria = null,
     Object? hora = null,
+    Object? orden = null,
     Object? pas = freezed,
     Object? pad = freezed,
     Object? pam = freezed,
     Object? fc = freezed,
     Object? fr = freezed,
     Object? t = freezed,
+    Object? pvc = freezed,
+    Object? rvc = freezed,
     Object? fio2 = freezed,
     Object? pia = freezed,
     Object? ppa = freezed,
@@ -259,6 +288,10 @@ class __$$MonitoriaHemodinamicaImplCopyWithImpl<$Res>
       hora: null == hora
           ? _value.hora
           : hora // ignore: cast_nullable_to_non_nullable
+              as int,
+      orden: null == orden
+          ? _value.orden
+          : orden // ignore: cast_nullable_to_non_nullable
               as int,
       pas: freezed == pas
           ? _value.pas
@@ -283,6 +316,14 @@ class __$$MonitoriaHemodinamicaImplCopyWithImpl<$Res>
       t: freezed == t
           ? _value.t
           : t // ignore: cast_nullable_to_non_nullable
+              as double?,
+      pvc: freezed == pvc
+          ? _value.pvc
+          : pvc // ignore: cast_nullable_to_non_nullable
+              as double?,
+      rvc: freezed == rvc
+          ? _value.rvc
+          : rvc // ignore: cast_nullable_to_non_nullable
               as double?,
       fio2: freezed == fio2
           ? _value.fio2
@@ -334,12 +375,15 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
   const _$MonitoriaHemodinamicaImpl(
       {required this.idMonitoria,
       required this.hora,
+      required this.orden,
       this.pas,
       this.pad,
       this.pam,
       this.fc,
       this.fr,
       this.t,
+      this.pvc,
+      this.rvc,
       this.fio2,
       this.pia,
       this.ppa,
@@ -355,6 +399,8 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
   final String idMonitoria;
   @override
   final int hora;
+  @override
+  final int orden;
   @override
   final double? pas;
 // Presión arterial sistólica
@@ -373,6 +419,12 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
   @override
   final double? t;
 // Temperatura (°C)
+  @override
+  final double? pvc;
+// presion venosa central
+  @override
+  final double? rvc;
+// Resistencia vascular sistemica
   @override
   final int? fio2;
 // Fracción de Oxígeno Inspirado (%)
@@ -405,7 +457,7 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
 
   @override
   String toString() {
-    return 'MonitoriaHemodinamica(idMonitoria: $idMonitoria, hora: $hora, pas: $pas, pad: $pad, pam: $pam, fc: $fc, fr: $fr, t: $t, fio2: $fio2, pia: $pia, ppa: $ppa, pic: $pic, ppc: $ppc, glucometria: $glucometria, insulina: $insulina, saturacion: $saturacion, fechaFirma: $fechaFirma, firmadoPor: $firmadoPor)';
+    return 'MonitoriaHemodinamica(idMonitoria: $idMonitoria, hora: $hora, orden: $orden, pas: $pas, pad: $pad, pam: $pam, fc: $fc, fr: $fr, t: $t, pvc: $pvc, rvc: $rvc, fio2: $fio2, pia: $pia, ppa: $ppa, pic: $pic, ppc: $ppc, glucometria: $glucometria, insulina: $insulina, saturacion: $saturacion, fechaFirma: $fechaFirma, firmadoPor: $firmadoPor)';
   }
 
   @override
@@ -416,12 +468,15 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
             (identical(other.idMonitoria, idMonitoria) ||
                 other.idMonitoria == idMonitoria) &&
             (identical(other.hora, hora) || other.hora == hora) &&
+            (identical(other.orden, orden) || other.orden == orden) &&
             (identical(other.pas, pas) || other.pas == pas) &&
             (identical(other.pad, pad) || other.pad == pad) &&
             (identical(other.pam, pam) || other.pam == pam) &&
             (identical(other.fc, fc) || other.fc == fc) &&
             (identical(other.fr, fr) || other.fr == fr) &&
             (identical(other.t, t) || other.t == t) &&
+            (identical(other.pvc, pvc) || other.pvc == pvc) &&
+            (identical(other.rvc, rvc) || other.rvc == rvc) &&
             (identical(other.fio2, fio2) || other.fio2 == fio2) &&
             (identical(other.pia, pia) || other.pia == pia) &&
             (identical(other.ppa, ppa) || other.ppa == ppa) &&
@@ -440,26 +495,30 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      idMonitoria,
-      hora,
-      pas,
-      pad,
-      pam,
-      fc,
-      fr,
-      t,
-      fio2,
-      pia,
-      ppa,
-      pic,
-      ppc,
-      glucometria,
-      insulina,
-      saturacion,
-      fechaFirma,
-      firmadoPor);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        idMonitoria,
+        hora,
+        orden,
+        pas,
+        pad,
+        pam,
+        fc,
+        fr,
+        t,
+        pvc,
+        rvc,
+        fio2,
+        pia,
+        ppa,
+        pic,
+        ppc,
+        glucometria,
+        insulina,
+        saturacion,
+        fechaFirma,
+        firmadoPor
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -473,12 +532,15 @@ abstract class _MonitoriaHemodinamica implements MonitoriaHemodinamica {
   const factory _MonitoriaHemodinamica(
       {required final String idMonitoria,
       required final int hora,
+      required final int orden,
       final double? pas,
       final double? pad,
       final double? pam,
       final int? fc,
       final int? fr,
       final double? t,
+      final double? pvc,
+      final double? rvc,
       final int? fio2,
       final int? pia,
       final int? ppa,
@@ -495,6 +557,8 @@ abstract class _MonitoriaHemodinamica implements MonitoriaHemodinamica {
   @override
   int get hora;
   @override
+  int get orden;
+  @override
   double? get pas;
   @override // Presión arterial sistólica
   double? get pad;
@@ -507,6 +571,10 @@ abstract class _MonitoriaHemodinamica implements MonitoriaHemodinamica {
   @override // Frecuencia respiratoria (rpm)
   double? get t;
   @override // Temperatura (°C)
+  double? get pvc;
+  @override // presion venosa central
+  double? get rvc;
+  @override // Resistencia vascular sistemica
   int? get fio2;
   @override // Fracción de Oxígeno Inspirado (%)
   int? get pia;

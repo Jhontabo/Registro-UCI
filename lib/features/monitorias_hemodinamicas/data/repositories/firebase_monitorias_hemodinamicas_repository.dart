@@ -7,7 +7,7 @@ import 'package:registro_uci/features/monitorias_hemodinamicas/data/dto/update_m
 import 'package:registro_uci/features/monitorias_hemodinamicas/domain/models/monitoria_hemodinamica.dart';
 
 class FirebaseMonitoriasHemodinamicasRepository
-    implements IMonitoriasHemodinamicasRepository {
+    implements MonitoriasHemodinamicasRepository {
   FirebaseMonitoriasHemodinamicasRepository();
 
   @override
