@@ -8,14 +8,14 @@ class MonitoriaHemodinamica with _$MonitoriaHemodinamica {
     required String idMonitoria,
     required int hora,
     required int orden,
-    double? pas, // Presión arterial sistólica
-    double? pad, // Presión arterial diastólica
-    double? pam, // Presión arterial media (Fórmula: (2D + 1S)/3)
+    int? pas, // Presión arterial sistólica
+    int? pad, // Presión arterial diastólica
+    int? pam, // Presión arterial media (Fórmula: (2pad + 1pas)/3)
     int? fc, // Frecuencia cardiaca (ppm)
     int? fr, // Frecuencia respiratoria (rpm)
     double? t, // Temperatura (°C)
-    double? pvc, // presion venosa central
-    double? rvc, // Resistencia vascular sistemica
+    int? pvc, // presion venosa central
+    int? rvc, // Resistencia vascular sistemica
     int? fio2, // Fracción de Oxígeno Inspirado (%)
     int? pia, // Presión intraabdominal (mm H2O)
     int? ppa, // Presión de Perfusión arterial (mm Hg)
@@ -24,8 +24,6 @@ class MonitoriaHemodinamica with _$MonitoriaHemodinamica {
     int? glucometria, // Glucometría (mg/dL)
     int? insulina, // Insulina (Unidades)
     int? saturacion, // Saturación (%)
-    DateTime? fechaFirma, // Fecha de firma
-    String? firmadoPor, // Firmado por
   }) = _MonitoriaHemodinamica;
 
   factory MonitoriaHemodinamica.fromJson(Map<String, dynamic> json,
@@ -34,9 +32,9 @@ class MonitoriaHemodinamica with _$MonitoriaHemodinamica {
       idMonitoria: id,
       hora: json['hora'] as int,
       orden: json['orden'] as int,
-      pas: (json['pas'] as num?)?.toDouble(),
-      pad: (json['pad'] as num?)?.toDouble(),
-      pam: (json['pam'] as num?)?.toDouble(),
+      pas: (json['pas'] as num?)?.toInt(),
+      pad: (json['pad'] as num?)?.toInt(),
+      pam: (json['pam'] as num?)?.toInt(),
       fc: json['fc'] as int?,
       fr: json['fr'] as int?,
       t: (json['t'] as num?)?.toDouble(),
@@ -48,10 +46,6 @@ class MonitoriaHemodinamica with _$MonitoriaHemodinamica {
       glucometria: json['glucometria'] as int?,
       insulina: json['insulina'] as int?,
       saturacion: json['saturacion'] as int?,
-      fechaFirma: json['fechaFirma'] != null
-          ? (json['fechaFirma'] as Timestamp).toDate()
-          : null,
-      firmadoPor: json['firmadoPor'] as String?,
     );
   }
 }

@@ -51,9 +51,9 @@ final registrosDiariosRepositoryProvider =
   return FirebaseRegistrosDiariosRepository();
 });
 
-final monitoriasHemodinamicasRepositoryProvider =
-    Provider<MonitoriasHemodinamicasRepository>((ref) {
-  return FirebaseMonitoriasHemodinamicasRepository();
+final monitoriasHemodinamicaRepositoryProvider =
+    Provider<MonitoriaHemodinamicaRepository>((ref) {
+  return FirebaseMonitoriaHemodinamicaRepository();
 });
 
 final necesidadesRepositoryProvider = Provider<NecesidadesRepository>((ref) {

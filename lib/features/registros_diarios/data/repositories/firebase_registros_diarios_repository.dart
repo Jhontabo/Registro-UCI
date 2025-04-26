@@ -7,7 +7,6 @@ import 'package:registro_uci/common/constants/firebase_collection_names.dart';
 import 'package:registro_uci/features/balance_liquidos/data/dto/create_balace_de_liquidos_dto.dart';
 import 'package:registro_uci/features/firmas/data/dto/create_firma_dto.dart';
 import 'package:registro_uci/features/firmas/domain/models/firma.dart';
-import 'package:registro_uci/features/monitorias_hemodinamicas/data/dto/create_monitoria_hemodinamica_dto.dart';
 import 'package:registro_uci/features/registros_diarios/data/abstract_repositories/registros_diarios_repository.dart';
 import 'package:registro_uci/features/registros_diarios/data/dto/create_registro_diario_dto.dart';
 import 'package:registro_uci/features/registros_diarios/domain/models/registro_diario.dart';
@@ -84,20 +83,6 @@ class FirebaseRegistrosDiariosRepository
 
         // Add the Registro Diario
         transaction.set(docRef, dto);
-
-        // Create 24 Monitorias Hemodinamicas
-        final monitorias = List.generate(
-          24,
-          (index) => CreateMonitoriaHemodinamicaDto(hora: index + 1),
-        );
-
-        final monitoriasRef =
-            docRef.collection(FirebaseCollectionNames.monitoriasHemodinamicas);
-
-        for (var monitoria in monitorias) {
-          final monitoriaDocRef = monitoriasRef.doc('${monitoria.hora}');
-          transaction.set(monitoriaDocRef, monitoria);
-        }
 
         // Create 24 Balance de Líquidos with specific orden and hora mapping
         final horas = [

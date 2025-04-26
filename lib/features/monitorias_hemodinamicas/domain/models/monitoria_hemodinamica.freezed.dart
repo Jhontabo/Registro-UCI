@@ -19,20 +19,19 @@ mixin _$MonitoriaHemodinamica {
   String get idMonitoria => throw _privateConstructorUsedError;
   int get hora => throw _privateConstructorUsedError;
   int get orden => throw _privateConstructorUsedError;
-  double? get pas =>
+  int? get pas =>
       throw _privateConstructorUsedError; // Presión arterial sistólica
-  double? get pad =>
+  int? get pad =>
       throw _privateConstructorUsedError; // Presión arterial diastólica
-  double? get pam =>
-      throw _privateConstructorUsedError; // Presión arterial media (Fórmula: (2D + 1S)/3)
+  int? get pam =>
+      throw _privateConstructorUsedError; // Presión arterial media (Fórmula: (2pad + 1pas)/3)
   int? get fc =>
       throw _privateConstructorUsedError; // Frecuencia cardiaca (ppm)
   int? get fr =>
       throw _privateConstructorUsedError; // Frecuencia respiratoria (rpm)
   double? get t => throw _privateConstructorUsedError; // Temperatura (°C)
-  double? get pvc =>
-      throw _privateConstructorUsedError; // presion venosa central
-  double? get rvc =>
+  int? get pvc => throw _privateConstructorUsedError; // presion venosa central
+  int? get rvc =>
       throw _privateConstructorUsedError; // Resistencia vascular sistemica
   int? get fio2 =>
       throw _privateConstructorUsedError; // Fracción de Oxígeno Inspirado (%)
@@ -48,10 +47,7 @@ mixin _$MonitoriaHemodinamica {
       throw _privateConstructorUsedError; // Glucometría (mg/dL)
   int? get insulina =>
       throw _privateConstructorUsedError; // Insulina (Unidades)
-  int? get saturacion => throw _privateConstructorUsedError; // Saturación (%)
-  DateTime? get fechaFirma =>
-      throw _privateConstructorUsedError; // Fecha de firma
-  String? get firmadoPor => throw _privateConstructorUsedError;
+  int? get saturacion => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MonitoriaHemodinamicaCopyWith<MonitoriaHemodinamica> get copyWith =>
@@ -68,14 +64,14 @@ abstract class $MonitoriaHemodinamicaCopyWith<$Res> {
       {String idMonitoria,
       int hora,
       int orden,
-      double? pas,
-      double? pad,
-      double? pam,
+      int? pas,
+      int? pad,
+      int? pam,
       int? fc,
       int? fr,
       double? t,
-      double? pvc,
-      double? rvc,
+      int? pvc,
+      int? rvc,
       int? fio2,
       int? pia,
       int? ppa,
@@ -83,9 +79,7 @@ abstract class $MonitoriaHemodinamicaCopyWith<$Res> {
       int? ppc,
       int? glucometria,
       int? insulina,
-      int? saturacion,
-      DateTime? fechaFirma,
-      String? firmadoPor});
+      int? saturacion});
 }
 
 /// @nodoc
@@ -121,8 +115,6 @@ class _$MonitoriaHemodinamicaCopyWithImpl<$Res,
     Object? glucometria = freezed,
     Object? insulina = freezed,
     Object? saturacion = freezed,
-    Object? fechaFirma = freezed,
-    Object? firmadoPor = freezed,
   }) {
     return _then(_value.copyWith(
       idMonitoria: null == idMonitoria
@@ -140,15 +132,15 @@ class _$MonitoriaHemodinamicaCopyWithImpl<$Res,
       pas: freezed == pas
           ? _value.pas
           : pas // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as int?,
       pad: freezed == pad
           ? _value.pad
           : pad // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as int?,
       pam: freezed == pam
           ? _value.pam
           : pam // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as int?,
       fc: freezed == fc
           ? _value.fc
           : fc // ignore: cast_nullable_to_non_nullable
@@ -164,11 +156,11 @@ class _$MonitoriaHemodinamicaCopyWithImpl<$Res,
       pvc: freezed == pvc
           ? _value.pvc
           : pvc // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as int?,
       rvc: freezed == rvc
           ? _value.rvc
           : rvc // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as int?,
       fio2: freezed == fio2
           ? _value.fio2
           : fio2 // ignore: cast_nullable_to_non_nullable
@@ -201,14 +193,6 @@ class _$MonitoriaHemodinamicaCopyWithImpl<$Res,
           ? _value.saturacion
           : saturacion // ignore: cast_nullable_to_non_nullable
               as int?,
-      fechaFirma: freezed == fechaFirma
-          ? _value.fechaFirma
-          : fechaFirma // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      firmadoPor: freezed == firmadoPor
-          ? _value.firmadoPor
-          : firmadoPor // ignore: cast_nullable_to_non_nullable
-              as String?,
     ) as $Val);
   }
 }
@@ -226,14 +210,14 @@ abstract class _$$MonitoriaHemodinamicaImplCopyWith<$Res>
       {String idMonitoria,
       int hora,
       int orden,
-      double? pas,
-      double? pad,
-      double? pam,
+      int? pas,
+      int? pad,
+      int? pam,
       int? fc,
       int? fr,
       double? t,
-      double? pvc,
-      double? rvc,
+      int? pvc,
+      int? rvc,
       int? fio2,
       int? pia,
       int? ppa,
@@ -241,9 +225,7 @@ abstract class _$$MonitoriaHemodinamicaImplCopyWith<$Res>
       int? ppc,
       int? glucometria,
       int? insulina,
-      int? saturacion,
-      DateTime? fechaFirma,
-      String? firmadoPor});
+      int? saturacion});
 }
 
 /// @nodoc
@@ -277,8 +259,6 @@ class __$$MonitoriaHemodinamicaImplCopyWithImpl<$Res>
     Object? glucometria = freezed,
     Object? insulina = freezed,
     Object? saturacion = freezed,
-    Object? fechaFirma = freezed,
-    Object? firmadoPor = freezed,
   }) {
     return _then(_$MonitoriaHemodinamicaImpl(
       idMonitoria: null == idMonitoria
@@ -296,15 +276,15 @@ class __$$MonitoriaHemodinamicaImplCopyWithImpl<$Res>
       pas: freezed == pas
           ? _value.pas
           : pas // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as int?,
       pad: freezed == pad
           ? _value.pad
           : pad // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as int?,
       pam: freezed == pam
           ? _value.pam
           : pam // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as int?,
       fc: freezed == fc
           ? _value.fc
           : fc // ignore: cast_nullable_to_non_nullable
@@ -320,11 +300,11 @@ class __$$MonitoriaHemodinamicaImplCopyWithImpl<$Res>
       pvc: freezed == pvc
           ? _value.pvc
           : pvc // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as int?,
       rvc: freezed == rvc
           ? _value.rvc
           : rvc // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as int?,
       fio2: freezed == fio2
           ? _value.fio2
           : fio2 // ignore: cast_nullable_to_non_nullable
@@ -357,14 +337,6 @@ class __$$MonitoriaHemodinamicaImplCopyWithImpl<$Res>
           ? _value.saturacion
           : saturacion // ignore: cast_nullable_to_non_nullable
               as int?,
-      fechaFirma: freezed == fechaFirma
-          ? _value.fechaFirma
-          : fechaFirma // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      firmadoPor: freezed == firmadoPor
-          ? _value.firmadoPor
-          : firmadoPor // ignore: cast_nullable_to_non_nullable
-              as String?,
     ));
   }
 }
@@ -391,9 +363,7 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
       this.ppc,
       this.glucometria,
       this.insulina,
-      this.saturacion,
-      this.fechaFirma,
-      this.firmadoPor});
+      this.saturacion});
 
   @override
   final String idMonitoria;
@@ -402,14 +372,14 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
   @override
   final int orden;
   @override
-  final double? pas;
+  final int? pas;
 // Presión arterial sistólica
   @override
-  final double? pad;
+  final int? pad;
 // Presión arterial diastólica
   @override
-  final double? pam;
-// Presión arterial media (Fórmula: (2D + 1S)/3)
+  final int? pam;
+// Presión arterial media (Fórmula: (2pad + 1pas)/3)
   @override
   final int? fc;
 // Frecuencia cardiaca (ppm)
@@ -420,10 +390,10 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
   final double? t;
 // Temperatura (°C)
   @override
-  final double? pvc;
+  final int? pvc;
 // presion venosa central
   @override
-  final double? rvc;
+  final int? rvc;
 // Resistencia vascular sistemica
   @override
   final int? fio2;
@@ -448,16 +418,10 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
 // Insulina (Unidades)
   @override
   final int? saturacion;
-// Saturación (%)
-  @override
-  final DateTime? fechaFirma;
-// Fecha de firma
-  @override
-  final String? firmadoPor;
 
   @override
   String toString() {
-    return 'MonitoriaHemodinamica(idMonitoria: $idMonitoria, hora: $hora, orden: $orden, pas: $pas, pad: $pad, pam: $pam, fc: $fc, fr: $fr, t: $t, pvc: $pvc, rvc: $rvc, fio2: $fio2, pia: $pia, ppa: $ppa, pic: $pic, ppc: $ppc, glucometria: $glucometria, insulina: $insulina, saturacion: $saturacion, fechaFirma: $fechaFirma, firmadoPor: $firmadoPor)';
+    return 'MonitoriaHemodinamica(idMonitoria: $idMonitoria, hora: $hora, orden: $orden, pas: $pas, pad: $pad, pam: $pam, fc: $fc, fr: $fr, t: $t, pvc: $pvc, rvc: $rvc, fio2: $fio2, pia: $pia, ppa: $ppa, pic: $pic, ppc: $ppc, glucometria: $glucometria, insulina: $insulina, saturacion: $saturacion)';
   }
 
   @override
@@ -487,11 +451,7 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
             (identical(other.insulina, insulina) ||
                 other.insulina == insulina) &&
             (identical(other.saturacion, saturacion) ||
-                other.saturacion == saturacion) &&
-            (identical(other.fechaFirma, fechaFirma) ||
-                other.fechaFirma == fechaFirma) &&
-            (identical(other.firmadoPor, firmadoPor) ||
-                other.firmadoPor == firmadoPor));
+                other.saturacion == saturacion));
   }
 
   @override
@@ -515,9 +475,7 @@ class _$MonitoriaHemodinamicaImpl implements _MonitoriaHemodinamica {
         ppc,
         glucometria,
         insulina,
-        saturacion,
-        fechaFirma,
-        firmadoPor
+        saturacion
       ]);
 
   @JsonKey(ignore: true)
@@ -533,14 +491,14 @@ abstract class _MonitoriaHemodinamica implements MonitoriaHemodinamica {
       {required final String idMonitoria,
       required final int hora,
       required final int orden,
-      final double? pas,
-      final double? pad,
-      final double? pam,
+      final int? pas,
+      final int? pad,
+      final int? pam,
       final int? fc,
       final int? fr,
       final double? t,
-      final double? pvc,
-      final double? rvc,
+      final int? pvc,
+      final int? rvc,
       final int? fio2,
       final int? pia,
       final int? ppa,
@@ -548,9 +506,7 @@ abstract class _MonitoriaHemodinamica implements MonitoriaHemodinamica {
       final int? ppc,
       final int? glucometria,
       final int? insulina,
-      final int? saturacion,
-      final DateTime? fechaFirma,
-      final String? firmadoPor}) = _$MonitoriaHemodinamicaImpl;
+      final int? saturacion}) = _$MonitoriaHemodinamicaImpl;
 
   @override
   String get idMonitoria;
@@ -559,21 +515,21 @@ abstract class _MonitoriaHemodinamica implements MonitoriaHemodinamica {
   @override
   int get orden;
   @override
-  double? get pas;
+  int? get pas;
   @override // Presión arterial sistólica
-  double? get pad;
+  int? get pad;
   @override // Presión arterial diastólica
-  double? get pam;
-  @override // Presión arterial media (Fórmula: (2D + 1S)/3)
+  int? get pam;
+  @override // Presión arterial media (Fórmula: (2pad + 1pas)/3)
   int? get fc;
   @override // Frecuencia cardiaca (ppm)
   int? get fr;
   @override // Frecuencia respiratoria (rpm)
   double? get t;
   @override // Temperatura (°C)
-  double? get pvc;
+  int? get pvc;
   @override // presion venosa central
-  double? get rvc;
+  int? get rvc;
   @override // Resistencia vascular sistemica
   int? get fio2;
   @override // Fracción de Oxígeno Inspirado (%)
@@ -590,10 +546,6 @@ abstract class _MonitoriaHemodinamica implements MonitoriaHemodinamica {
   int? get insulina;
   @override // Insulina (Unidades)
   int? get saturacion;
-  @override // Saturación (%)
-  DateTime? get fechaFirma;
-  @override // Fecha de firma
-  String? get firmadoPor;
   @override
   @JsonKey(ignore: true)
   _$$MonitoriaHemodinamicaImplCopyWith<_$MonitoriaHemodinamicaImpl>
