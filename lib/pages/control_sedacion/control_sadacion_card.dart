@@ -527,16 +527,15 @@ class _SelectorSedacionDialogState
         ),
         DropdownMenuItem(
           value: 3,
-          child: Text('+3 - MUY AGITADO (Intenta quitarse tubo/catéteres)'),
+          child: Text('+3 - MUY AGITADO'),
         ),
         DropdownMenuItem(
           value: 2,
-          child: Text(
-              '+2 - AGITADO (Movimientos frecuentes, lucha con respirador)'),
+          child: Text('+2 - AGITADO'),
         ),
         DropdownMenuItem(
           value: 1,
-          child: Text('+1 - ANSIOSO (Inquieto, sin conducta violenta)'),
+          child: Text('+1 - ANSIOSO'),
         ),
         DropdownMenuItem(
           value: 0,
@@ -544,26 +543,23 @@ class _SelectorSedacionDialogState
         ),
         DropdownMenuItem(
           value: -1,
-          child: Text(
-              '-1 - ADORMILADO (Despierta con voz, ojos abiertos +10 seg)'),
+          child: Text('-1 - ADORMILADO'),
         ),
         DropdownMenuItem(
           value: -2,
-          child: Text(
-              '-2 - SEDACIÓN LIGERA (Despierta con voz, ojos abiertos <10 seg)'),
+          child: Text('-2 - SEDACIÓN LIGERA'),
         ),
         DropdownMenuItem(
           value: -3,
-          child: Text('-3 - SEDACIÓN MODERADA (Se mueve, abre ojos sin mirar)'),
+          child: Text('-3 - SEDACIÓN MODERADA'),
         ),
         DropdownMenuItem(
           value: -4,
-          child: Text(
-              '-4 - SEDACIÓN PROFUNDA (No responde a voz, abre ojos a estímulo físico)'),
+          child: Text('-4 - SEDACIÓN PROFUNDA'),
         ),
         DropdownMenuItem(
           value: -5,
-          child: Text('-5 - SEDACIÓN MUY PROFUNDA (No responde a estímulos)'),
+          child: Text('-5 - SEDACIÓN MUY PROFUNDA'),
         ),
       ],
       onChanged: (value) {

@@ -30,7 +30,7 @@ class FirebaseMonitoriaHemodinamicaRepository
       final query = await _obtenerColeccion(
         idIngreso: idIngreso,
         idRegistroDiario: idRegistroDiario,
-      ).orderBy('orden').get();
+      ).orderBy('orden', descending: false).get();
 
       return query.docs.map((doc) {
         return MonitoriaHemodinamica.fromJson(doc.data(), id: doc.id);

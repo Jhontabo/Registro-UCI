@@ -250,6 +250,15 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
                     'Frecuencia Respiratoria', '${monitoria.fr} rpm'),
                 _buildDetailItem('Temperatura', '${monitoria.t}°C'),
                 _buildDetailItem('PVC', '${monitoria.pvc} mmHg'),
+                _buildDetailItem('RVS', '${monitoria.rvc} dyn·s/cm5'),
+                _buildDetailItem('FiO₂', '${monitoria.fio2}%'),
+                _buildDetailItem('PIA', '${monitoria.pia} mmH₂O'),
+                _buildDetailItem('PPA', '${monitoria.ppa} mmHg'),
+                _buildDetailItem('PIC', '${monitoria.pic} mmHg'),
+                _buildDetailItem('PPC', '${monitoria.ppc} mmHg'),
+                _buildDetailItem(
+                    'Glucometría', '${monitoria.glucometria} mg/dL'),
+                _buildDetailItem('Insulina', '${monitoria.insulina} U'),
                 _buildDetailItem('Sat O₂', '${monitoria.saturacion}%'),
               ],
               TextButton(
@@ -323,8 +332,16 @@ class _MonitoriaHemodinamicaFormDialogState
   int? pad;
   int? fc;
   int? fr;
-  double? temperatura;
+  double? t;
   int? pvc;
+  int? rvc;
+  int? fio2;
+  int? pia;
+  int? ppa;
+  int? pic;
+  int? ppc;
+  int? glucometria;
+  int? insulina;
   int? saturacion;
 
   @override
@@ -362,8 +379,16 @@ class _MonitoriaHemodinamicaFormDialogState
         pad = monitoriaExistente.pad;
         fc = monitoriaExistente.fc;
         fr = monitoriaExistente.fr;
-        temperatura = monitoriaExistente.t;
+        t = monitoriaExistente.t;
         pvc = monitoriaExistente.pvc;
+        rvc = monitoriaExistente.rvc;
+        fio2 = monitoriaExistente.fio2;
+        pia = monitoriaExistente.pia;
+        ppa = monitoriaExistente.ppa;
+        pic = monitoriaExistente.pic;
+        ppc = monitoriaExistente.ppc;
+        glucometria = monitoriaExistente.glucometria;
+        insulina = monitoriaExistente.insulina;
         saturacion = monitoriaExistente.saturacion;
       });
     }
@@ -399,7 +424,11 @@ class _MonitoriaHemodinamicaFormDialogState
               const SizedBox(height: 16),
               _buildVitalSignsFields(),
               const SizedBox(height: 16),
-              _buildOtherParameters(),
+              _buildOxygenationFields(),
+              const SizedBox(height: 16),
+              _buildSpecialPressures(),
+              const SizedBox(height: 16),
+              _buildMetabolicFields(),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -481,32 +510,45 @@ class _MonitoriaHemodinamicaFormDialogState
   }
 
   Widget _buildPressureFields() {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'PAS (mmHg)',
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                    labelText: 'PAS (mmHg)',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8))),
+                keyboardType: TextInputType.number,
+                onChanged: (value) => pas = int.tryParse(value),
+                initialValue: pas?.toString(),
+              ),
             ),
-            keyboardType: TextInputType.number,
-            onChanged: (value) => pas = int.tryParse(value),
-            initialValue: pas?.toString(),
-          ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'PAD (mmHg)',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) => pad = int.tryParse(value),
+                initialValue: pad?.toString(),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'PAD (mmHg)',
+        const SizedBox(height: 12),
+        TextFormField(
+          decoration: InputDecoration(
+              labelText: 'RVS (dyn·s/cm5)',
               border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            keyboardType: TextInputType.number,
-            onChanged: (value) => pad = int.tryParse(value),
-            initialValue: pad?.toString(),
-          ),
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+          keyboardType: TextInputType.number,
+          onChanged: (value) => rvc = int.tryParse(value),
+          initialValue: rvc?.toString(),
         ),
       ],
     );
@@ -518,25 +560,22 @@ class _MonitoriaHemodinamicaFormDialogState
         Row(
           children: [
             Expanded(
-              child: TextFormField(
-                decoration: InputDecoration(
+                child: TextFormField(
+              decoration: InputDecoration(
                   labelText: 'FC (ppm)',
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
-                keyboardType: TextInputType.number,
-                onChanged: (value) => fc = int.tryParse(value),
-                initialValue: fc?.toString(),
-              ),
-            ),
+                      borderRadius: BorderRadius.circular(8))),
+              keyboardType: TextInputType.number,
+              onChanged: (value) => fc = int.tryParse(value),
+              initialValue: fc?.toString(),
+            )),
             const SizedBox(width: 16),
             Expanded(
               child: TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'FR (rpm)',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
+                    labelText: 'FR (rpm)',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8))),
                 keyboardType: TextInputType.number,
                 onChanged: (value) => fr = int.tryParse(value),
                 initialValue: fr?.toString(),
@@ -544,21 +583,57 @@ class _MonitoriaHemodinamicaFormDialogState
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         TextFormField(
           decoration: InputDecoration(
-            labelText: 'Temp (°C)',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          ),
+              labelText: 'Temp (°C)',
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
           keyboardType: TextInputType.number,
-          onChanged: (value) => temperatura = double.tryParse(value),
-          initialValue: temperatura?.toString(),
+          onChanged: (value) => t = double.tryParse(value),
+          initialValue: t?.toString(),
         ),
       ],
     );
   }
 
-  Widget _buildOtherParameters() {
+  Widget _buildOxygenationFields() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'FiO₂ (%)',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) => fio2 = int.tryParse(value),
+                initialValue: fio2?.toString(),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Sat O₂ (%)',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) => saturacion = int.tryParse(value),
+                initialValue: saturacion?.toString(),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSpecialPressures() {
     return Column(
       children: [
         Row(
@@ -579,13 +654,89 @@ class _MonitoriaHemodinamicaFormDialogState
             Expanded(
               child: TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Sat O₂ (%)',
+                  labelText: 'PIA (mmH₂O)',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),
                 keyboardType: TextInputType.number,
-                onChanged: (value) => saturacion = int.tryParse(value),
-                initialValue: saturacion?.toString(),
+                onChanged: (value) => pia = int.tryParse(value),
+                initialValue: pia?.toString(),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'PPA (mmHg)',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) => ppa = int.tryParse(value),
+                initialValue: ppa?.toString(),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'PIC (mmHg)',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) => pic = int.tryParse(value),
+                initialValue: pic?.toString(),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: 'PPC (mmHg)',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          keyboardType: TextInputType.number,
+          onChanged: (value) => ppc = int.tryParse(value),
+          initialValue: ppc?.toString(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMetabolicFields() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Glucemia (mg/dL)',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) => glucometria = int.tryParse(value),
+                initialValue: glucometria?.toString(),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Insulina (U)',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) => insulina = int.tryParse(value),
+                initialValue: insulina?.toString(),
               ),
             ),
           ],
@@ -610,8 +761,16 @@ class _MonitoriaHemodinamicaFormDialogState
           pam: pam,
           fc: fc,
           fr: fr,
-          t: temperatura,
+          t: t,
           pvc: pvc,
+          rvc: rvc,
+          fio2: fio2,
+          pia: pia,
+          ppa: ppa,
+          pic: pic,
+          ppc: ppc,
+          glucometria: glucometria,
+          insulina: insulina,
           saturacion: saturacion,
           idMonitoria: widget.idMonitoriaExistente,
         ),
