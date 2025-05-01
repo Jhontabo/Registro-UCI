@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/features/monitorias_hemodinamicas/data/providers/monitoria_hemodinamica_provider.dart';
 import 'package:registro_uci/features/monitorias_hemodinamicas/domain/models/monitoria_hemodinamica.dart';
+import 'package:registro_uci/pages/monitoria_hermodinamica/monitoria_hemodinamica_form_page.dart';
 
 class MonitoriaHemodinamicaCard extends ConsumerWidget {
   final String idIngreso;
@@ -293,14 +294,14 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
     int? horaInicial,
     String? idMonitoriaExistente,
   }) {
-    showDialog(
-      context: context,
-      builder: (context) => _MonitoriaHemodinamicaFormDialog(
-        key: UniqueKey(),
-        idIngreso: idIngreso,
-        idRegistroDiario: idRegistroDiario,
-        horaInicial: horaInicial,
-        idMonitoriaExistente: idMonitoriaExistente,
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FormularioMonitoriaScreen(
+          idIngreso: idIngreso,
+          idRegistroDiario: idRegistroDiario,
+          horaInicial: horaInicial,
+        ),
       ),
     );
   }
