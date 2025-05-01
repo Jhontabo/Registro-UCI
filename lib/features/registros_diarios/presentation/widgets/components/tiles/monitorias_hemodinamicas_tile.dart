@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registro_uci/common/components/form_tile.dart';
-import 'package:registro_uci/pages/monitoria_hermodinamica/monitoria_hemodinamica_page.dart';
+import 'package:registro_uci/pages/monitoria_hemodinamica/monitoria_hemodinamica_page.dart';
 
 class MonitoriasHemodinamicasTile extends StatelessWidget {
   const MonitoriasHemodinamicasTile({
