@@ -182,7 +182,6 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
               const SizedBox(width: 12),
               _buildTimeLabel(hour, hasRecord),
               const SizedBox(width: 12),
-              _buildRecordInfo(hasRecord, record),
               const Spacer(),
               _buildActionButtons(context, hour, hasRecord, record.idMonitoria),
             ],
@@ -209,18 +208,6 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecordInfo(bool hasRecord, MonitoriaHemodinamica record) {
-    return Expanded(
-      child: Text(
-        hasRecord ? 'PA: ${record.pas}/${record.pad}' : 'Sin registro',
-        style: TextStyle(
-          color: hasRecord ? Colors.green : Colors.grey,
-          fontStyle: hasRecord ? FontStyle.normal : FontStyle.italic,
-        ),
-      ),
-    );
-  }
-
   Widget _buildActionButtons(
     BuildContext context,
     int hour,
@@ -241,6 +228,20 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
         IconButton(
           icon: Icon(
             Icons.edit_outlined,
+            color: hasRecord ? Colors.blue : Colors.grey,
+          ),
+          onPressed: hasRecord
+              ? () => _showForm(
+                    context,
+                    hour: hour,
+                    idMonitoria: idMonitoria,
+                  )
+              : null,
+          tooltip: 'Editar registro',
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.bar_chart,
             color: hasRecord ? Colors.blue : Colors.grey,
           ),
           onPressed: hasRecord
