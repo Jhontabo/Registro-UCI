@@ -77,16 +77,16 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Últimos parámetros registrados:',
+          'Última hora registrada:',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8.0),
-        if (lastRecord != null) ...[
-          _buildParameterRow('PA', '${lastRecord.pas}/${lastRecord.pad} mmHg'),
-          _buildParameterRow('FC', '${lastRecord.fc} ppm'),
-          _buildParameterRow('FR', '${lastRecord.fr} rpm'),
-          _buildParameterRow('Temp', '${lastRecord.t}°C'),
-        ] else
+        if (lastRecord != null)
+          Text(
+            'Hora: ${_formatHour(lastRecord.hora)}',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          )
+        else
           const Text(
             'No hay registros disponibles',
             style: TextStyle(fontStyle: FontStyle.italic),
