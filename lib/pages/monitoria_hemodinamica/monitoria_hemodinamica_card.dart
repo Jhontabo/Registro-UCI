@@ -4,6 +4,7 @@ import 'package:registro_uci/features/monitorias_hemodinamicas/data/providers/mo
 import 'package:registro_uci/features/monitorias_hemodinamicas/domain/models/monitoria_hemodinamica.dart';
 import 'package:registro_uci/pages/monitoria_hemodinamica/monitoria_hemodinamica_form_page.dart';
 import 'package:registro_uci/pages/monitoria_hemodinamica/monitoria_hemodinamica_edit_page.dart';
+import 'package:registro_uci/pages/monitoria_hemodinamica/monitoria_hemodinamica_graphics_page.dart';
 
 class MonitoriaHemodinamicaCard extends ConsumerWidget {
   final String idIngreso;
@@ -31,8 +32,47 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 1. Header
             _buildHeader(context),
+
+            // 2. Espacio + Botón (debajo del header)
             const SizedBox(height: 12.0),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GraphicsPage(
+                        idIngreso: idIngreso,
+                        idRegistroDiario: idRegistroDiario,
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 14.0, horizontal: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                  elevation: 2,
+                  shadowColor: Colors.black.withOpacity(0.2),
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                icon: const Icon(Icons.bar_chart_rounded, size: 24),
+                label: const Text('Ver Gráficos'),
+              ),
+            ),
+
+            // 3. Espacio + Contenido (debajo del botón)
+            const SizedBox(height: 16.0),
             _buildContent(monitoriasData, context, ref),
           ],
         ),
@@ -223,7 +263,7 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
             Icons.add_circle_outline,
             color: !hasRecord ? Colors.green : Colors.grey,
           ),
-          onPressed: !hasRecord ? () => _showForm(context, hour: hour) : null,
+          onPressed: !hasRecord ? () => _createForm(context, hour: hour) : null,
           tooltip: 'Agregar registro',
         ),
         IconButton(
@@ -233,20 +273,6 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
           ),
           onPressed: hasRecord
               ? () => _editForm(
-                    context,
-                    hour: hour,
-                    idMonitoria: idMonitoria,
-                  )
-              : null,
-          tooltip: 'Editar registro',
-        ),
-        IconButton(
-          icon: Icon(
-            Icons.bar_chart,
-            color: hasRecord ? Colors.blue : Colors.grey,
-          ),
-          onPressed: hasRecord
-              ? () => _showForm(
                     context,
                     hour: hour,
                     idMonitoria: idMonitoria,
@@ -342,25 +368,6 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
       context,
       MaterialPageRoute(
         builder: (_) => EditMonitoriaScreen(
-          idIngreso: idIngreso,
-          idRegistroDiario: idRegistroDiario,
-          horaInicial: hour,
-          idMonitoriaExistente: idMonitoria,
-        ),
-        fullscreenDialog: true,
-      ),
-    );
-  }
-
-  void _showForm(
-    BuildContext context, {
-    required int hour,
-    String? idMonitoria,
-  }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => FormularioMonitoriaScreen(
           idIngreso: idIngreso,
           idRegistroDiario: idRegistroDiario,
           horaInicial: hour,
