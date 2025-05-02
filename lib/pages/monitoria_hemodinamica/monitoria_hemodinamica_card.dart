@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/features/monitorias_hemodinamicas/data/providers/monitoria_hemodinamica_provider.dart';
 import 'package:registro_uci/features/monitorias_hemodinamicas/domain/models/monitoria_hemodinamica.dart';
 import 'package:registro_uci/pages/monitoria_hemodinamica/monitoria_hemodinamica_form_page.dart';
+import 'package:registro_uci/pages/monitoria_hemodinamica/monitoria_hemodinamica_edit_page.dart';
 
 class MonitoriaHemodinamicaCard extends ConsumerWidget {
   final String idIngreso;
@@ -231,7 +232,7 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
             color: hasRecord ? Colors.blue : Colors.grey,
           ),
           onPressed: hasRecord
-              ? () => _showForm(
+              ? () => _editForm(
                     context,
                     hour: hour,
                     idMonitoria: idMonitoria,
@@ -309,6 +310,44 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
           ),
           Text(value),
         ],
+      ),
+    );
+  }
+
+  void _createForm(
+    BuildContext context, {
+    required int hour,
+    String? idMonitoria,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => FormularioMonitoriaScreen(
+          idIngreso: idIngreso,
+          idRegistroDiario: idRegistroDiario,
+          horaInicial: hour,
+          idMonitoriaExistente: idMonitoria,
+        ),
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
+  void _editForm(
+    BuildContext context, {
+    required int hour,
+    String? idMonitoria,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditMonitoriaScreen(
+          idIngreso: idIngreso,
+          idRegistroDiario: idRegistroDiario,
+          horaInicial: hour,
+          idMonitoriaExistente: idMonitoria,
+        ),
+        fullscreenDialog: true,
       ),
     );
   }
