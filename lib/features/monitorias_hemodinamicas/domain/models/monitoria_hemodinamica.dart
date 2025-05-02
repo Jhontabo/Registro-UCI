@@ -39,6 +39,7 @@ class MonitoriaHemodinamica with _$MonitoriaHemodinamica {
       fr: json['fr'] as int?,
       t: (json['t'] as num?)?.toDouble(),
       fio2: json['fio2'] as int?,
+      pvc: json['pvc'] as int?,
       pia: json['pia'] as int?,
       ppa: json['ppa'] as int?,
       pic: json['pic'] as int?,
