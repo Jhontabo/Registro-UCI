@@ -138,7 +138,7 @@ class _CreateTratamientoAntibioticoFormState
 
               // Frecuencia en 24h dropdown
               DropdownButtonFormField<int>(
-                value: _selectedFrecuencia,
+                initialValue: _selectedFrecuencia,
                 decoration: InputDecoration(
                   label: const Text(
                     "Frecuencia",
@@ -223,12 +223,10 @@ class _CreateTratamientoAntibioticoFormState
       TextEditingController controller, BuildContext context) async {
     final initialDate = DateTime.now();
     DateTime? pickedDate = await pickDate(initialDate, context);
-    if (pickedDate != null) {
-      setState(() {
-        controller.text = pickedDate.toString().split(" ")[0];
-        _selectedDate = pickedDate;
-      });
-    }
+    setState(() {
+      controller.text = pickedDate.toString().split(" ")[0];
+      _selectedDate = pickedDate;
+    });
   }
 
   Future<void> _selectStartTime() async {

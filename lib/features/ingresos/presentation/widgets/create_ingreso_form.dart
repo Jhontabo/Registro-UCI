@@ -353,10 +353,8 @@ class _CreateIngresoFormState extends State<CreateIngresoForm> {
       TextEditingController controller, BuildContext context) async {
     final initialDate = DateTime.now();
     DateTime? pickedDate = await pickDate(initialDate, context);
-    if (pickedDate != null) {
-      setState(() {
-        controller.text = pickedDate.toString().split(" ")[0];
-      });
+    setState(() {
+      controller.text = pickedDate.toString().split(" ")[0];
+    });
     }
-  }
 }

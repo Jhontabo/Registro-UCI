@@ -408,7 +408,7 @@ class _CreateControlRiesgosFormState extends State<CreateControlRiesgosForm> {
               const Text('Sitio de UPP'),
               DropdownButtonFormField<String>(
                 hint: const Text("Sitio anatómico"),
-                value:
+                initialValue:
                     _selectedSitioUPP ?? SitiosAnatomicosUPP.sitiosCefalicos[0],
                 onChanged: (String? newValue) {
                   setState(() {

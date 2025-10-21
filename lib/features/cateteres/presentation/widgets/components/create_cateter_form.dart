@@ -89,7 +89,7 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
 
               // **Dropdown Tipo de Catéter**
               DropdownButtonFormField<String>(
-                value: _tipo,
+                initialValue: _tipo,
                 items: tiposCateter
                     .map((tipo) =>
                         DropdownMenuItem(value: tipo, child: Text(tipo)))
@@ -103,7 +103,7 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
 
               // **Dropdown Sitio**
               DropdownButtonFormField<String>(
-                value: _sitio,
+                initialValue: _sitio,
                 items: sitiosCateter
                     .map((sitio) =>
                         DropdownMenuItem(value: sitio, child: Text(sitio)))
@@ -117,7 +117,7 @@ class _CreateCateterFormState extends ConsumerState<CreateCateterForm> {
 
               // **Dropdown Lugar de Procedencia**
               DropdownButtonFormField<String>(
-                value: _lugarProcedencia,
+                initialValue: _lugarProcedencia,
                 items: lugaresProcedenciaCateter
                     .map((lugar) =>
                         DropdownMenuItem(value: lugar, child: Text(lugar)))

@@ -99,12 +99,11 @@ final lightTheme = ThemeData(
   //     color: Colors.white,
   //   ),
   // ),
-  dialogTheme: DialogTheme(
+
+  dialogTheme: DialogThemeData(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
     ),
-    elevation: 3,
-    shadowColor: Colors.black,
   ),
   // cardTheme: CardTheme(
   //   elevation: 13,

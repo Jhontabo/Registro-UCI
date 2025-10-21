@@ -35,7 +35,7 @@ class FirebaseMonitoriaHemodinamicaRepository
       return query.docs.map((doc) {
         return MonitoriaHemodinamica.fromJson(doc.data(), id: doc.id);
       }).toList();
-    } catch (e, stackTrace) {
+    } catch (e) {
       throw Exception('Error obteniendo monitorías hemodinámicas: $e');
     }
   }
@@ -55,7 +55,7 @@ class FirebaseMonitoriaHemodinamicaRepository
       return doc.exists
           ? MonitoriaHemodinamica.fromJson(doc.data()!, id: doc.id)
           : null;
-    } catch (e, stackTrace) {
+    } catch (e) {
       throw Exception('Error obteniendo monitoría por ID: $e');
     }
   }
@@ -118,7 +118,7 @@ class FirebaseMonitoriaHemodinamicaRepository
         'insulina': insulina,
         'saturacion': saturacion,
       });
-    } catch (e, stackTrace) {
+    } catch (e) {
       throw Exception('Error creando monitoría hemodinámica: $e');
     }
   }
@@ -176,7 +176,7 @@ class FirebaseMonitoriaHemodinamicaRepository
         idIngreso: idIngreso,
         idRegistroDiario: idRegistroDiario,
       ).doc(idMonitoria).update(datosActualizacion);
-    } catch (e, stackTrace) {
+    } catch (e) {
       throw Exception('Error actualizando monitoría: $e');
     }
   }
@@ -192,7 +192,7 @@ class FirebaseMonitoriaHemodinamicaRepository
         idIngreso: idIngreso,
         idRegistroDiario: idRegistroDiario,
       ).doc(idMonitoria).delete();
-    } catch (e, stackTrace) {
+    } catch (e) {
       throw Exception('Error eliminando monitoría: $e');
     }
   }
@@ -215,7 +215,7 @@ class FirebaseMonitoriaHemodinamicaRepository
       }
 
       await lote.commit();
-    } catch (e, stackTrace) {
+    } catch (e) {
       throw Exception('Error reordenando monitorías: $e');
     }
   }

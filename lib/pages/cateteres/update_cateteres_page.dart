@@ -64,9 +64,10 @@ class _EditCateterPageState extends ConsumerState<EditCateterPage> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
+
     if (picked != null) {
       setState(() {
-        controller.text = DateFormat('yyyy-MM-dd').format(picked);
+        controller.text = DateFormat('yyyy-MM-dd').format(picked!);
       });
     }
   }
@@ -84,7 +85,7 @@ class _EditCateterPageState extends ConsumerState<EditCateterPage> {
             children: [
               // **Tipo de catéter**
               DropdownButtonFormField<String>(
-                value: selectedTipo,
+                initialValue: selectedTipo,
                 onChanged: (value) => setState(() => selectedTipo = value),
                 items: tiposCateter.map((tipo) {
                   return DropdownMenuItem(value: tipo, child: Text(tipo));
@@ -97,7 +98,7 @@ class _EditCateterPageState extends ConsumerState<EditCateterPage> {
 
               // **Sitio de inserción**
               DropdownButtonFormField<String>(
-                value: selectedSitio,
+                initialValue: selectedSitio,
                 onChanged: (value) => setState(() => selectedSitio = value),
                 items: sitiosCateter.map((sitio) {
                   return DropdownMenuItem(value: sitio, child: Text(sitio));
@@ -111,7 +112,7 @@ class _EditCateterPageState extends ConsumerState<EditCateterPage> {
 
               // **Lugar de procedencia**
               DropdownButtonFormField<String>(
-                value: selectedLugarProcedencia,
+                initialValue: selectedLugarProcedencia,
                 onChanged: (value) =>
                     setState(() => selectedLugarProcedencia = value),
                 items: lugaresProcedenciaCateter.map((lugar) {

@@ -21,7 +21,7 @@ class EnumDropdownButtonFormField<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
-      value: value,
+      initialValue: value,
       menuMaxHeight: 500,
       items: values.map<DropdownMenuItem<T>>(
         (T value) {

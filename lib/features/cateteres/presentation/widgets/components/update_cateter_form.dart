@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/components/buttons/primary_button.dart';
 import 'package:registro_uci/features/cateteres/data/dto/update_cateter_dto.dart';
 import 'package:registro_uci/features/cateteres/data/providers/cateteres_providers.dart';
-import 'package:intl/intl.dart';
 
 class UpdateCateterFormButton extends ConsumerWidget {
   final GlobalKey<FormState> formKey;

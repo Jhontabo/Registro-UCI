@@ -98,10 +98,11 @@ class _EditMarcapasoPageState extends ConsumerState<EditMarcapasoPage> {
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
                   );
+
                   if (pickedDate != null) {
                     setState(() {
                       fechaController.text =
-                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                          DateFormat('yyyy-MM-dd').format(pickedDate!);
                     });
                   }
                 },
@@ -110,7 +111,7 @@ class _EditMarcapasoPageState extends ConsumerState<EditMarcapasoPage> {
 
               // **Modo**
               DropdownButtonFormField<String>(
-                value: selectedModo,
+                initialValue: selectedModo,
                 onChanged: (value) => setState(() => selectedModo = value),
                 items: modosMarcapaso.map((modo) {
                   return DropdownMenuItem(value: modo, child: Text(modo));
@@ -121,7 +122,7 @@ class _EditMarcapasoPageState extends ConsumerState<EditMarcapasoPage> {
 
               // **Vía**
               DropdownButtonFormField<String>(
-                value: selectedVia,
+                initialValue: selectedVia,
                 onChanged: (value) => setState(() => selectedVia = value),
                 items: viasMarcapaso.map((via) {
                   return DropdownMenuItem(value: via, child: Text(via));
@@ -133,7 +134,7 @@ class _EditMarcapasoPageState extends ConsumerState<EditMarcapasoPage> {
 
               // **Frecuencia**
               DropdownButtonFormField<int>(
-                value: selectedFrecuencia,
+                initialValue: selectedFrecuencia,
                 onChanged: (value) =>
                     setState(() => selectedFrecuencia = value),
                 items: frecuenciasMarcapaso.map((frecuencia) {
@@ -146,7 +147,7 @@ class _EditMarcapasoPageState extends ConsumerState<EditMarcapasoPage> {
 
               // **Sensibilidad**
               DropdownButtonFormField<double>(
-                value: selectedSensibilidad,
+                initialValue: selectedSensibilidad,
                 onChanged: (value) =>
                     setState(() => selectedSensibilidad = value),
                 items: sensibilidadesMarcapaso.map((sensibilidad) {
@@ -160,7 +161,7 @@ class _EditMarcapasoPageState extends ConsumerState<EditMarcapasoPage> {
 
               // **Salida**
               DropdownButtonFormField<double>(
-                value: selectedSalida,
+                initialValue: selectedSalida,
                 onChanged: (value) => setState(() => selectedSalida = value),
                 items: salidasMarcapaso.map((salida) {
                   return DropdownMenuItem(

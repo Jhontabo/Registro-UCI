@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../data/dto/create_sonda_dto.dart';
 import '../../data/providers/sonda_provider.dart';
-import '../../domain/models/sonda.dart'; // ← Importar el modelo correctamente
+// ← Importar el modelo correctamente
 
 final createSondaControllerProvider =
     StateNotifierProvider<CreateSondaController, AsyncValue<void>>(

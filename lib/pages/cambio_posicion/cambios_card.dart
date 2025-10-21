@@ -482,7 +482,7 @@ class _SelectorPosicionDialogState
     ];
 
     return DropdownButtonFormField<int>(
-      value: horasDisponibles.contains(selectedHora) ? selectedHora : 8,
+      initialValue: horasDisponibles.contains(selectedHora) ? selectedHora : 8,
       decoration: InputDecoration(
         labelText: 'Hora',
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -502,7 +502,7 @@ class _SelectorPosicionDialogState
 
   Widget _buildPosicionSelector() {
     return DropdownButtonFormField<String>(
-      value: selectedPosicion,
+      initialValue: selectedPosicion,
       decoration: InputDecoration(
         labelText: 'Posición',
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),

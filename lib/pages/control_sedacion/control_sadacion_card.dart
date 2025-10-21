@@ -494,7 +494,7 @@ class _SelectorSedacionDialogState
     ];
 
     return DropdownButtonFormField<int>(
-      value: horasDisponibles.contains(selectedHora) ? selectedHora : 8,
+      initialValue: horasDisponibles.contains(selectedHora) ? selectedHora : 8,
       decoration: InputDecoration(
         labelText: 'Hora',
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -514,7 +514,7 @@ class _SelectorSedacionDialogState
 
   Widget _buildRassSelector() {
     return DropdownButtonFormField<int>(
-      value: selectedRass,
+      initialValue: selectedRass,
       decoration: InputDecoration(
         labelText: 'Escala RASS',
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),

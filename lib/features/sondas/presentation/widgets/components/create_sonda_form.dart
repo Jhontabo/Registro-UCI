@@ -30,7 +30,7 @@ class _CreateSondaFormState extends ConsumerState<CreateSondaForm> {
           // ✅ DROPDOWN REGIÓN ANATÓMICA
           DropdownButtonFormField<String>(
             decoration: const InputDecoration(labelText: "Región Anatómica"),
-            value: regionSeleccionada,
+            initialValue: regionSeleccionada,
             isExpanded: true, // ✅ Evita que el texto se corte
             items: sondasPorRegion.keys.map((region) {
               return DropdownMenuItem(
@@ -59,7 +59,7 @@ class _CreateSondaFormState extends ConsumerState<CreateSondaForm> {
           if (regionSeleccionada != null)
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: "Tipo de Sonda"),
-              value: tipoSondaSeleccionado,
+              initialValue: tipoSondaSeleccionado,
               isExpanded: true, // ✅ Evita desbordamiento
               items: (sondasPorRegion[regionSeleccionada] ?? [])
                   .map((sonda) => DropdownMenuItem(

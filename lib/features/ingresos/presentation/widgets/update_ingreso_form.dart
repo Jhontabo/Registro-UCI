@@ -403,10 +403,8 @@ class _UpdateIngresoFormState extends State<UpdateIngresoForm> {
   ) async {
     final initialDate = controller.text.toDateTime();
     DateTime? pickedDate = await pickDate(initialDate, context);
-    if (pickedDate != null) {
-      setState(() {
-        controller.text = pickedDate.toString().split(" ")[0];
-      });
+    setState(() {
+      controller.text = pickedDate.toString().split(" ")[0];
+    });
     }
-  }
 }

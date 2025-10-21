@@ -9,12 +9,12 @@ class EditMonitoriaScreen extends ConsumerStatefulWidget {
   final String? idMonitoriaExistente;
 
   const EditMonitoriaScreen({
-    Key? key,
+    super.key,
     required this.idIngreso,
     required this.idRegistroDiario,
     required this.idMonitoriaExistente,
     required this.horaInicial,
-  }) : super(key: key);
+  });
 
   @override
   EditMonitoriaScreenState createState() => EditMonitoriaScreenState();
@@ -190,7 +190,7 @@ class EditMonitoriaScreenState extends ConsumerState<EditMonitoriaScreen> {
               Text(
                 'Cargando datos...',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  color: colors.onBackground.withOpacity(0.8),
+                  color: colors.onSurface.withOpacity(0.8),
                 ),
               ),
             ],
@@ -586,7 +586,7 @@ class EditMonitoriaScreenState extends ConsumerState<EditMonitoriaScreen> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         filled: true,
-        fillColor: colors.surfaceVariant.withOpacity(0.3),
+        fillColor: colors.surfaceContainerHighest.withOpacity(0.3),
       ),
       style: theme.textTheme.bodyLarge,
       keyboardType: TextInputType.numberWithOptions(decimal: decimal),

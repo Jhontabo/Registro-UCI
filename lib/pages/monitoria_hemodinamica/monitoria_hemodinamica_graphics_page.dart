@@ -227,7 +227,7 @@ class GraphicsPage extends ConsumerWidget {
                       : 1,
                   minY: 0,
                   maxY: _calculateMaxY(datosFiltrados, getValue),
-                  gridData: FlGridData(show: true),
+                  gridData: const FlGridData(show: true),
                   titlesData: FlTitlesData(
                     show: true,
                     bottomTitles: AxisTitles(
@@ -279,7 +279,7 @@ class GraphicsPage extends ConsumerWidget {
                       color: color,
                       barWidth: 3,
                       isStrokeCapRound: true,
-                      dotData: FlDotData(show: true),
+                      dotData: const FlDotData(show: true),
                       belowBarData: BarAreaData(show: false),
                     ),
                   ],
@@ -290,7 +290,7 @@ class GraphicsPage extends ConsumerWidget {
                           final index = spot.x.toInt();
                           // Verifica si el índice es válido antes de usarlo
                           if (index < 0 || index >= datosFiltrados.length) {
-                            return LineTooltipItem(
+                            return const LineTooltipItem(
                               'No hay datos disponibles',
                               TextStyle(color: Colors.black),
                             );

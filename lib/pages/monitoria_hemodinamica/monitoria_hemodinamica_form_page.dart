@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/features/monitorias_hemodinamicas/data/providers/monitoria_hemodinamica_provider.dart';
 
@@ -10,12 +9,12 @@ class FormularioMonitoriaScreen extends ConsumerStatefulWidget {
   final String? idMonitoriaExistente;
 
   const FormularioMonitoriaScreen({
-    Key? key,
+    super.key,
     required this.idIngreso,
     required this.idRegistroDiario,
     this.horaInicial,
     this.idMonitoriaExistente,
-  }) : super(key: key);
+  });
 
   @override
   FormularioMonitoriaScreenState createState() =>
@@ -140,7 +139,7 @@ class FormularioMonitoriaScreenState
       elevation: 2,
       child: ExpansionTile(
         leading: Icon(icon, color: Theme.of(context).primaryColor),
-        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         initiallyExpanded: isExpanded,
         onExpansionChanged: onExpand,
         children: [
@@ -372,20 +371,20 @@ class FormularioMonitoriaScreenState
         children: [
           OutlinedButton(
             onPressed: _isLoading ? null : () => Navigator.pop(context),
-            child: const Text('Cancelar'),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
+            child: const Text('Cancelar'),
           ),
           const SizedBox(width: 12),
           ElevatedButton(
             onPressed: _isLoading ? null : _guardarMonitoria,
-            child: Text(widget.idMonitoriaExistente == null
-                ? 'Crear Registro'
-                : 'Guardar Cambios'),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
+            child: Text(widget.idMonitoriaExistente == null
+                ? 'Crear Registro'
+                : 'Guardar Cambios'),
           ),
         ],
       ),

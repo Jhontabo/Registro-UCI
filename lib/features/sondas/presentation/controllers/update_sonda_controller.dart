@@ -1,7 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../data/dto/update_sonda_dto.dart';
 import '../../data/providers/sonda_provider.dart';
-import '../../domain/models/sonda.dart';
 
 final updateSondaControllerProvider =
     StateNotifierProvider<UpdateSondaController, AsyncValue<void>>(

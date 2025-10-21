@@ -11,10 +11,10 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
   final String idRegistroDiario;
 
   const MonitoriaHemodinamicaCard({
-    Key? key,
+    super.key,
     required this.idIngreso,
     required this.idRegistroDiario,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -125,7 +125,7 @@ class MonitoriaHemodinamicaCard extends ConsumerWidget {
         if (lastRecord != null)
           Text(
             'Hora: ${_formatHour(lastRecord.hora)}',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           )
         else
           const Text(

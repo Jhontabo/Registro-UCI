@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:registro_uci/common/components/buttons/primary_button.dart';
@@ -84,11 +83,9 @@ class _CreateRegistroDiarioFormState extends State<CreateRegistroDiarioForm> {
   ) async {
     final initialDate = controller.text.toDateTime();
     DateTime? pickedDate = await pickDate(initialDate, context);
-    if (pickedDate != null) {
-      setState(() {
-        controller.text = pickedDate.toString().split(" ")[0];
-      });
-    }
+    setState(() {
+      controller.text = pickedDate.toString().split(" ")[0];
+    });
   }
 }
 

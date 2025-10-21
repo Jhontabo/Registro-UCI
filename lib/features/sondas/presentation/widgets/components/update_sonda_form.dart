@@ -61,7 +61,7 @@ class _UpdateSondaFormState extends ConsumerState<UpdateSondaForm> {
           // ✅ DROPDOWN REGIÓN ANATÓMICA
           DropdownButtonFormField<String>(
             decoration: const InputDecoration(labelText: "Región Anatómica"),
-            value: regionAnatomica.isNotEmpty ? regionAnatomica : null,
+            initialValue: regionAnatomica.isNotEmpty ? regionAnatomica : null,
             isExpanded: true,
             items: sondasPorRegion.keys.map((region) {
               return DropdownMenuItem(
@@ -85,7 +85,7 @@ class _UpdateSondaFormState extends ConsumerState<UpdateSondaForm> {
               sondasPorRegion[regionAnatomica] != null)
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: "Tipo de Sonda"),
-              value: sondasPorRegion[regionAnatomica]!.contains(tipo)
+              initialValue: sondasPorRegion[regionAnatomica]!.contains(tipo)
                   ? tipo
                   : sondasPorRegion[regionAnatomica]!.first,
               isExpanded: true,
@@ -130,7 +130,7 @@ class _UpdateSondaFormState extends ConsumerState<UpdateSondaForm> {
                 lastDate: DateTime(
                     2101), // ✅ Permite seleccionar cualquier fecha futura
               );
-              if (pickedDate != null && pickedDate != fechaRetiro) {
+              if (pickedDate != fechaRetiro) {
                 setState(() {
                   fechaRetiro = pickedDate;
                 });

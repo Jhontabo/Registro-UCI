@@ -524,7 +524,7 @@ class _UpdateControlRiesgosFormState extends State<UpdateControlRiesgosForm> {
                   "Seleccione sitio anatómico",
                   style: TextStyle(fontSize: 14),
                 ),
-                value: _selectedSitioUPP,
+                initialValue: _selectedSitioUPP,
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedSitioUPP = newValue;

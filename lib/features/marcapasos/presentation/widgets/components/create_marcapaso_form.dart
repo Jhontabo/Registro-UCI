@@ -69,10 +69,11 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
                   firstDate: DateTime(2000),
                   lastDate: DateTime(2101),
                 );
+
                 if (pickedDate != null) {
                   setState(() {
                     fechaController.text =
-                        DateFormat('yyyy-MM-dd').format(pickedDate);
+                        DateFormat('yyyy-MM-dd').format(pickedDate!);
                   });
                 }
               },
@@ -85,7 +86,7 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
                 border: OutlineInputBorder(),
                 labelText: "Modo",
               ),
-              value: selectedModo,
+              initialValue: selectedModo,
               onChanged: (value) => setState(() => selectedModo = value),
               items: modosMarcapaso.map((modo) {
                 return DropdownMenuItem(value: modo, child: Text(modo));
@@ -100,7 +101,7 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
                 border: OutlineInputBorder(),
                 labelText: "Vía",
               ),
-              value: selectedVia,
+              initialValue: selectedVia,
               onChanged: (value) => setState(() => selectedVia = value),
               items: viasMarcapaso.map((via) {
                 return DropdownMenuItem(value: via, child: Text(via));
@@ -115,7 +116,7 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
                 border: OutlineInputBorder(),
                 labelText: "Frecuencia",
               ),
-              value: selectedFrecuencia,
+              initialValue: selectedFrecuencia,
               onChanged: (value) => setState(() => selectedFrecuencia = value),
               items: frecuenciasMarcapaso.map((freq) {
                 return DropdownMenuItem(value: freq, child: Text("$freq"));
@@ -131,7 +132,7 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
                 border: OutlineInputBorder(),
                 labelText: "Sensibilidad",
               ),
-              value: selectedSensibilidad,
+              initialValue: selectedSensibilidad,
               onChanged: (value) =>
                   setState(() => selectedSensibilidad = value),
               items: sensibilidadesMarcapaso.map((sens) {
@@ -148,7 +149,7 @@ class _CreateMarcapasoFormState extends ConsumerState<CreateMarcapasoForm> {
                 border: OutlineInputBorder(),
                 labelText: "Salida",
               ),
-              value: selectedSalida,
+              initialValue: selectedSalida,
               onChanged: (value) => setState(() => selectedSalida = value),
               items: salidasMarcapaso.map((salida) {
                 return DropdownMenuItem(value: salida, child: Text("$salida"));
