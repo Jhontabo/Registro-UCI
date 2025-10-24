@@ -13,7 +13,7 @@ Esta aplicación de Flutter ha sido desarrollada para la unidad de cuidados inte
 Para comenzar, clona este repositorio en tu entorno local:
 
 ```bash
-git clone https://github.com/cbotina/Registro-UCI.git
+https://github.com/Jhontabo/Registro-UCI.git
 ```
 
 ## Configuración de Firebase
@@ -52,7 +52,9 @@ En este paso se debe seleccionar la opción "create a new project" y asignarle u
 
 ### Paso 5: Instalar dependencias
 
-Ejecuta `flutter pub get` para instalar las dependencias.
+```bash
+flutter pub get
+```
 
 ## Ejecutar el Proyecto
 
